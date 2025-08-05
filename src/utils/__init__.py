@@ -6,5 +6,6 @@ Contains configuration management, error type definitions, and helper functions.
 
 from .config import Config
 from .error_types import ErrorType, get_all_error_types, get_error_definition
+from .model_manager import ModelManager, get_model_manager
 
-__all__ = ["Config", "ErrorType", "get_all_error_types", "get_error_definition"]
+__all__ = ["Config", "ErrorType", "get_all_error_types", "get_error_definition", "ModelManager", "get_model_manager"]

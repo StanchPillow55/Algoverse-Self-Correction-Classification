@@ -152,8 +152,17 @@ class ClassificationWorkflow:
         
         # Split data
         from sklearn.model_selection import train_test_split
+        
+        # Check if we have enough samples for stratification
+        unique_classes, class_counts = np.unique(y, return_counts=True)
+        min_class_count = np.min(class_counts)
+        n_classes = len(unique_classes)
+        
+        # Disable stratification if dataset is too small
+        stratify = y if min_class_count >= 2 and len(y) >= n_classes * 2 else None
+        
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42, stratify=y
+            X, y, test_size=0.4, random_state=42, stratify=stratify
         )
         
         # Train model (simplified for skeleton)
