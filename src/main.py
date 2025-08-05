@@ -13,6 +13,7 @@ from .classification.classifier import ErrorClassifier
 from .workflow import ClassificationWorkflow
 from .utils.config import Config
 from .utils.error_types import get_all_error_types
+from .utils.model_manager import get_model_manager
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -124,6 +125,39 @@ def run_experiment(data_file: str, model_type: str, output_dir: str):
 
 
 @cli.command()
+def model_status():
+    """Show status of available models and API keys."""
+    print("Model Status Report")
+    print("=" * 40)
+    
+    manager = get_model_manager()
+    models = manager.get_available_models()
+    
+    # Show API status
+    print("\nAPI Availability:")
+    for provider in ["openai", "anthropic"]:
+        status = "✓ Available" if manager.is_api_available(provider) else "✗ No API key (using placeholders)"
+        print(f"  {provider.capitalize()}: {status}")
+    
+    # Show recommended models
+    print("\nRecommended Models:")
+    embedding_model = manager.get_recommended_embedding_model()
+    generation_model = manager.get_recommended_generation_model()
+    print(f"  Embedding: {embedding_model}")
+    print(f"  Generation: {generation_model}")
+    
+    # Show local models
+    print("\nLocal Models Available:")
+    for category, models_dict in models["local"].items():
+        print(f"  {category.capitalize()}:")
+        for name, model_id in models_dict.items():
+            print(f"    - {name}: {model_id}")
+    
+    print("\nNote: When API keys are provided, the system will automatically")
+    print("switch from local placeholders to live API inference.")
+
+
+@cli.command()
 def info():
     """Show information about the pipeline."""
     error_types = get_all_error_types()
@@ -139,6 +173,7 @@ def info():
     print("  - train: Train the classification model")
     print("  - predict: Classify text for error types")
     print("  - run-experiment: Run complete classification experiment")
+    print("  - model-status: Show model and API key status")
 
 
 def main():
