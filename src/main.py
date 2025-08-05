@@ -10,6 +10,7 @@ from pathlib import Path
 from .data_collection.synthetic_generator import SyntheticDataGenerator
 from .embeddings.embedding_generator import EmbeddingGenerator
 from .classification.classifier import ErrorClassifier
+from .workflow import ClassificationWorkflow
 from .utils.config import Config
 from .utils.error_types import get_all_error_types
 
@@ -84,6 +85,45 @@ def predict(text: str, model_dir: str):
 
 
 @cli.command()
+@click.option('--data-file', required=True, help='Path to dataset CSV file')
+@click.option('--model-type', default='logistic_regression', 
+              type=click.Choice(['logistic_regression', 'decision_tree']),
+              help='Type of model to use')
+@click.option('--output-dir', default='./outputs', help='Directory to save results')
+def run_experiment(data_file: str, model_type: str, output_dir: str):
+    """Run a complete classification experiment."""
+    logger.info(f"Running classification experiment with {model_type}")
+    
+    try:
+        workflow = ClassificationWorkflow()
+        results = workflow.run_classification_experiment(
+            dataset_path=data_file,
+            model_type=model_type
+        )
+        
+        # Save results
+        output_path = Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+        
+        import json
+        with open(output_path / f'experiment_results_{model_type}.json', 'w') as f:
+            json.dump(results, f, indent=2, default=str)
+        
+        print(f"\nExperiment Results ({model_type}):")
+        print("=" * 40)
+        print(f"Accuracy: {results['accuracy']:.4f}")
+        print(f"Training samples: {results['training_samples']}")
+        print(f"Test samples: {results['test_samples']}")
+        print(f"Features used: {results['feature_count']}")
+        
+        logger.info(f"Results saved to {output_path / f'experiment_results_{model_type}.json'}")
+        
+    except Exception as e:
+        logger.error(f"Experiment failed: {e}")
+        raise
+
+
+@cli.command()
 def info():
     """Show information about the pipeline."""
     error_types = get_all_error_types()
@@ -98,6 +138,7 @@ def info():
     print("  - generate-data: Create synthetic training data")
     print("  - train: Train the classification model")
     print("  - predict: Classify text for error types")
+    print("  - run-experiment: Run complete classification experiment")
 
 
 def main():
