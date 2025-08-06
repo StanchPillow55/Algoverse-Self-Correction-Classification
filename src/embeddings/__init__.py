@@ -9,5 +9,7 @@ This module handles:
 
 from .embedding_generator import EmbeddingGenerator
 from .semantic_analyzer import SemanticAnalyzer
+from .logits_processor import LogitsProcessor
+from .feature_fusion import FeatureFusion, FusionMethod
 
-__all__ = ["EmbeddingGenerator", "SemanticAnalyzer"]
+__all__ = ["EmbeddingGenerator", "SemanticAnalyzer", "LogitsProcessor", "FeatureFusion", "FusionMethod"]

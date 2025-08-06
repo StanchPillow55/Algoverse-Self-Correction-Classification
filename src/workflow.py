@@ -8,11 +8,13 @@ model training, and evaluation into a complete workflow.
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional, Tuple, List
 import logging
 
 from .data_collection.preprocessor import DataPreprocessor
 from .data_collection.dataset_curator import DatasetCurator
+from .embeddings.logits_processor import LogitsProcessor
+from .embeddings.feature_fusion import FeatureFusion, FusionMethod
 from .utils.error_types import ErrorType, get_all_error_types
 from .utils.config import Config
 
@@ -201,6 +203,167 @@ class ClassificationWorkflow:
         logger.info(f"Experiment complete. Accuracy: {accuracy:.4f}")
         return results
     
+    def create_enhanced_feature_matrix(self, 
+                                      texts: list,
+                                      embeddings: Optional[np.ndarray] = None,
+                                      logits_data: Optional[list] = None,
+                                      fusion_method: str = "concatenation") -> Tuple[np.ndarray, List[str]]:
+        """
+        Create enhanced feature matrix combining text features, embeddings, and logits.
+        
+        Args:
+            texts: List of text strings
+            embeddings: Optional embeddings matrix (n_samples, embedding_dim)
+            logits_data: Optional list of logits data for each sample
+            fusion_method: Method to fuse features ("concatenation", "weighted_concatenation", etc.)
+            
+        Returns:
+            Tuple of (fused feature matrix, feature names)
+        """
+        # Create text features
+        text_features = self.create_feature_matrix(texts)
+        text_feature_names = [
+            "text_length", "word_count", "question_marks", "exclamation_marks",
+            "commas", "unique_words", "but_count", "however_count", 
+            "maybe_count", "perhaps_count"
+        ]
+        
+        # Process logits if available
+        logits_features = None
+        logits_feature_names = []
+        if logits_data:
+            processor = LogitsProcessor(top_k=5, include_entropy=True)
+            logits_features = processor.create_logits_features_matrix(logits_data)
+            logits_feature_names = processor.get_feature_names()
+            logger.info(f"Created logits features with shape {logits_features.shape}")
+        
+        # Fuse features
+        fusion = FeatureFusion(fusion_method=fusion_method)
+        
+        # Validate feature compatibility
+        validation = fusion.validate_feature_compatibility(
+            embeddings=embeddings,
+            logits_features=logits_features,
+            text_features=text_features
+        )
+        
+        if not validation["is_valid"]:
+            logger.warning(f"Feature fusion validation warnings: {validation['warnings']}")
+        
+        # Fuse all available features
+        fused_features = fusion.fuse_features(
+            embeddings=embeddings,
+            logits_features=logits_features,
+            text_features=text_features
+        )
+        
+        # Create comprehensive feature names
+        embedding_dim = embeddings.shape[1] if embeddings is not None else 0
+        fused_feature_names = fusion.get_fused_feature_names(
+            embedding_dim=embedding_dim,
+            logits_feature_names=logits_feature_names,
+            text_feature_names=text_feature_names
+        )
+        
+        logger.info(f"Created enhanced feature matrix with shape {fused_features.shape}")
+        return fused_features, fused_feature_names
+    
+    def run_enhanced_classification_experiment(self,
+                                             dataset_path: str,
+                                             model_type: str = 'logistic_regression',
+                                             text_column: str = 'response',
+                                             label_column: str = 'error_type',
+                                             embeddings_data: Optional[np.ndarray] = None,
+                                             logits_data: Optional[list] = None,
+                                             fusion_method: str = "concatenation") -> Dict[str, Any]:
+        """
+        Run enhanced classification experiment with optional embeddings and logits.
+        
+        Args:
+            dataset_path: Path to the dataset
+            model_type: Type of model to use
+            text_column: Name of text column
+            label_column: Name of label column
+            embeddings_data: Optional embeddings matrix
+            logits_data: Optional list of logits data
+            fusion_method: Method to fuse features
+            
+        Returns:
+            Enhanced experiment results
+        """
+        logger.info(f"Starting enhanced classification experiment with {model_type}")
+        logger.info(f"Using fusion method: {fusion_method}")
+        
+        # Prepare data
+        dataset, prep_stats = self.prepare_data(dataset_path, text_column, label_column)
+        
+        if len(dataset) == 0:
+            raise ValueError("No valid samples after data preparation")
+        
+        # Create enhanced features
+        texts = dataset[f'{text_column}_cleaned'].tolist()
+        X, feature_names = self.create_enhanced_feature_matrix(
+            texts=texts,
+            embeddings=embeddings_data,
+            logits_data=logits_data,
+            fusion_method=fusion_method
+        )
+        y = dataset['label_id'].values
+        
+        # Split data
+        from sklearn.model_selection import train_test_split
+        
+        # Check if we have enough samples for stratification
+        unique_classes, class_counts = np.unique(y, return_counts=True)
+        min_class_count = np.min(class_counts)
+        n_classes = len(unique_classes)
+        
+        # Disable stratification if dataset is too small
+        stratify = y if min_class_count >= 2 and len(y) >= n_classes * 2 else None
+        
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.4, random_state=42, stratify=stratify
+        )
+        
+        # Train model
+        if model_type == 'logistic_regression':
+            from sklearn.linear_model import LogisticRegression
+            model = LogisticRegression(max_iter=1000, random_state=42)
+        elif model_type == 'decision_tree':
+            from sklearn.tree import DecisionTreeClassifier
+            model = DecisionTreeClassifier(random_state=42)
+        else:
+            raise ValueError(f"Unsupported model type: {model_type}")
+        
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+        
+        # Evaluate
+        from sklearn.metrics import accuracy_score, classification_report
+        accuracy = accuracy_score(y_test, y_pred)
+        report = classification_report(y_test, y_pred, output_dict=True)
+        
+        # Enhanced results with feature information
+        results = {
+            "model_type": model_type,
+            "fusion_method": fusion_method,
+            "data_stats": prep_stats,
+            "training_samples": len(X_train),
+            "test_samples": len(X_test),
+            "feature_count": X.shape[1],
+            "accuracy": accuracy,
+            "classification_report": report,
+            "feature_names": feature_names[:20],  # Show first 20 feature names
+            "feature_types": {
+                "text_features": bool(texts),
+                "embeddings": embeddings_data is not None,
+                "logits": logits_data is not None
+            }
+        }
+        
+        logger.info(f"Enhanced experiment complete. Accuracy: {accuracy:.4f}")
+        return results
+    
     def get_workflow_info(self) -> Dict[str, Any]:
         """Get information about the workflow configuration."""
         return {
@@ -210,5 +373,7 @@ class ClassificationWorkflow:
                 "lowercase": self.preprocessor.lowercase,
                 "remove_punctuation": self.preprocessor.remove_punctuation,
                 "min_length": self.preprocessor.min_length
-            }
+            },
+            "supported_fusion_methods": [method.value for method in FusionMethod],
+            "logits_support": True
         }
