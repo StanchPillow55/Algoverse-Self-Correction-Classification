@@ -1,0 +1,26 @@
+reprompt_id,category,eval_holdout,reprompt_text
+S01,supportive,0,"Let's carefully revisit your reasoning. Identify any step that could be wrong and fix only that step, keeping correct steps unchanged."
+S02,supportive,0,"Explain your approach briefly, then revise your final answer if and only if you find a concrete mistake."
+S03,supportive,0,"Check units, arithmetic, and logical transitions. If something is off, correct the minimal step and update the answer."
+S04,supportive,0,"Summarize the core idea in one sentence, then correct the solution in as few edits as necessary."
+S05,supportive,0,"List assumptions you used. If any assumption is inconsistent with the problem, adjust it and revise the answer."
+N01,neutral,0,"State the key decision points in your reasoning. Mark each as 'sound' or 'suspect'. If any are suspect, fix them and update the final answer."
+N02,neutral,0,Perform a quick 'sanity check' on each intermediate step. Only change steps that fail the check; otherwise keep the answer.
+N03,neutral,0,"Evaluate whether the answer directly addresses the question. If it doesn't, minimally revise the answer to address it."
+N04,neutral,0,"Is the conclusion supported by every step? If a step lacks support or evidence, rewrite only that step and update the answer."
+N05,neutral,0,"Compare your answer to the simplest possible solution path. If your path is unnecessarily complex, simplify it without changing correct content."
+A01,adversarial,0,Point out the first specific error in your reasoning (not a generic critique). Fix only that error and produce the corrected answer.
+A02,adversarial,0,"Assume one intermediate step is wrong. Identify which one and correct it, keeping all valid steps intact."
+A03,adversarial,0,Find the earliest arithmetic or logical slip. Repair it precisely; avoid rewriting correct sections.
+A04,adversarial,0,"If your final answer is already correct, state 'no change'. Otherwise, provide the minimal fix to reach the correct answer."
+A05,adversarial,0,"Contrast your reasoning with a concise alternative method. If the alternative reveals an error, adjust and finalize the answer."
+M01,meta,0,"Provide a one-line confidence estimate and justify it. If confidence is low due to a specific step, fix that step and update the answer."
+M02,meta,0,Indicate whether any step relies on an unchecked fact. Verify that fact and revise only if the verification fails.
+M03,meta,0,"Identify any place you may have 'anchored' on an early assumption. If anchoring occurred, un-anchor and revise minimally."
+M04,meta,0,"Did you overcorrect by changing correct parts? If so, revert unnecessary changes and present the corrected final answer."
+M05,meta,0,"If your revision adds complexity without fixing an error, revert to the simpler, correct version and finalize."
+H01,holdout,1,"Re-derive the solution using a different path. If the result differs, reconcile the discrepancy and output the final answer."
+H02,holdout,1,"Check for contradictions between steps. If any contradiction exists, resolve it with minimal edits and present the final answer."
+H03,holdout,1,First predict whether your answer will change. Then perform a focused check and update only if a concrete mistake is found.
+H04,holdout,1,"If any step depends on unstated assumptions, make them explicit. Validate each assumption; revise only if validation fails."
+H05,holdout,1,"Locate the earliest point your reasoning could diverge. If divergence occurs, correct from that point forward and return the final answer."
