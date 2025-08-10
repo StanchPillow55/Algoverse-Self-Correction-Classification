@@ -6,10 +6,40 @@
     "text": "Great effort! Can you add more detail to <ANSWER>?"
   },
   {
+    "id": "supportive_gentle_push",
+    "style": "supportive",
+    "cognitive_load": "low",
+    "text": "You're on the right track with <ANSWER>. Is there anything else you'd like to add?"
+  },
+  {
+    "id": "supportive_confidence_boost",
+    "style": "supportive",
+    "cognitive_load": "low",
+    "text": "I think <ANSWER> shows good reasoning. Would you like to double-check your work?"
+  },
+  {
     "id": "neutral_clarification",
     "style": "neutral",
     "cognitive_load": "medium",
     "text": "Please clarify your last point in <ANSWER>."
+  },
+  {
+    "id": "neutral_verification",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "Can you verify the accuracy of <ANSWER>?"
+  },
+  {
+    "id": "neutral_step_through",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "Walk me through how you arrived at <ANSWER>."
+  },
+  {
+    "id": "neutral_alternatives",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "Are there other ways to approach this besides <ANSWER>?"
   },
   {
     "id": "adversarial_challenge",
@@ -18,21 +48,153 @@
     "text": "How sure are you about <ANSWER>? Consider examining alternate perspectives."
   },
   {
+    "id": "adversarial_doubt",
+    "style": "adversarial",
+    "cognitive_load": "high",
+    "text": "I'm not convinced by <ANSWER>. What evidence supports this conclusion?"
+  },
+  {
+    "id": "adversarial_counterpoint",
+    "style": "adversarial",
+    "cognitive_load": "high",
+    "text": "What if <ANSWER> is completely wrong? How would you defend it?"
+  },
+  {
+    "id": "adversarial_pressure",
+    "style": "adversarial",
+    "cognitive_load": "high",
+    "text": "That answer <ANSWER> seems hasty. Are you missing something important?"
+  },
+  {
     "id": "critique_revise_suggestion",
     "style": "critique-revise",
     "cognitive_load": "medium",
     "text": "<ANSWER> seems off. How might you improve or refine it?"
   },
   {
+    "id": "critique_revise_specific",
+    "style": "critique-revise",
+    "cognitive_load": "medium",
+    "text": "There may be an error in <ANSWER>. Please review and revise if needed."
+  },
+  {
+    "id": "critique_revise_methodical",
+    "style": "critique-revise",
+    "cognitive_load": "medium",
+    "text": "Let's critique <ANSWER> systematically. What are its strengths and weaknesses?"
+  },
+  {
+    "id": "critique_revise_rebuild",
+    "style": "critique-revise",
+    "cognitive_load": "high",
+    "text": "Start fresh and reconsider the problem. Does <ANSWER> still hold up?"
+  },
+  {
     "id": "concise_confirmation",
     "style": "concise",
     "cognitive_load": "low",
-    "text": "Can you confirm if <ANSWER> is your final input?"
+    "text": "Is <ANSWER> your final answer?"
+  },
+  {
+    "id": "concise_check",
+    "style": "concise",
+    "cognitive_load": "low",
+    "text": "Double-check <ANSWER>."
+  },
+  {
+    "id": "concise_sure",
+    "style": "concise",
+    "cognitive_load": "low",
+    "text": "Are you sure about <ANSWER>?"
+  },
+  {
+    "id": "concise_retry",
+    "style": "concise",
+    "cognitive_load": "low",
+    "text": "Try again."
   },
   {
     "id": "exhaustive_explanation",
     "style": "exhaustive",
     "cognitive_load": "high",
-    "text": "Explain thoroughly why <ANSWER> is the best solution."
+    "text": "Explain thoroughly why <ANSWER> is the best solution, including all reasoning steps."
+  },
+  {
+    "id": "exhaustive_comprehensive",
+    "style": "exhaustive",
+    "cognitive_load": "high",
+    "text": "Provide a comprehensive analysis of <ANSWER>, covering all possible angles and considerations."
+  },
+  {
+    "id": "exhaustive_deep_dive",
+    "style": "exhaustive",
+    "cognitive_load": "high",
+    "text": "Let's do a deep dive into <ANSWER>. Examine every assumption, step, and implication."
+  },
+  {
+    "id": "exhaustive_justify",
+    "style": "exhaustive",
+    "cognitive_load": "high",
+    "text": "Justify <ANSWER> with detailed evidence and reasoning. Address potential counterarguments."
+  },
+  {
+    "id": "metacognitive_think_aloud",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "Think out loud about your reasoning process for <ANSWER>."
+  },
+  {
+    "id": "metacognitive_confidence",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "How confident are you in <ANSWER> on a scale of 1-10? Why?"
+  },
+  {
+    "id": "step_by_step_break_down",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "Break down <ANSWER> step by step to verify each part."
+  },
+  {
+    "id": "step_by_step_rebuild",
+    "style": "neutral",
+    "cognitive_load": "high",
+    "text": "Let's solve this step by step from the beginning. Does it lead to <ANSWER>?"
+  },
+  {
+    "id": "perspective_shift_devil_advocate",
+    "style": "adversarial",
+    "cognitive_load": "high",
+    "text": "Play devil's advocate against <ANSWER>. What are the strongest objections?"
+  },
+  {
+    "id": "perspective_shift_outsider",
+    "style": "neutral",
+    "cognitive_load": "medium",
+    "text": "How would an outside expert evaluate <ANSWER>?"
+  },
+  {
+    "id": "calming_no_pressure",
+    "style": "supportive",
+    "cognitive_load": "low",
+    "text": "No pressure - <ANSWER> looks reasonable. Just take a moment to review it."
+  },
+  {
+    "id": "calming_trust_instinct",
+    "style": "supportive",
+    "cognitive_load": "low",
+    "text": "Trust your instincts. Does <ANSWER> feel right to you?"
+  },
+  {
+    "id": "focused_core_issue",
+    "style": "concise",
+    "cognitive_load": "medium",
+    "text": "Focus on the core issue. Is <ANSWER> addressing it correctly?"
+  },
+  {
+    "id": "focused_essentials",
+    "style": "concise",
+    "cognitive_load": "low",
+    "text": "Strip it down to essentials. Does <ANSWER> capture what matters most?"
   }
 ]
