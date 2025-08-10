@@ -1,0 +1,67 @@
+reprompt_id,style,intent,source_type,source_citation,length_hint_tokens,constraints,holdout,notes,reprompt_text
+LIT-CB-01,neutral,generic_critique,literature,arXiv:2402.14809,short,revise freely if issues are found,0,CriticBench baseline,Review your reasoning and revise the answer as needed.
+LIT-CB-02,neutral,generic_critique,literature,ACL:2024.findings.91,medium,revise freely if issues are found,0,CriticBench rephrase,"Re-read your solution, identify weaknesses, and provide an improved final answer."
+LIT-CB-03,supportive,generic_critique,literature,arXiv:2402.14809,short,revise freely if issues are found,1,Held out (generic family),Take another pass at your solution and refine it for correctness and clarity.
+LIT-TY-01,adversarial,first_error_minimal_fix,literature,ACL:2024.findings.826,short,fix only the first specific error; keep correct steps,0,Error-localizing,Identify the first specific error in your reasoning. Fix only that step and update the final answer.
+LIT-TY-02,neutral,first_error_minimal_fix,literature,arXiv:2311.08516,medium,minimal edit; unchanged correct steps,0,Error-localizing rephrase,Pinpoint where the mistake begins. Correct that exact step and adjust the final answer minimally.
+LIT-TY-03,adversarial,error_span,literature,ACL:2024.findings.826,short,point to error span; minimal correction,1,Held out (error-span family),Point to the exact token/step where the error starts. Provide the corrected step and final answer.
+LIT-CM-01,meta,stability_first,literature,arXiv:2402.12563,short,no change unless concrete mistake; say 'no change',0,Confidence-aware,"If you can cite a concrete mistake, revise. Otherwise say 'no change' and keep the answer."
+LIT-CM-02,meta,stability_first,literature,openreview:glGkVk8kX6,medium,no change unless low-confidence evidence of error,0,Confidence-aware rephrase,Assess your answer. Only modify it if a specific flaw is found; otherwise leave it unchanged.
+LIT-CM-03,meta,stability_first,literature,arXiv:2402.12563,short,minimal edit; explicit 'no change' allowed,1,Held out (stability-first family),Revise only if you identify a concrete error; otherwise respond 'no change'.
+LIT-KM-01,neutral,checklist,literature,arXiv:2406.01297,medium,change only suspect points,0,Checklist,List the key decision points. Mark each as sound or suspect. Fix only the suspect ones.
+LIT-KM-02,neutral,sanity_check,literature,arXiv:2406.01297,short,minimal edits for failed checks,0,Sanity check,"Run a quick sanity check for units, arithmetic, and logic. Apply the minimal correction required."
+LIT-KM-03,supportive,assumptions_explicit,literature,arXiv:2406.01297,medium,validate assumptions; minimal edit,1,Held out (assumptions family),"List any unstated assumptions. Validate them; if one fails, adjust only that part and finalize."
+HUM-S-01,supportive,stability_first,human,,short,no change unless concrete bug,0,Anti-overcorrection,"If everything checks out, keep your answer. Revise only if you find a concrete bug."
+HUM-S-02,supportive,first_error_minimal_fix,human,,short,fix first error only,0,Minimal edit,"Find the earliest incorrect step, correct it, and keep other steps intact."
+HUM-S-03,supportive,sanity_check,human,,short,minimal correction,0,Units/arithmetic/logic triage,"Double-check units, arithmetic, and logical entailment. Correct the minimal step needed."
+HUM-S-04,supportive,assumptions_explicit,human,,medium,"validate assumptions, minimal change",0,Assumptions-first,"State your assumptions in one line each. If any are invalid, adjust only that part and recompute."
+HUM-S-05,supportive,generic_critique,human,,short,revise if issues found,0,Gentle nudge,Take a careful look and refine the final answer if needed.
+HUM-S-06,supportive,de_anchoring,human,,medium,challenge earliest commitment,1,Held out (de-anchoring),"Challenge your earliest committed step. If it’s unsupported, replace just that step and update the answer."
+HUM-S-07,supportive,alt_path,human,,medium,reconcile differences,0,Alternative path,"Re-derive using a simpler path. If the result differs, reconcile and return the final answer."
+HUM-S-08,supportive,verify_units,human,,short,verify units only; minimal edit,0,Unit check,"Verify all units and conversions. If a unit error exists, fix only that and update the result."
+HUM-S-09,supportive,checklist,human,,medium,change only suspect points,0,Checklist rephrase,"Outline the main steps, mark any suspect, and change only those."
+HUM-S-10,supportive,stability_first,human,,short,explicit 'no change' allowed,0,Anti-overcorrection 2,Only change the answer if you can point to a specific mistake; otherwise reply 'no change'.
+HUM-S-11,supportive,first_error_minimal_fix,human,,short,fix first error only,0,Minimal edit 2,"Locate the first flawed step, correct that step precisely, and keep everything else."
+HUM-S-12,supportive,sanity_check,human,,short,minimal edit,0,Short sanity check,Scan for arithmetic slips or missing justifications. Correct only the flawed part.
+HUM-N-01,neutral,generic_critique,human,,short,revise freely if issues found,0,Baseline-like,Evaluate your reasoning objectively and revise the final answer if necessary.
+HUM-N-02,neutral,checklist,human,,medium,change only suspect points,0,Decision points,Enumerate decision points. Mark pass/fail. Update only failing points.
+HUM-N-03,neutral,sanity_check,human,,short,minimal edit,0,Targeted check,Perform a quick consistency check; make the smallest correction that resolves any inconsistency.
+HUM-N-04,neutral,assumptions_explicit,human,,medium,validate assumptions; minimal edit,0,Assumptions exposure,"Expose hidden assumptions. If an assumption fails, revise only that portion."
+HUM-N-05,neutral,alt_path,human,,medium,reconcile differences,1,Held out (alt path),"Try a shorter derivation. If it disagrees with your answer, explain and reconcile the discrepancy."
+HUM-N-06,neutral,stability_first,human,,short,no change without concrete error,0,Guardrail,Do not change correct content. Only edit if you can name the exact mistake.
+HUM-N-07,neutral,first_error_minimal_fix,human,,short,minimal edit,0,Pinpoint & fix,"Point to the first problematic step, fix it, and finalize without rewriting correct parts."
+HUM-N-08,neutral,verify_units,human,,short,units only,0,Units-only pass,"Check units and scales. If a unit issue exists, fix only that and re-compute."
+HUM-N-09,neutral,error_span,human,,short,point to span; minimal edit,0,Token-level pointer,Indicate the exact token/span where the error begins and provide the corrected version.
+HUM-N-10,neutral,de_anchoring,human,,medium,challenge earliest commitment,0,De-anchoring,"Question your earliest nontrivial assumption; if it fails, replace that part and recompute the answer."
+HUM-N-11,neutral,generic_critique,human,,short,revise if issues found,0,Brief critique,Give a brief critique and update the final answer if warranted.
+HUM-N-12,neutral,sanity_check,human,,short,minimal edit,1,Held out (boundary),"Check boundary cases or simple examples. If they contradict your result, make the smallest necessary fix."
+HUM-A-01,adversarial,first_error_minimal_fix,human,,short,fix first specific error,0,Force specificity,Your answer is likely flawed. Identify the first specific error and fix only that.
+HUM-A-02,adversarial,generic_critique,human,,short,revise if issues found,0,Sharper tone,This answer appears unreliable. Re-check reasoning and provide a corrected final answer.
+HUM-A-03,adversarial,error_span,human,,short,point to span; minimal edit,0,Locate error span,Point to the exact span where reasoning fails. Correct that span and update the final answer.
+HUM-A-04,adversarial,stability_first,human,,short,no change unless concrete error,0,Guardrail (adversarial),"Do not change anything unless you can show a concrete, verifiable mistake."
+HUM-A-05,adversarial,alt_path,human,,medium,reconcile differences,0,Force alternative,"Produce a more direct solution path. If it conflicts with your answer, resolve the conflict and finalize."
+HUM-A-06,adversarial,de_anchoring,human,,medium,challenge earliest commitment,0,Break anchoring,"Your first commitment may be wrong. Replace it if unsupported, and recompute minimally."
+HUM-A-07,adversarial,verify_units,human,,short,units only; minimal edit,1,Held out (units),Verify dimensions and units. Fix any mismatch without rewriting other parts.
+HUM-A-08,adversarial,checklist,human,,medium,change only failed checks,0,Strict checklist,Provide a checklist of steps; mark failed ones. Change only failed steps.
+HUM-A-09,adversarial,sanity_check,human,,short,minimal edit,0,Stress test,Stress-test each step for contradiction or unsupported inference. Fix only the failing step.
+HUM-A-10,adversarial,first_error_minimal_fix,human,,short,fix first specific error,0,Earliest-fix reiteration,Find the earliest concrete mistake; correct it and leave correct steps unchanged.
+HUM-A-11,adversarial,generic_critique,human,,short,revise if issues found,0,Direct critique,Re-examine the argument critically and produce a corrected final answer.
+HUM-A-12,adversarial,error_span,human,,short,point to span; minimal edit,0,Locate & correct,Indicate the exact step where the error arises and provide the corrected step and answer.
+HUM-M-01,meta,stability_first,human,,short,explicit 'no change' allowed,0,Anti-overcorrection,Only revise if you can justify a specific correction; otherwise respond 'no change'.
+HUM-M-02,meta,checklist,human,,medium,change only suspect points,0,Meta-checklist,"Enumerate checkpoints (assumptions, arithmetic, references). Change only points that fail verification."
+HUM-M-03,meta,sanity_check,human,,short,minimal edit,0,Meta sanity,Run a sanity check and explain briefly why the answer should change (or not).
+HUM-M-04,meta,alt_path,human,,medium,reconcile differences,0,Meta reconciliation,"Outline a shorter path. If it diverges from your answer, reconcile and finalize."
+HUM-M-05,meta,assumptions_explicit,human,,medium,validate assumptions; minimal edit,0,Assumptions meta,Expose assumptions and evidence for each. Adjust only the one that fails scrutiny.
+HUM-M-06,meta,error_span,human,,short,point to span; minimal edit,0,Meta pointer,Cite the exact step where the error begins. Provide the correction and final answer.
+HUM-M-07,meta,de_anchoring,human,,medium,challenge earliest commitment,0,Meta de-anchoring,"If your earliest assumption lacks support, replace it minimally and recompute."
+HUM-M-08,meta,verify_units,human,,short,units only; minimal edit,0,Meta units,Confirm all units/conversions. Adjust only if a mismatch exists.
+HUM-M-09,meta,generic_critique,human,,short,revise if issues found,1,Held out (meta generic),"Re-evaluate succinctly. If you find a concrete flaw, update the answer; otherwise keep it."
+HUM-M-10,meta,stability_first,human,,short,no-change if no flaw,0,Stability reiteration,Do not modify text that is already correct. Update only content tied to a verified error.
+HUM-M-11,meta,first_error_minimal_fix,human,,short,fix first specific error,0,Minimal-fix meta,"Identify the first concrete mistake; correct only that, then finalize."
+HUM-M-12,meta,sanity_check,human,,short,minimal edit,1,Held out (meta sanity),"Perform a minimal sanity check. If nothing fails, reply 'no change'."
+PAR-GC-01,neutral,generic_critique,llm_paraphrase,arXiv:2402.14809,short,revise if issues found,0,Paraphrase of generic critique,Revisit your solution and improve the final answer where appropriate.
+PAR-GC-02,supportive,generic_critique,llm_paraphrase,arXiv:2402.14809,short,revise if issues found,1,Held out (paraphrase generic),Take another look and polish the answer only where needed.
+PAR-FE-01,neutral,first_error_minimal_fix,llm_paraphrase,ACL:2024.findings.826,short,fix first error only,0,Paraphrase of first-error,"Locate the earliest mistake, correct that step precisely, and leave the rest unchanged."
+PAR-ST-01,meta,stability_first,llm_paraphrase,arXiv:2402.12563,short,explicit 'no change' allowed,0,Paraphrase of stability-first,Modify your answer only if you can identify a definite error; otherwise respond with 'no change'.
+PAR-CL-01,neutral,checklist,llm_paraphrase,arXiv:2406.01297,medium,change only failed checks,0,Paraphrase checklist,Write a brief checklist of steps; update only steps that do not pass the check.
+PAR-DA-01,adversarial,de_anchoring,llm_paraphrase,,medium,challenge earliest commitment,1,Held out (paraphrase de-anchoring),Question your earliest committed step; replace it if unsupported and recompute minimally.
