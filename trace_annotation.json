@@ -1,1 +1,50 @@
-{"failure_mode":"unchanged_correct","delta_accuracy":0}
+{
+  "scenario_1": {
+    "trace_snippet": {
+      "initial_correct": false,
+      "previous_answer": "London",
+      "current_answer": "Paris", 
+      "reprompt_id": "neutral_verification"
+    },
+    "annotation": {
+      "failure_mode": "corrected",
+      "delta_accuracy": 1
+    }
+  },
+  "scenario_2": {
+    "trace_snippet": {
+      "initial_correct": true,
+      "previous_answer": "Paris",
+      "current_answer": "Lyon",
+      "reprompt_id": "adversarial_challenge" 
+    },
+    "annotation": {
+      "failure_mode": "overcorrected",
+      "delta_accuracy": -1
+    }
+  },
+  "scenario_3": {
+    "trace_snippet": {
+      "initial_correct": false,
+      "previous_answer": "Madrid",
+      "current_answer": "Madrid",
+      "reprompt_id": "critique_revise_specific"
+    },
+    "annotation": {
+      "failure_mode": "anchored", 
+      "delta_accuracy": 0
+    }
+  },
+  "scenario_4": {
+    "trace_snippet": {
+      "initial_correct": true,
+      "previous_answer": "Paris",
+      "current_answer": "Paris",
+      "reprompt_id": "concise_confirmation"
+    },
+    "annotation": {
+      "failure_mode": "unchanged_correct",
+      "delta_accuracy": 0
+    }
+  }
+}
