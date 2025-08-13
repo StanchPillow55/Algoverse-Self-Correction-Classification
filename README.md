@@ -1,38 +1,8 @@
-# LLM Error Classification Pipeline
+# Confidence-Aware Reprompt Selection for Reliable LLM Self-Correction (Teacher-Bot / Learner-Bot Edition)
 
-A comprehensive pipeline for identifying and correcting errors in Large Language Model (LLM) outputs. This project implements a classification system that can semantically analyze model outputs and route errors to appropriate re-prompting strategies.
+This repo implements a *classification-free* teacher/learner loop. The **teacher-bot** semantically labels broad failure modes (Anchoring, Confirmation, Availability/Bandwagon, Hindsight, Overgeneralization), gates on confidence, and selects a **reprompt template**. The **learner-bot** attempts answers; the teacher iterates until STOP rules.
 
-## Inspiration
-
-This work is inspired by the paper "Understanding the Dark Side of LLMs Intrinsic Self-Correction" (Sharma et al., 2023), which provides foundational understanding of error typology in self-correcting LLMs.
-
-## Error Types Supported
-
-The pipeline can identify and classify the following error types:
-
-- **Answer Wavering**: Model changes answers without clear justification
-- **Prompt Bias**: Responses heavily influenced by prompt framing
-- **Overthinking**: Unnecessarily complex solutions to simple problems  
-- **Cognitive Overload**: Struggles with complex multi-step reasoning
-- **Perfectionism Bias**: Over-corrects or provides unnecessarily perfect solutions
-
-## Pipeline Architecture
-
-### 1. Data Collection
-- Curate/generate datasets with annotated examples of different error types
-- Initial synthetic generation using LLMs (GPT-4, Claude Sonnet, Llama 3) to bootstrap labeled datasets
-
-### 2. Semantic Embedding
-- Generate embeddings via LLMs, Sentence Transformers, or OpenAI embeddings
-- Optional integration of logits from Llama models
-
-### 3. Classification Model
-- Logistic Regression or Decision Trees initially (interpretable, baseline models)
-- Multi-class classification to handle different error types
-
-### 4. Post-Processing
-- Route model predictions to specific re-prompting strategies
-- Apply appropriate corrections based on error type and confidence
+> Note: Legacy classifier files remain during this pivot and are skipped in tests.
 
 ## Installation
 
@@ -57,25 +27,19 @@ cp .env.example .env
 # Edit .env with your API keys
 ```
 
-## Usage
-
-### Command Line Interface
-
-The pipeline provides a CLI for various operations:
-
+## Quickstart
 ```bash
-# Show pipeline information
+pip install -r requirements.txt
+export DEMO_MODE=1
 python -m src.main info
-
-# Generate synthetic training data
-python -m src.main generate-data --samples-per-error 20
-
-# Train the classification model
-python -m src.main train --data-file data/synthetic/synthetic_errors.csv
-
-# Predict error type for text
-python -m src.main predict --text "Your text here"
+python -m src.main run --dataset data/math20.csv --max-turns 2
+pytest -q
 ```
+
+See `configs/run.yaml`, `rts_templates.json`, and `configs/stop_rules.yaml` for controls.
+
+### Outputs
+- `outputs/traces.json` — per-item turns with bias labels, confidence, templates, and accuracy deltas.
 
 ### Programmatic Usage
 
