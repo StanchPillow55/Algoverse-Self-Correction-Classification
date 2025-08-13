@@ -6,6 +6,8 @@ from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
 from src.rts.policy import select_template
 
+mismatch_log = 'outputs/mismatches.log'
+
 def accuracy(answer: str, reference: str) -> int:
     # numeric exact or string exact
     try:
@@ -13,7 +15,13 @@ def accuracy(answer: str, reference: str) -> int:
             return int(abs(float(answer) - float(reference)) < 1e-9)
         return int(int(float(answer)) == int(float(reference)))
     except Exception:
-        return int((answer or "").strip() == (reference or "").strip())
+        ans = (answer or "").strip()
+    ref = (reference or "").strip()
+    ok = int(ans == ref)
+    if not ok:
+        with open(mismatch_log, 'a', encoding='utf-8') as f:
+            f.write(f'MISMATCH | Parsed Answer: "{ans}" | Expected Reference: "{ref}"\n')
+    return ok
 
 def run_dataset(
     dataset_csv: str,
