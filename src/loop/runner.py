@@ -22,7 +22,9 @@ def run_dataset(
     provider: str = "demo",
     k: int = 1
 ) -> Dict[str, Any]:
-    os.makedirs("outputs", exist_ok=True)
+    # Ensure output directory exists
+    output_dir = Path(traces_out).parent
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     learner = LearnerBot(provider=provider)
     traces: List[Dict[str, Any]] = []
