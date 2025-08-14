@@ -22,6 +22,10 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 import pandas as pd
 
+# Fix import path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.utils.dataset_loader import read_csv_flexible
+
 try:
     import requests
 except ImportError:
@@ -34,24 +38,6 @@ except ImportError:
     _OPENAI_OK = False
 
 # ---- Utilities ----
-def _to_raw_github(url: str) -> str:
-    m = re.match(r"https://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.*)", url)
-    if m:
-        user, repo, branch, path = m.groups()
-        return f"https://raw.githubusercontent.com/{user}/{repo}/{branch}/{path}"
-    return url
-
-def _read_csv_flexible(path_or_url: str) -> pd.DataFrame:
-    p = _to_raw_github(path_or_url)
-    try:
-        return pd.read_csv(p, dtype=str, keep_default_na=False)
-    except Exception as e:
-        if requests and p.startswith("http"):
-            r = requests.get(p, timeout=30)
-            r.raise_for_status()
-            return pd.read_csv(io.StringIO(r.text), dtype=str, keep_default_na=False)
-        raise e
-
 def _norm_text(s: Optional[str]) -> str:
     return "" if s is None else str(s).strip()
 
@@ -108,8 +94,8 @@ def call_openai(messages: List[Dict[str,str]], model: str) -> Dict[str, Any]:
         return {"answer": f"API_ERROR: {e}", "why": "API call failed."}
 
 def run_pipeline(err_src: str, qna_src: str, model: str):
-    df_err, _, err_missing = _auto_map_columns(_read_csv_flexible(err_src), ERR_MAP)
-    df_qna, _, qna_missing = _auto_map_columns(_read_csv_flexible(qna_src), QNA_MAP)
+    df_err, _, err_missing = _auto_map_columns(read_csv_flexible(err_src), ERR_MAP)
+    df_qna, _, qna_missing = _auto_map_columns(read_csv_flexible(qna_src), QNA_MAP)
     checklist = build_checklist(df_err)
     
     outputs, counts = [], {"exact_init":0, "norm_init":0, "exact_final":0, "norm_final":0}
