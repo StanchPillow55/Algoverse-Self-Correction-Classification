@@ -52,8 +52,8 @@ def _num_or_none(s: str) -> Optional[float]:
         return float(m.group(0)) if m else None
 
 # ---- Schema Normalization ----
-ERR_MAP = {"id": ["id"], "error_type": ["error_type"], "failure_pattern": ["failure_pattern"], "brief_reasoning": ["brief_reasoning"], "correction_rule": ["correction_rule"], "topic": ["topic"]}
-QNA_MAP = {"qid": ["qid"], "question": ["question"], "ground_truth": ["ground_truth"], "topic": ["topic"]}
+ERR_MAP = {"id": ["id"], "error_type": ["error"], "failure_pattern": ["prompt (question)", "feedback (llm answer)"], "brief_reasoning": ["error"], "correction_rule": ["error"], "topic": ["topic"]}
+QNA_MAP = {"qid": ["qid"], "question": ["question"], "ground_truth": ["answer", "ground_truth"], "topic": ["topic"]}
 
 def _auto_map_columns(df: pd.DataFrame, mapping: Dict[str, List[str]]) -> Tuple[pd.DataFrame, Dict[str,str], List[str]]:
     lowmap = {c.lower().strip(): c for c in df.columns}
