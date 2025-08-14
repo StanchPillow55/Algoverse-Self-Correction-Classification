@@ -1,3 +1,4 @@
+from src.utils.dataset_loader import read_csv_flexible
 import csv, json, os
 from pathlib import Path
 from typing import Dict, Any, List
@@ -23,6 +24,14 @@ def accuracy(answer: str, reference: str) -> int:
             f.write(f'MISMATCH | Parsed Answer: "{ans}" | Expected Reference: "{ref}"\n')
     return ok
 
+
+QNA_MAP = {"qid": ["qid","id"], "question": ["question","prompt"], "reference": ["ground_truth","answer"]}
+def _auto_map_row(row: dict) -> tuple[str, str, str]:
+    low = {str(k).lower().strip(): v for k, v in row.items()}
+    def pick(keys): return next((str(low[k.lower()]) for k in keys if k.lower() in low and str(low.get(k.lower(),"")).strip()), "")
+    return pick(QNA_MAP["qid"]), pick(QNA_MAP["question"]), pick(QNA_MAP["reference"])
+
+
 def run_dataset(
     dataset_csv: str,
     traces_out: str = "outputs/traces.json",
@@ -41,9 +50,8 @@ def run_dataset(
         rows = list(csv.DictReader(f))
 
     for idx, row in enumerate(rows):
-        qid = f"q{idx+1}"
-        q = row["question"]
-        ref = str(row["reference"])
+        qid = qid_m or f"q{idx+1}"
+        qid_m, q, ref = _auto_map_row(row)
         history: List[Dict[str, Any]] = []
         # first attempt
         a0, self_conf = learner.answer(q, history, template=None)

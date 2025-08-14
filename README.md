@@ -110,3 +110,18 @@ This is currently a research prototype implementing the core pipeline structure.
 ## License
 
 MIT License - see LICENSE file for details.
+
+## Datasets via GitHub URLs
+
+The pipeline can now run directly from the ground-truth CSVs hosted on GitHub.
+
+### Run teacher–learner pipeline on the QnA URL:
+```bash
+# This requires OPENAI_API_KEY to be set in .env
+python scripts/run_experiments.py --config configs/experiments/exp_qna_urls.yaml
+```
+
+### Run GPT-4 self-correction evaluator:
+```bash
+scripts/run_self_correction_eval.sh
+```
