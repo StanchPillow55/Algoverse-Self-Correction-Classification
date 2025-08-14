@@ -11,7 +11,7 @@ class LearnerBot:
         self.provider = provider
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
-    def answer(self, q: str, hist: List[Dict[str, Any]], tmpl: str | None = None) -> Tuple[str, float]:
+    def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None) -> Tuple[str, float]:
         if os.getenv("DEMO_MODE", "0") == "1" or self.provider == "demo":
             try:
                 # Basic arithmetic eval for demo
@@ -25,7 +25,7 @@ class LearnerBot:
             from openai import OpenAI
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             sys_prompt = "Answer concisely. If numeric, return the number only. No explanations."
-            user_prompt = f"{q}\n[Instruction]: {tmpl}" if tmpl else q
+            user_prompt = f"{q}\n[Instruction]: {template}" if template else q
             try:
                 resp = client.chat.completions.create(model=self.model,
                     messages=[{"role":"system","content":sys_prompt}, {"role":"user","content":user_prompt}],
@@ -33,7 +33,7 @@ class LearnerBot:
                 text = (resp.choices[0].message.content or "").strip()
                 ans = _first_number(text) or text[:64]
                 conf = 0.85 if _first_number(text) == text else 0.6
-                self._safe_debug_log(q, tmpl, text, ans)
+                self._safe_debug_log(q, template, text, ans)
                 return ans, conf
             except Exception:
                 return "0", 0.1 # Fallback on API error
