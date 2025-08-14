@@ -46,12 +46,12 @@ def run_dataset(
     learner = LearnerBot(provider=provider)
     traces: List[Dict[str, Any]] = []
 
-    with open(dataset_csv, "r", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+    df = read_csv_flexible(dataset_csv)
+    rows = df.to_dict(orient="records")
 
     for idx, row in enumerate(rows):
-        qid = qid_m or f"q{idx+1}"
         qid_m, q, ref = _auto_map_row(row)
+        qid = qid_m or f"q{idx+1}"
         history: List[Dict[str, Any]] = []
         # first attempt
         a0, self_conf = learner.answer(q, history, template=None)
