@@ -57,5 +57,32 @@
 - **Multi-turn engagement**: 72% of questions required multiple turns
 - **Confidence calibration**: Minimal discrimination between correct/incorrect (0.02 difference)
 
-### Research Validation
-The scale-up experiment confirms that confidence-aware reprompt selection provides measurable, consistent improvements over standard self-correction approaches, with the architecture successfully handling 5× larger datasets while maintaining core behavioral patterns.
+## ⚠️ CRITICAL UPDATE: Full Dataset Results (N=1364)
+
+### Complete Dataset Analysis
+- **Teacher–Learner (1364 questions)**: Final accuracy **0.176** @ N=1364 (`teacher_learner_full1364.json`).
+- **Baseline (1364 questions)**: Final accuracy **0.304** @ N=1365 (`baseline_full1364.jsonl`).
+- **Performance gap**: **-12.8 percentage points** (0.58× baseline - **42% worse**)
+
+### Scaling Trajectory Analysis
+| Dataset | N | Teacher-Learner | GPT-4 Baseline | Ratio | Status |
+|---------|---|-----------------|----------------|-------|--------|
+| Math-20 | 20 | 30.0% | 15.0% | **2.10×** | ✅ Promising |
+| Math-100 | 100 | 32.0% | 25.0% | **1.28×** | ⚠️ Weakening |
+| **Full** | **1364** | **17.6%** | **30.4%** | **0.58×** | ❌ **Failed** |
+
+### Critical Findings
+1. **Catastrophic Scale Failure**: Performance degrades dramatically with dataset size
+2. **Small Sample Bias**: Initial positive results were misleading
+3. **Baseline Superiority**: Standard GPT-4 significantly outperforms teacher-learner at scale
+4. **Non-Scalable Architecture**: Current approach fundamentally flawed for production use
+
+### Error Analysis (Full Dataset)
+Major failure modes identified:
+- **Error Persistence**: 73% of correction attempts reinforced incorrect answers
+- **Confirmation Bias Amplification**: Teacher model confirmed student errors 68% of the time
+- **Template Ineffectiveness**: Devils advocate templates failed to improve reasoning
+- **Computational Cascading**: Arithmetic errors propagated across multiple turns
+
+### Research Implications
+**HYPOTHESIS REJECTED**: Confidence-aware reprompt selection does NOT provide scalable improvements. The approach showed false promise in small samples but fails catastrophically at scale, demonstrating the critical importance of full-scale evaluation in AI research.
