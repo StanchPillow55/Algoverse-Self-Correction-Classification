@@ -44,7 +44,9 @@ def main():
     if args.cmd == "info":
         print("Teacher/Learner pipeline. Demo mode:", os.getenv("DEMO_MODE","1"))
     elif args.cmd == "run":
-        os.environ.setdefault("DEMO_MODE", "1")
+        # Only set demo mode if no explicit setting and provider is not openai
+        if "DEMO_MODE" not in os.environ and args.provider != "openai":
+            os.environ.setdefault("DEMO_MODE", "1")
         res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider)
         print(json.dumps(res["summary"], indent=2))
     else:
