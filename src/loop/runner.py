@@ -2,6 +2,7 @@ from src.utils.dataset_loader import read_csv_flexible
 import csv, json, os
 from pathlib import Path
 from typing import Dict, Any, List
+from src.utils.trace_logger import TraceLogger
 
 from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
@@ -48,10 +49,21 @@ def run_dataset(
 
     df = read_csv_flexible(dataset_csv)
     rows = df.to_dict(orient="records")
+    
+    # Initialize trace logger
+    run_id = os.environ.get('RUN_ID', 'dev_run')
+    split = os.environ.get('DATASET_SPLIT', 'unknown')
+    git_sha = os.environ.get('GIT_COMMIT', '')
+    logger = TraceLogger(run_id=run_id, dataset_split=split, git_commit=git_sha)
+    logger.write_run_config({'dataset': dataset_csv, 'max_turns': max_turns, 'provider': provider, 'split': split, 'model': os.getenv('OPENAI_MODEL')})
 
     for idx, row in enumerate(rows):
         qid_m, q, ref = _auto_map_row(row)
         qid = qid_m or f"q{idx+1}"
+        
+        # Start trace for this example
+        ex = logger.start_example(problem_id=qid, text=q)
+        
         history: List[Dict[str, Any]] = []
         # first attempt
         a0, self_conf = learner.answer(q, history, template=None)
@@ -63,6 +75,13 @@ def run_dataset(
             "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
             "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0
         }]
+        
+        # Log first turn
+        logger.on_turn(ex, turn_index=0, prompt=q, response_text=a0, 
+                      response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
+                      evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
+                      model_reported_confidence=self_conf, evaluator_feedback=f"bias={bias}",
+                      model_name=getattr(learner, 'model', provider))
 
         acc_prev = acc0
         t = 1
@@ -79,11 +98,24 @@ def run_dataset(
                 "answer": a1, "self_conf": round(self_conf,2), "teacher_bias": bias,
                 "teacher_conf": round(tconf,2), "template": template, "accuracy": acc1
             })
+            
+            # Log this turn
+            logger.on_turn(ex, turn_index=t, prompt=f"Template: {template}", response_text=a1, 
+                          response_is_final=(t == max_turns-1 or acc1 == 1), is_correct=bool(acc1),
+                          evaluator_signal=('stop' if acc1 == 1 else 'continue'), 
+                          model_reported_confidence=self_conf, evaluator_feedback=f"bias={bias}",
+                          model_name=getattr(learner, 'model', provider))
+            
             t += 1
             # simple stop: two non-improvements handled implicitly by max_turns and correctness
             if acc1 == 1: break
             acc_prev = acc1
 
+        # Finalize the trace for this example
+        final_answer = turns[-1]["answer"]
+        final_correct = bool(turns[-1]["accuracy"])
+        logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
+        
         traces.append({
             "qid": qid, "question": q, "reference": ref, "turns": turns,
             "final_accuracy": turns[-1]["accuracy"]
@@ -96,4 +128,7 @@ def run_dataset(
     out = {"summary": summary, "traces": traces}
     with open(traces_out, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
+    
+    # Close the trace logger
+    logger.close()
     return out
