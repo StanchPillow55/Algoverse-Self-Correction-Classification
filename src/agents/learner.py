@@ -25,20 +25,39 @@ class LearnerBot:
             from openai import OpenAI
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             sys_prompt = "Answer concisely. If numeric, return the number only. No explanations."
+            
+            # FIX: Properly handle template parameter (was: tmpl vs template mismatch)
             user_prompt = f"{q}\n[Instruction]: {template}" if template else q
+            
             try:
                 resp = client.chat.completions.create(model=self.model,
                     messages=[{"role":"system","content":sys_prompt}, {"role":"user","content":user_prompt}],
                     temperature=0.2, max_tokens=40)
-                text = (resp.choices[0].message.content or "").strip()
+                
+                # FIX: Properly extract from OpenAI SDK v1.x - choices[0].message.content
+                raw_text = resp.choices[0].message.content
+                if raw_text is None:
+                    self._safe_debug_log(q, template, "<NULL_RESPONSE>", "ERROR")
+                    return "ERROR_NULL_RESPONSE", 0.1
+                    
+                text = raw_text.strip()
+                if not text:
+                    self._safe_debug_log(q, template, "<EMPTY_RESPONSE>", "ERROR")
+                    return "ERROR_EMPTY_RESPONSE", 0.1
+                
+                # Extract numeric answer or return cleaned text
                 ans = _first_number(text) or text[:64]
                 conf = 0.85 if _first_number(text) == text else 0.6
                 self._safe_debug_log(q, template, text, ans)
                 return ans, conf
-            except Exception:
-                return "0", 0.1 # Fallback on API error
+                
+            except Exception as e:
+                # FIX: Don't silently fallback to "0" - log the actual error
+                error_msg = f"API_ERROR: {str(e)}"
+                self._safe_debug_log(q, template, error_msg, "ERROR")
+                return f"ERROR_{type(e).__name__}", 0.1
 
-        return "0", 0.3 # Default fallback
+        return "UNKNOWN_PROVIDER", 0.1  # Don't default to "0"
 
     def _safe_debug_log(self, q, tmpl, raw, parsed):
         try:
