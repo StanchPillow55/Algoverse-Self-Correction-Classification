@@ -23,6 +23,7 @@ class LearnerBot:
 
         if self.provider == "openai":
             from openai import OpenAI
+            from ..utils.rate_limit import safe_openai_chat_completion
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             sys_prompt = "Answer concisely. If numeric, return the number only. No explanations."
             
@@ -30,9 +31,12 @@ class LearnerBot:
             user_prompt = f"{q}\n[Instruction]: {template}" if template else q
             
             try:
-                resp = client.chat.completions.create(model=self.model,
+                resp = safe_openai_chat_completion(
+                    client=client,
+                    model=self.model,
                     messages=[{"role":"system","content":sys_prompt}, {"role":"user","content":user_prompt}],
-                    temperature=0.2, max_tokens=40)
+                    temperature=0.2, max_tokens=40
+                )
                 
                 # FIX: Properly extract from OpenAI SDK v1.x - choices[0].message.content
                 raw_text = resp.choices[0].message.content

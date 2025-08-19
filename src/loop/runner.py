@@ -7,6 +7,7 @@ from src.utils.trace_logger import TraceLogger
 from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
 from src.rts.policy import select_template
+from src.evaluator_feedback import coaching_from_bias
 
 mismatch_log = 'outputs/mismatches.log'
 
@@ -77,10 +78,13 @@ def run_dataset(
         }]
         
         # Log first turn
+        coaching_feedback = coaching_from_bias(bias)
         logger.on_turn(ex, turn_index=0, prompt=q, response_text=a0, 
                       response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
                       evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
-                      model_reported_confidence=self_conf, evaluator_feedback=f"bias={bias}",
+                      model_reported_confidence=self_conf, 
+                      evaluator_bias_label=bias,
+                      evaluator_feedback=coaching_feedback,
                       model_name=getattr(learner, 'model', provider))
 
         acc_prev = acc0
@@ -100,10 +104,13 @@ def run_dataset(
             })
             
             # Log this turn
+            coaching_feedback = coaching_from_bias(bias)
             logger.on_turn(ex, turn_index=t, prompt=f"Template: {template}", response_text=a1, 
                           response_is_final=(t == max_turns-1 or acc1 == 1), is_correct=bool(acc1),
                           evaluator_signal=('stop' if acc1 == 1 else 'continue'), 
-                          model_reported_confidence=self_conf, evaluator_feedback=f"bias={bias}",
+                          model_reported_confidence=self_conf, 
+                          evaluator_bias_label=bias,
+                          evaluator_feedback=coaching_feedback,
                           model_name=getattr(learner, 'model', provider))
             
             t += 1
