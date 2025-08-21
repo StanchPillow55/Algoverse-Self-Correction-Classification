@@ -29,16 +29,21 @@ def test_src_module_structure():
     project_root = Path(__file__).parent.parent.parent
     src_dir = project_root / "src"
     
-    # Check that submodules exist
+    # Check that active submodules exist
     assert (src_dir / "utils").exists()
     assert (src_dir / "data_collection").exists() 
-    assert (src_dir / "embeddings").exists()
-    assert (src_dir / "classification").exists()
-    assert (src_dir / "post_processing").exists()
+    assert (src_dir / "agents").exists()  # Teacher/learner agents
+    assert (src_dir / "loop").exists()    # Main runner
     
     # Check that __init__.py files exist
     assert (src_dir / "__init__.py").exists()
     assert (src_dir / "utils" / "__init__.py").exists()
+    
+    # Check that legacy modules were moved
+    legacy_dir = project_root / "legacy"
+    assert (legacy_dir / "embeddings").exists()
+    assert (legacy_dir / "classification").exists()
+    assert (legacy_dir / "post_processing").exists()
 
 
 def test_requirements_file():
