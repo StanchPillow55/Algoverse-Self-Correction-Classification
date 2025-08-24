@@ -1,0 +1,17 @@
+runtime:
+  demo_mode: false
+  max_turns: 1  # Single turn only
+  parallel_learners_k: 1
+models:
+  provider: "openai"
+  temperature:
+    learner_math: 0.3
+    learner_facts: 0.6
+    teacher: 0.0
+paths:
+  dataset: "data/gsm8k_sample.csv"  # We'll create this
+  traces_out: "outputs/baseline_traces.json"
+features:
+  enable_confidence: false
+  enable_error_awareness: false
+  enable_multi_turn: false
