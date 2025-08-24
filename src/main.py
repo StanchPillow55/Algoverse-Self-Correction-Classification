@@ -14,16 +14,17 @@ def load_config_defaults():
                 'dataset': config.get('paths', {}).get('dataset', 'data/math20.csv'),
                 'traces_out': config.get('paths', {}).get('traces_out', 'outputs/traces.json'),
                 'max_turns': config.get('runtime', {}).get('max_turns', 3),
-                'provider': config.get('models', {}).get('provider', 'demo')
+                'provider': config.get('models', {}).get('provider', 'demo'),
+                'config': config  # Pass the full config
             }
         except Exception:
-            # If config reading fails, use hardcoded defaults
             pass
     return {
         'dataset': 'data/math20.csv',
         'traces_out': 'outputs/traces.json', 
         'max_turns': 3,
-        'provider': 'demo'
+        'provider': 'demo',
+        'config': None
     }
 
 def main():
@@ -39,15 +40,29 @@ def main():
     p_run.add_argument("--out", default=defaults['traces_out'])
     p_run.add_argument("--max-turns", type=int, default=defaults['max_turns'])
     p_run.add_argument("--provider", default=os.getenv("PROVIDER", defaults['provider']))
+    p_run.add_argument("--config", help="Path to config file")
 
     args = p.parse_args()
     if args.cmd == "info":
         print("Teacher/Learner pipeline. Demo mode:", os.getenv("DEMO_MODE","1"))
     elif args.cmd == "run":
+        # Load config file if specified
+        config = None
+        if args.config:
+            try:
+                with open(args.config, 'r') as f:
+                    config = yaml.safe_load(f)
+            except Exception as e:
+                print(f"Error loading config: {e}")
+                return
+        elif defaults['config']:
+            config = defaults['config']
+            
         # Only set demo mode if no explicit setting and provider is not openai
         if "DEMO_MODE" not in os.environ and args.provider != "openai":
             os.environ.setdefault("DEMO_MODE", "1")
-        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider)
+            
+        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, config=config)
         print(json.dumps(res["summary"], indent=2))
     else:
         p.print_help()
