@@ -39,7 +39,8 @@ def run_dataset(
     traces_out: str = "outputs/traces.json",
     max_turns: int = 3,
     provider: str = "demo",
-    k: int = 1
+    k: int = 1,
+    config: Dict[str, Any] = None  # Add config parameter
 ) -> Dict[str, Any]:
     # Ensure output directory exists
     output_dir = Path(traces_out).parent
@@ -58,6 +59,15 @@ def run_dataset(
     logger = TraceLogger(run_id=run_id, dataset_split=split, git_commit=git_sha)
     logger.write_run_config({'dataset': dataset_csv, 'max_turns': max_turns, 'provider': provider, 'split': split, 'model': os.getenv('OPENAI_MODEL')})
 
+    # Apply feature flags from config
+    enable_confidence = config.get('features', {}).get('enable_confidence', True) if config else True
+    enable_error_awareness = config.get('features', {}).get('enable_error_awareness', True) if config else True
+    enable_multi_turn = config.get('features', {}).get('enable_multi_turn', True) if config else True
+    
+    # Override max_turns if multi-turn is disabled
+    if not enable_multi_turn:
+        max_turns = 1
+
     for idx, row in enumerate(rows):
         qid_m, q, ref = _auto_map_row(row)
         qid = qid_m or f"q{idx+1}"
@@ -69,8 +79,17 @@ def run_dataset(
         # first attempt
         a0, self_conf = learner.answer(q, history, template=None)
         acc0 = accuracy(a0, ref)
-        bias, tconf = detect_bias(q, a0, ref, history)
-        conf = combine_confidence(self_conf, tconf, None)
+
+        # Only run bias detection and confidence if enabled
+        if enable_error_awareness:
+            bias, tconf = detect_bias(q, a0, ref, history)
+        else:
+            bias, tconf = "None", 0.5
+            
+        if enable_confidence:
+            conf = combine_confidence(self_conf, tconf, None)
+        else:
+            conf = 0.5
 
         turns = [{
             "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
@@ -87,36 +106,55 @@ def run_dataset(
                       evaluator_feedback=coaching_feedback,
                       model_name=getattr(learner, 'model', provider))
 
-        acc_prev = acc0
-        t = 1
-        while t < max_turns and acc_prev == 0:
-            reprompt, template = select_template(bias, conf, bool(acc_prev), len(history))
-            if not reprompt:
-                break
-            # send template to learner
-            a1, self_conf = learner.answer(q, history + turns, template=template)
-            acc1 = accuracy(a1, ref)
-            bias, tconf = detect_bias(q, a1, ref, history + turns)
-            conf = combine_confidence(self_conf, tconf, None)
-            turns.append({
-                "answer": a1, "self_conf": round(self_conf,2), "teacher_bias": bias,
-                "teacher_conf": round(tconf,2), "template": template, "accuracy": acc1
-            })
-            
-            # Log this turn
-            coaching_feedback = coaching_from_bias(bias)
-            logger.on_turn(ex, turn_index=t, prompt=f"Template: {template}", response_text=a1, 
-                          response_is_final=(t == max_turns-1 or acc1 == 1), is_correct=bool(acc1),
-                          evaluator_signal=('stop' if acc1 == 1 else 'continue'), 
-                          model_reported_confidence=self_conf, 
-                          evaluator_bias_label=bias,
-                          evaluator_feedback=coaching_feedback,
-                          model_name=getattr(learner, 'model', provider))
-            
-            t += 1
-            # simple stop: two non-improvements handled implicitly by max_turns and correctness
-            if acc1 == 1: break
-            acc_prev = acc1
+        # Multi-turn loop only if enabled
+        if enable_multi_turn:
+            acc_prev = acc0
+            t = 1
+            while t < max_turns and acc_prev == 0:
+                # Check if we should reprompt based on error awareness
+                if enable_error_awareness:
+                    reprompt, template = select_template(bias, conf, bool(acc_prev), len(history))
+                else:
+                    # If error awareness is disabled, always reprompt with a generic template
+                    reprompt, template = True, "try_again_concise"
+                
+                if not reprompt:
+                    break
+                    
+                # send template to learner
+                a1, self_conf = learner.answer(q, history + turns, template=template)
+                acc1 = accuracy(a1, ref)
+                
+                # Only run bias detection and confidence if enabled
+                if enable_error_awareness:
+                    bias, tconf = detect_bias(q, a1, ref, history + turns)
+                else:
+                    bias, tconf = "None", 0.5
+                    
+                if enable_confidence:
+                    conf = combine_confidence(self_conf, tconf, None)
+                else:
+                    conf = 0.5
+                    
+                turns.append({
+                    "answer": a1, "self_conf": round(self_conf,2), "teacher_bias": bias,
+                    "teacher_conf": round(tconf,2), "template": template, "accuracy": acc1
+                })
+                
+                # Log this turn
+                coaching_feedback = coaching_from_bias(bias)
+                logger.on_turn(ex, turn_index=t, prompt=f"Template: {template}", response_text=a1, 
+                              response_is_final=(t == max_turns-1 or acc1 == 1), is_correct=bool(acc1),
+                              evaluator_signal=('stop' if acc1 == 1 else 'continue'), 
+                              model_reported_confidence=self_conf, 
+                              evaluator_bias_label=bias,
+                              evaluator_feedback=coaching_feedback,
+                              model_name=getattr(learner, 'model', provider))
+                
+                t += 1
+                # simple stop: two non-improvements handled implicitly by max_turns and correctness
+                if acc1 == 1: break
+                acc_prev = acc1
 
         # Finalize the trace for this example
         final_answer = turns[-1]["answer"]
