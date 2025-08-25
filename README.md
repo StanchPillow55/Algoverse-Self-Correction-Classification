@@ -68,7 +68,7 @@ python -m src.main run --dataset runs/tmp/inputs/full.csv      --max-turns 3 --o
 * Analysis: `runs/<RUN_ID>/analysis.md`, `runs/<RUN_ID>/summary.csv` (if generated)
 
 
-### New Run Settings
+# New Run Settings
   ## Environment setup
   ```
   export OPENAI_API_KEY="your-key-here"
