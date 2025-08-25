@@ -67,6 +67,69 @@ python -m src.main run --dataset runs/tmp/inputs/full.csv      --max-turns 3 --o
 * Summaries: `runs/<RUN_ID>/*_summary.json`
 * Analysis: `runs/<RUN_ID>/analysis.md`, `runs/<RUN_ID>/summary.csv` (if generated)
 
+
+### New Run Settings
+  ## Environment setup
+  ```
+  export OPENAI_API_KEY="your-key-here"
+  export DEMO_MODE=0
+  export PROVIDER=openai
+  export OPENAI_MODEL=gpt-4o-mini
+  ```
+
+  ## Create experiement directories (This is already completed, but you may tweak this if you want new or different output directories)
+  ```
+  mkdir -p runs/experiments/{baseline,full_system,confidence_only,error_awareness_only,multiturn_only}
+  ```
+
+  ## Run with original dataset (or any other dataset)
+  ```
+  # Run baseline (single turn, no features)
+  export RUN_ID=baseline
+  python -m src.main run \
+    --dataset runs/tmp/inputs/subset_100.csv \
+    --max-turns 1 \
+    --out runs/experiments/baseline/baseline_summary.json \
+    --provider openai \
+    --config configs/experiments/baseline.yaml
+
+  # Run full system (all features enabled)
+  export RUN_ID=full_system
+  python -m src.main run \
+    --dataset runs/tmp/inputs/subset_100.csv \
+    --max-turns 3 \
+    --out runs/experiments/full_system/full_system_summary.json \
+    --provider openai \
+    --config configs/experiments/full_system.yaml
+
+  # Run confidence only
+  export RUN_ID=confidence_only
+  python -m src.main run \
+    --dataset runs/tmp/inputs/subset_100.csv \
+    --max-turns 1 \
+    --out runs/experiments/confidence_only/confidence_only_summary.json \
+    --provider openai \
+    --config configs/experiments/confidence_only.yaml
+
+  # Run error awareness only
+  export RUN_ID=error_awareness_only
+  python -m src.main run \
+    --dataset runs/tmp/inputs/subset_100.csv \
+    --max-turns 1 \
+    --out runs/experiments/error_awareness_only/error_awareness_only_summary.json \
+    --provider openai \
+    --config configs/experiments/error_awareness_only.yaml
+
+  # Run multi-turn only
+  export RUN_ID=multiturn_only
+  python -m src.main run \
+    --dataset runs/tmp/inputs/subset_100.csv \
+    --max-turns 3 \
+    --out runs/experiments/multiturn_only/multiturn_only_summary.json \
+    --provider openai \
+    --config configs/experiments/multiturn_only.yaml
+  ```
+
 ### Notes
 
 * `.env` is ignored by git; never commit API keys.
