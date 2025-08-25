@@ -130,6 +130,18 @@ python -m src.main run --dataset runs/tmp/inputs/full.csv      --max-turns 3 --o
     --config configs/experiments/multiturn_only.yaml
   ```
 
+  ## (EXAMPLE) Running after incorporating new datasets
+  ```
+  export RUN_ID=livecodebench_full_system
+  python -m src.main run \
+    --dataset data/livecodebench_sample.csv \
+    --max-turns 3 \
+    --out runs/experiments/livecodebench_full_system/summary.json \
+    --provider openai \
+    --config configs/experiments/full_system.yaml
+  # etc.. follow the formatting for RUN_ID and run configs
+  ```
+
 ### Notes
 
 * `.env` is ignored by git; never commit API keys.
