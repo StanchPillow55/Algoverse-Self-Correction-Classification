@@ -3,6 +3,7 @@ import csv, json, os
 from pathlib import Path
 from typing import Dict, Any, List
 from src.utils.trace_logger import TraceLogger
+from src.utils.accuracy_metrics import get_accuracy  # Add this import
 
 from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
