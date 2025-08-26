@@ -41,6 +41,7 @@ def main():
     p_run.add_argument("--max-turns", type=int, default=defaults['max_turns'])
     p_run.add_argument("--provider", default=os.getenv("PROVIDER", defaults['provider']))
     p_run.add_argument("--config", help="Path to config file")
+    p_run.add_argument("--subset", help="Dataset subset (for HumanEval: subset_20, subset_100, full)")
 
     args = p.parse_args()
     if args.cmd == "info":
@@ -62,7 +63,7 @@ def main():
         if "DEMO_MODE" not in os.environ and args.provider != "openai":
             os.environ.setdefault("DEMO_MODE", "1")
             
-        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, config=config)
+        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, config=config, subset=args.subset)
         print(json.dumps(res["summary"], indent=2))
     else:
         p.print_help()
