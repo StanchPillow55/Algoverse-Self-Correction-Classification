@@ -194,6 +194,9 @@ def run_dataset(
                 if not reprompt:
                     break
 
+                # Preserve the bias used for template selection to align feedback with the chosen template
+                bias_for_template = bias
+
                 # send template to learner
                 a1, self_conf = learner.answer(prompt, history + turns, template=template)
 
@@ -206,34 +209,53 @@ def run_dataset(
                     acc1 = accuracy(a1, ref)
                     execution_details = {}
 
-                # Only run bias detection and confidence if enabled
+                # Only run bias detection and confidence if enabled (after the new response)
                 if enable_error_awareness:
-                    bias, tconf = detect_bias(q, a1, ref, history + turns)
+                    bias_after, tconf = detect_bias(q, a1, ref, history + turns)
                 else:
-                    bias, tconf = "None", 0.5
+                    bias_after, tconf = "None", 0.5
 
                 if enable_confidence:
                     conf = combine_confidence(self_conf, tconf, None)
                 else:
                     conf = 0.5
 
+                # Append turn details with both before/after bias and selected template
                 turns.append({
-                    "answer": a1, "self_conf": round(self_conf,2), "teacher_bias": bias,
-                    "teacher_conf": round(tconf,2), "template": template, "accuracy": acc1,
+                    "answer": a1,
+                    "self_conf": round(self_conf,2),
+                    "teacher_bias": bias_after,
+                    "teacher_conf": round(tconf,2),
+                    "template": template,
+                    "template_selected": template,
+                    "evaluator_bias_label_before": bias_for_template,
+                    "evaluator_bias_label_after": bias_after,
+                    "accuracy": acc1,
                     "execution_details": execution_details if is_humaneval else {}
                 })
 
-                # Log this turn
-                coaching_feedback = coaching_from_bias(bias)
-                logger.on_turn(ex, turn_index=t, prompt=f"Template: {template}", response_text=a1, 
-                              response_is_final=(t == max_turns-1 or acc1 == 1), is_correct=bool(acc1),
-                              evaluator_signal=('stop' if acc1 == 1 else 'continue'), 
-                              model_reported_confidence=self_conf, 
-                              evaluator_bias_label=bias,
-                              evaluator_feedback=coaching_feedback,
-                              model_name=getattr(learner, 'model', provider),
-                              task_type='humaneval' if is_humaneval else 'standard',
-                              execution_details=execution_details if is_humaneval else None)
+                # Log this turn with feedback aligned to the bias used for template selection
+                coaching_feedback = coaching_from_bias(bias_for_template)
+                logger.on_turn(
+                    ex,
+                    turn_index=t,
+                    prompt=f"Template: {template}",
+                    response_text=a1,
+                    response_is_final=(t == max_turns-1 or acc1 == 1),
+                    is_correct=bool(acc1),
+                    evaluator_signal=('stop' if acc1 == 1 else 'continue'),
+                    model_reported_confidence=self_conf,
+                    evaluator_bias_label=bias_for_template,
+                    evaluator_feedback=coaching_feedback,
+                    model_name=getattr(learner, 'model', provider),
+                    task_type='humaneval' if is_humaneval else 'standard',
+                    template_selected=template,
+                    evaluator_bias_label_after=bias_after,
+                    execution_details=execution_details if is_humaneval else None
+                )
+
+                # Prepare for next iteration: use the latest bias as current
+                bias = bias_after
 
                 t += 1
                 # simple stop: two non-improvements handled implicitly by max_turns and correctness
