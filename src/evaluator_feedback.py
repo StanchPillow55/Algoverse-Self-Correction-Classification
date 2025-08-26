@@ -56,6 +56,31 @@ BIAS_COACHING: Dict[str, str] = {
     "None": (
         "Your reasoning is sound and your answer is correct. "
         "Good work applying logical thinking to solve the problem."
+    ),
+    # Code-specific bias labels for HumanEval tasks
+    "SyntaxError": (
+        "Your code has syntax errors that prevent execution. "
+        "Check indentation, parentheses, and Python syntax rules."
+    ),
+    "LogicError": (
+        "Your code runs but produces incorrect results on test cases. "
+        "Review the problem requirements and trace through your logic step by step."
+    ),
+    "IncompleteImplementation": (
+        "Your function implementation is incomplete or missing key logic. "
+        "Make sure to handle all the requirements specified in the problem."
+    ),
+    "EfficiencyIssue": (
+        "Your solution may be inefficient or times out on larger inputs. "
+        "Consider optimizing your algorithm or using more efficient data structures."
+    ),
+    "EdgeCaseError": (
+        "Your solution fails on edge cases or boundary conditions. "
+        "Test your code with empty inputs, single elements, or extreme values."
+    ),
+    "ImportError": (
+        "You're using imports or functions not available in the test environment. "
+        "Use only standard Python built-ins unless explicitly allowed."
     )
 }
 

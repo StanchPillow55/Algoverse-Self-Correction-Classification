@@ -61,14 +61,59 @@ python -m src.main run --dataset runs/tmp/inputs/full.csv      --max-turns 3 --o
 ```
 
 
+## HumanEval Code Generation
+
+This pipeline now supports HumanEval code generation tasks with sandboxed test execution.
+
+### HumanEval DEMO_MODE = 1 (no API key required)
+
+```bash
+export DEMO_MODE=1 PROVIDER=demo
+python -m src.main info
+
+# Run HumanEval subsets in demo mode
+python -m src.main run --dataset humaneval --subset subset_20  --max-turns 3 --out runs/tmp/heval_demo_subset20.json  --provider "$PROVIDER"
+python -m src.main run --dataset humaneval --subset subset_100 --max-turns 3 --out runs/tmp/heval_demo_subset100.json --provider "$PROVIDER"
+python -m src.main run --dataset humaneval --subset full       --max-turns 3 --out runs/tmp/heval_demo_full.json     --provider "$PROVIDER"
+```
+
+### HumanEval DEMO_MODE = 0 (real API; requires `.env`)
+
+```bash
+set -a; source .env; set +a   # will not echo secrets
+export DEMO_MODE=0 PROVIDER=openai OPENAI_MODEL=gpt-4o-mini
+
+# Run HumanEval with real API
+python -m src.main run --dataset humaneval --subset subset_20  --max-turns 3 --out runs/tmp/heval_subset20.json  --provider "$PROVIDER"
+python -m src.main run --dataset humaneval --subset subset_100 --max-turns 3 --out runs/tmp/heval_subset100.json --provider "$PROVIDER"
+python -m src.main run --dataset humaneval --subset full       --max-turns 3 --out runs/tmp/heval_full.json       --provider "$PROVIDER"
+```
+
+### HumanEval Features
+
+* **Sandboxed Execution**: Code is executed in a safe subprocess environment with timeouts and import restrictions
+* **Test-Based Scoring**: Solutions are validated by running unit tests, not string matching
+* **Pass@1 Metric**: Standard HumanEval evaluation using execution-based correctness
+* **Safety Checks**: Code is checked for dangerous patterns before execution
+* **Demo Mode**: Simulated execution for testing without actual code running
+
+### HumanEval Subsets
+
+* `subset_20`: First 20 tasks (good for quick testing)
+* `subset_100`: First 100 tasks (validation runs)
+* `full`: All 164 tasks (complete evaluation)
+
 ### Outputs
 
-* Traces: `runs/<RUN_ID>/traces.jsonl` (per-turn prompt, response, bias label, feedback)
+* Traces: `runs/<RUN_ID>/traces.jsonl` (per-turn prompt, response, bias label, feedback, **test results**)
 * Summaries: `runs/<RUN_ID>/*_summary.json`
 * Analysis: `runs/<RUN_ID>/analysis.md`, `runs/<RUN_ID>/summary.csv` (if generated)
+* HumanEval traces include `execution_details` with test pass/fail information
 
 ### Notes
 
 * `.env` is ignored by git; never commit API keys.
 * Analysis for older runs is archived under `/old-experiments/<STAMP>/`.
+* HumanEval requires `requests` for dataset downloading (installed via requirements.txt)
+* Code execution is sandboxed but still runs locally - exercise caution in production environments
 
