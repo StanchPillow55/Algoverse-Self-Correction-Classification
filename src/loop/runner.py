@@ -9,6 +9,10 @@ from src.agents.teacher import detect_bias, combine_confidence
 from src.rts.policy import select_template
 from src.evaluator_feedback import coaching_from_bias
 
+# HumanEval support
+from src.data.humaneval_loader import load_humaneval_dataset, create_demo_humaneval_data
+from src.eval.humaneval_scorer import score_humaneval_candidate
+
 mismatch_log = 'outputs/mismatches.log'
 
 def accuracy(answer: str, reference: str) -> int:
@@ -27,6 +31,16 @@ def accuracy(answer: str, reference: str) -> int:
     return ok
 
 
+def humaneval_accuracy(task: Dict[str, Any], answer: str) -> int:
+    """Score HumanEval task using code execution"""
+    try:
+        score_result = score_humaneval_candidate(task, answer)
+        return int(score_result['passed'])
+    except Exception as e:
+        print(f"Error scoring HumanEval task {task.get('qid', 'unknown')}: {e}")
+        return 0
+
+
 QNA_MAP = {"qid": ["qid","id"], "question": ["question","prompt"], "reference": ["ground_truth","answer"]}
 def _auto_map_row(row: dict) -> tuple[str, str, str]:
     low = {str(k).lower().strip(): v for k, v in row.items()}
@@ -34,12 +48,38 @@ def _auto_map_row(row: dict) -> tuple[str, str, str]:
     return pick(QNA_MAP["qid"]), pick(QNA_MAP["question"]), pick(QNA_MAP["reference"])
 
 
+def _load_dataset(dataset_csv: str, subset: str = None) -> List[Dict[str, Any]]:
+    """Load dataset, supporting both CSV and HumanEval formats"""
+    # Check if this is a HumanEval dataset request
+    if dataset_csv == "humaneval" or "humaneval" in dataset_csv.lower():
+        try:
+            if subset:
+                data = load_humaneval_dataset(subset=subset)
+            else:
+                data = load_humaneval_dataset()
+            return data
+        except Exception as e:
+            print(f"Failed to load HumanEval dataset: {e}")
+            print("Using demo HumanEval data...")
+            demo_data = create_demo_humaneval_data()
+            if subset == "subset_20":
+                return demo_data[:20] if len(demo_data) > 20 else demo_data
+            elif subset == "subset_100":
+                return demo_data[:100] if len(demo_data) > 100 else demo_data
+            return demo_data
+    else:
+        # Traditional CSV loading
+        df = read_csv_flexible(dataset_csv)
+        return df.to_dict(orient="records")
+
+
 def run_dataset(
     dataset_csv: str,
     traces_out: str = "outputs/traces.json",
     max_turns: int = 3,
     provider: str = "demo",
-    k: int = 1
+    k: int = 1,
+    subset: str = None
 ) -> Dict[str, Any]:
     # Ensure output directory exists
     output_dir = Path(traces_out).parent
@@ -48,8 +88,8 @@ def run_dataset(
     learner = LearnerBot(provider=provider)
     traces: List[Dict[str, Any]] = []
 
-    df = read_csv_flexible(dataset_csv)
-    rows = df.to_dict(orient="records")
+    # Load dataset - supports both CSV and HumanEval formats
+    rows = _load_dataset(dataset_csv, subset)
     
     # Initialize trace logger
     run_id = os.environ.get('RUN_ID', 'dev_run')
@@ -59,33 +99,66 @@ def run_dataset(
     logger.write_run_config({'dataset': dataset_csv, 'max_turns': max_turns, 'provider': provider, 'split': split, 'model': os.getenv('OPENAI_MODEL')})
 
     for idx, row in enumerate(rows):
-        qid_m, q, ref = _auto_map_row(row)
-        qid = qid_m or f"q{idx+1}"
+        # Handle different data formats
+        if isinstance(row, dict) and row.get('topic') == 'humaneval':
+            # HumanEval format with direct fields
+            qid = row.get('qid', f"humaneval_{idx}")
+            q = row.get('question', '')
+            ref = row.get('reference', '')
+            task = row  # Store the full task for HumanEval scoring
+            is_humaneval = True
+        else:
+            # Traditional CSV format
+            qid_m, q, ref = _auto_map_row(row)
+            qid = qid_m or f"q{idx+1}"
+            task = None
+            is_humaneval = False
         
         # Start trace for this example
         ex = logger.start_example(problem_id=qid, text=q)
         
         history: List[Dict[str, Any]] = []
-        # first attempt
-        a0, self_conf = learner.answer(q, history, template=None)
-        acc0 = accuracy(a0, ref)
+        
+        # Prepare prompt for HumanEval vs standard tasks
+        if is_humaneval:
+            # For HumanEval, request only the function implementation
+            prompt = f"Implement the following function. Only provide the function body, no additional explanations:\n\n{q}"
+        else:
+            prompt = q
+        
+        # First attempt
+        a0, self_conf = learner.answer(prompt, history, template=None)
+        
+        # Score based on task type
+        if is_humaneval:
+            acc0 = humaneval_accuracy(task, a0)
+            # Store test results in a way that's retrievable later
+            score_result = score_humaneval_candidate(task, a0)
+            execution_details = score_result.get('execution_result', {})
+        else:
+            acc0 = accuracy(a0, ref)
+            execution_details = {}
+            
         bias, tconf = detect_bias(q, a0, ref, history)
         conf = combine_confidence(self_conf, tconf, None)
 
         turns = [{
             "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
-            "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0
+            "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0,
+            "execution_details": execution_details if is_humaneval else {}
         }]
         
         # Log first turn
         coaching_feedback = coaching_from_bias(bias)
-        logger.on_turn(ex, turn_index=0, prompt=q, response_text=a0, 
+        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=a0, 
                       response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
                       evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
                       model_reported_confidence=self_conf, 
                       evaluator_bias_label=bias,
                       evaluator_feedback=coaching_feedback,
-                      model_name=getattr(learner, 'model', provider))
+                      model_name=getattr(learner, 'model', provider),
+                      task_type='humaneval' if is_humaneval else 'standard',
+                      execution_details=execution_details if is_humaneval else None)
 
         acc_prev = acc0
         t = 1
@@ -94,13 +167,23 @@ def run_dataset(
             if not reprompt:
                 break
             # send template to learner
-            a1, self_conf = learner.answer(q, history + turns, template=template)
-            acc1 = accuracy(a1, ref)
+            a1, self_conf = learner.answer(prompt, history + turns, template=template)
+            
+            # Score based on task type
+            if is_humaneval:
+                acc1 = humaneval_accuracy(task, a1)
+                score_result = score_humaneval_candidate(task, a1)
+                execution_details = score_result.get('execution_result', {})
+            else:
+                acc1 = accuracy(a1, ref)
+                execution_details = {}
+                
             bias, tconf = detect_bias(q, a1, ref, history + turns)
             conf = combine_confidence(self_conf, tconf, None)
             turns.append({
                 "answer": a1, "self_conf": round(self_conf,2), "teacher_bias": bias,
-                "teacher_conf": round(tconf,2), "template": template, "accuracy": acc1
+                "teacher_conf": round(tconf,2), "template": template, "accuracy": acc1,
+                "execution_details": execution_details if is_humaneval else {}
             })
             
             # Log this turn
@@ -111,7 +194,9 @@ def run_dataset(
                           model_reported_confidence=self_conf, 
                           evaluator_bias_label=bias,
                           evaluator_feedback=coaching_feedback,
-                          model_name=getattr(learner, 'model', provider))
+                          model_name=getattr(learner, 'model', provider),
+                          task_type='humaneval' if is_humaneval else 'standard',
+                          execution_details=execution_details if is_humaneval else None)
             
             t += 1
             # simple stop: two non-improvements handled implicitly by max_turns and correctness
