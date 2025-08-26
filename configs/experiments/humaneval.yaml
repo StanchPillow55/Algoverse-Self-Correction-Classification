@@ -1,0 +1,74 @@
+# HumanEval experiment configuration
+experiment_name: "humaneval_coding_evaluation"
+
+# Dataset configuration
+dataset:
+  name: "humaneval"
+  url: "https://raw.githubusercontent.com/openai/human-eval/master/data/HumanEval.jsonl"
+  cache_dir: "data/cache"
+  
+# Subset configurations for different evaluation scenarios
+subsets:
+  demo:
+    name: "subset_20"
+    size: 20
+    description: "Small subset for demo and smoke testing"
+  
+  validation:
+    name: "subset_100" 
+    size: 100
+    description: "Medium subset for validation runs"
+    
+  full:
+    name: "full"
+    size: -1  # All tasks
+    description: "Complete HumanEval dataset"
+
+# Runtime configuration
+runtime:
+  max_turns: 3
+  timeout_per_task: 300  # 5 minutes per task
+  execution_timeout: 10  # 10 seconds per code execution
+  
+# Model configuration
+models:
+  provider: "demo"  # Use "openai" for real API calls
+  demo_mode: true
+  temperature: 0.1
+  max_tokens: 512
+
+# Evaluation configuration
+evaluation:
+  metric: "pass@1"  # Standard HumanEval metric
+  score_type: "execution_based"  # vs "string_match"
+  safety_checks: true
+  sandbox_enabled: true
+
+# Output paths
+paths:
+  traces_out: "outputs/humaneval_traces.json"
+  results_dir: "outputs/humaneval_results"
+  logs_dir: "logs/humaneval"
+
+# Prompt templates for code generation
+prompts:
+  system_message: |
+    You are a skilled Python programmer. Your task is to implement functions according to their specifications.
+    
+  user_template: |
+    Implement the following function. Provide only the function body (the code inside the function), no additional explanations or comments:
+    
+    {question}
+    
+  coaching_templates:
+    syntax_error: "Your code has syntax errors. Please fix them and ensure proper indentation."
+    logic_error: "Your code doesn't pass all test cases. Review the function requirements and fix any logical errors."
+    timeout_error: "Your code takes too long to execute. Try to optimize it or use a more efficient algorithm."
+    import_error: "Avoid using external imports unless specifically required by the problem."
+
+# Demo mode settings (for testing without API access)  
+demo:
+  enabled: true
+  simulate_execution: true
+  mock_responses: true
+  success_rate: 0.7  # Simulated success rate for demo runs
