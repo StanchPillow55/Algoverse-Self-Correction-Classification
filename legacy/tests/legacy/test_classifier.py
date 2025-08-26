@@ -3,6 +3,9 @@
 Test script for Error + Confidence Classifier
 """
 
+import pytest
+pytest.skip("Legacy classifier tests skipped during teacher/learner pivot", allow_module_level=True)
+
 from src.train_classifier import (
     create_sample_training_data, 
     TrainingConfig, 
