@@ -1,0 +1,24 @@
+dataset_prompts:
+  humaneval:
+    system: |
+      You are a careful Python programmer. Do not include explanations or tests in your output.
+    user: |
+      Implement the following Python function. Return the complete function definition (signature + body). Do not include any text outside code.
+
+      Problem:
+      {{problem_text}}
+
+      Output format: Provide only a single Python code block containing the full function definition.
+    max_tokens: 512
+  gsm8k:
+    system: |
+      You are a meticulous math solver. Think privately. Provide only the final numeric answer.
+    user: |
+      Solve the problem. Think silently and provide only the final numeric answer with no units.
+
+      Question:
+      {{question}}
+
+      Output format: a single line containing only the final number (no punctuation or extra text).
+    max_tokens: 128
+

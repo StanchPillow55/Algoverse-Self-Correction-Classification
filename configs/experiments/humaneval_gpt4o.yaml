@@ -1,0 +1,23 @@
+experiments:
+  - name: heval_t0.0_k1_baseline
+    dataset: humaneval
+    max_turns: 1
+    provider: openai
+    temperature: 0.0
+    pass_k: 1
+    prompt_style: baseline_fixed
+  - name: heval_t0.2_k1_fullsig
+    dataset: humaneval
+    max_turns: 1
+    provider: openai
+    temperature: 0.2
+    pass_k: 1
+    prompt_style: full_signature
+  - name: heval_t0.7_k5_fullsig
+    dataset: humaneval
+    max_turns: 1
+    provider: openai
+    temperature: 0.7
+    pass_k: 5
+    prompt_style: full_signature
+

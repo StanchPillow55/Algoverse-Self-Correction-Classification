@@ -1,0 +1,19 @@
+experiments:
+  - name: gsm8k_t0.0_greedy
+    dataset: data/math_sample_100.csv
+    max_turns: 3
+    provider: openai
+    temperature: 0.0
+    decoding: greedy
+  - name: gsm8k_t0.2_greedy
+    dataset: data/math_sample_100.csv
+    max_turns: 3
+    provider: openai
+    temperature: 0.2
+    decoding: greedy
+  - name: gsm8k_t0.7_sc10
+    dataset: data/math_sample_100.csv
+    max_turns: 3
+    provider: openai
+    temperature: 0.7
+    decoding: self_consistency_10
