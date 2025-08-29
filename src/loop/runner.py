@@ -115,7 +115,7 @@ def run_dataset(
             # HumanEval format with direct fields
             qid = row.get('qid', f"humaneval_{idx}")
             q = row.get('question', '')
-ref = ''
+            ref = ''
             task = row  # Store the full task for HumanEval scoring
             is_humaneval = True
         else:
@@ -131,7 +131,7 @@ ref = ''
         history: List[Dict[str, Any]] = []
         
         # Prepare prompt for HumanEval vs standard tasks
-if is_humaneval:
+        if is_humaneval:
             prompt = (
                 "You are a careful Python programmer. Do not include explanations or tests in your output.\n\n"
                 "Implement the following Python function. Return the complete function definition (signature + body).\n"
@@ -146,7 +146,7 @@ if is_humaneval:
         # First attempt
         a0, self_conf = learner.answer(prompt, history, template=None)
         
-# Score based on task type
+        # Score based on task type
         if is_humaneval:
             # pass@k via sampling (k from env or arg)
             k_try = int(os.getenv("PASS_K", str(k))) if k else int(os.getenv("PASS_K", "1"))
@@ -192,7 +192,7 @@ if is_humaneval:
                       task_type='humaneval' if is_humaneval else 'standard',
                       execution_details=execution_details if is_humaneval else None)
 
-# Multi-turn loop only if enabled (GSM8K only)
+        # Multi-turn loop only if enabled (GSM8K only)
         if enable_multi_turn and not is_humaneval:
             acc_prev = acc0
             t = 1
@@ -213,7 +213,7 @@ if is_humaneval:
                 # send template to learner
                 a1, self_conf = learner.answer(prompt, history + turns, template=template)
 
-# For GSM8K follow-up turns, use EM
+                # For GSM8K follow-up turns, use EM
                 acc1 = gsm8k_em(a1, ref)
                 execution_details = {}
 

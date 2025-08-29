@@ -1,0 +1,83 @@
+{
+  "summary": {
+    "items": 3,
+    "final_accuracy_mean": 1.0
+  },
+  "traces": [
+    {
+      "qid": "HumanEval/0",
+      "question": "from typing import List\n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    \"\"\" Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    \"\"\"\n",
+      "reference": "",
+      "turns": [
+        {
+          "answer": "0",
+          "self_conf": 0.3,
+          "teacher_bias": "Anchoring",
+          "teacher_conf": 0.7,
+          "template": null,
+          "accuracy": 1,
+          "execution_details": {
+            "passed": true,
+            "passed_count": 7,
+            "total_count": 7,
+            "stdout": "PASS: All tests passed",
+            "stderr": "",
+            "runtime_ms": 50.0,
+            "error": ""
+          }
+        }
+      ],
+      "final_accuracy": 1
+    },
+    {
+      "qid": "HumanEval/1",
+      "question": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    \"\"\" Input to this function is a string containing multiple groups of nested parentheses. Your goal is to\n    separate those group and return the list of those.\n    Separate groups are balanced (each open brace is properly closed) and not nested within each other\n    Ignore any spaces in the input string.\n    >>> separate_paren_groups('( ) (( )) (( )( ))')\n    ['()', '(())', '(()())']\n    \"\"\"\n",
+      "reference": "",
+      "turns": [
+        {
+          "answer": "0",
+          "self_conf": 0.3,
+          "teacher_bias": "Confirmation",
+          "teacher_conf": 0.6,
+          "template": null,
+          "accuracy": 1,
+          "execution_details": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed",
+            "stderr": "",
+            "runtime_ms": 50.0,
+            "error": ""
+          }
+        }
+      ],
+      "final_accuracy": 1
+    },
+    {
+      "qid": "HumanEval/2",
+      "question": "def truncate_number(number: float) -> float:\n    \"\"\" Given a positive floating point number, it can be decomposed into\n    and integer part (largest integer smaller than given number) and decimals\n    (leftover part always smaller than 1).\n\n    Return the decimal part of the number.\n    >>> truncate_number(3.5)\n    0.5\n    \"\"\"\n",
+      "reference": "",
+      "turns": [
+        {
+          "answer": "0",
+          "self_conf": 0.3,
+          "teacher_bias": "Anchoring",
+          "teacher_conf": 0.7,
+          "template": null,
+          "accuracy": 1,
+          "execution_details": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed",
+            "stderr": "",
+            "runtime_ms": 50.0,
+            "error": ""
+          }
+        }
+      ],
+      "final_accuracy": 1
+    }
+  ]
+}
