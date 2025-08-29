@@ -17,6 +17,21 @@ from typing import Any, Callable, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
+# Simple backoff log (optional)
+RATE_LIMIT_LOG = os.getenv("RATE_LIMIT_LOG", "logs/rate_limit.log")
+_osmakedir = os.makedirs
+try:
+    _osmakedir(os.path.dirname(RATE_LIMIT_LOG), exist_ok=True)
+except Exception:
+    pass
+
+def _rl_log(msg: str):
+    try:
+        with open(RATE_LIMIT_LOG, "a", encoding="utf-8") as fh:
+            fh.write(f"{time.time():.3f} {msg}\n")
+    except Exception:
+        pass
+
 # Environment configuration
 MAX_CONCURRENCY = int(os.getenv("MAX_CONCURRENCY", "2"))
 RPS_LIMIT = float(os.getenv("RPS_LIMIT", "2.0"))  # requests per second
@@ -135,7 +150,7 @@ def call_with_backoff_sync(
             # Check rate limits before making request
             delay = _check_rate_limits(estimate_tokens)
             if delay and delay > 0:
-                logger.warning(f"Rate limit pre-check: waiting {delay:.2f}s")
+logger.warning(f"Rate limit pre-check: waiting {delay:.2f}s"); _rl_log(f"pre_wait={delay:.2f}")
                 time.sleep(delay)
             
             # Make the request
@@ -171,7 +186,9 @@ def call_with_backoff_sync(
                 raise e
             
             # Calculate backoff delay
-            retry_after = _parse_retry_after(e)
+retry_after = _parse_retry_after(e)
+            if retry_after:
+                _rl_log(f"retry_after={retry_after:.2f}")
             if retry_after:
                 delay = retry_after
             else:
@@ -182,7 +199,7 @@ def call_with_backoff_sync(
                     delay = random.uniform(base_delay, delay * 3)
                 delay = min(delay, 60.0)  # Cap at 60 seconds
             
-            logger.warning(f"API error (attempt {attempt + 1}/{MAX_RETRIES + 1}): {e}. Retrying in {delay:.2f}s")
+logger.warning(f"API error (attempt {attempt + 1}/{MAX_RETRIES + 1}): {e}. Retrying in {delay:.2f}s"); _rl_log(f"backoff={delay:.2f} attempt={attempt+1}")
             time.sleep(delay)
     
     # Should never reach here, but just in case

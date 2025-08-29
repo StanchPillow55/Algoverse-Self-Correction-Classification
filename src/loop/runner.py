@@ -3,7 +3,7 @@ import csv, json, os
 from pathlib import Path
 from typing import Dict, Any, List
 from src.utils.trace_logger import TraceLogger
-from src.utils.accuracy_metrics import get_accuracy  # Add this import
+from src.metrics.accuracy import gsm8k_em, humaneval_pass_at_k
 
 from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
@@ -115,7 +115,7 @@ def run_dataset(
             # HumanEval format with direct fields
             qid = row.get('qid', f"humaneval_{idx}")
             q = row.get('question', '')
-            ref = row.get('reference', '')
+ref = ''
             task = row  # Store the full task for HumanEval scoring
             is_humaneval = True
         else:
@@ -131,23 +131,36 @@ def run_dataset(
         history: List[Dict[str, Any]] = []
         
         # Prepare prompt for HumanEval vs standard tasks
-        if is_humaneval:
-            # For HumanEval, request only the function implementation
-            prompt = f"Implement the following function. Only provide the function body, no additional explanations:\n\n{q}"
+if is_humaneval:
+            prompt = (
+                "You are a careful Python programmer. Do not include explanations or tests in your output.\n\n"
+                "Implement the following Python function. Return the complete function definition (signature + body).\n"
+                "Do not include any text outside code.\n\nProblem:\n" + q + "\n\nOutput format: Provide only a single Python code block containing the full function definition."
+            )
         else:
-            prompt = q
+            prompt = (
+                "You are a meticulous math solver. Think privately. Provide only the final numeric answer.\n\n"
+                "Solve the problem. Think silently and provide only the final numeric answer with no units.\n\nQuestion:\n" + q + "\n\nOutput format: a single line containing only the final number."
+            )
         
         # First attempt
         a0, self_conf = learner.answer(prompt, history, template=None)
         
-        # Score based on task type
+# Score based on task type
         if is_humaneval:
-            acc0 = humaneval_accuracy(task, a0)
-            # Store test results in a way that's retrievable later
+            # pass@k via sampling (k from env or arg)
+            k_try = int(os.getenv("PASS_K", str(k))) if k else int(os.getenv("PASS_K", "1"))
+            passes = []
             score_result = score_humaneval_candidate(task, a0)
             execution_details = score_result.get('execution_result', {})
+            passes.append(bool(score_result.get('passed', False)))
+            for _ in range(max(0, k_try - 1)):
+                a_s, _ = learner.answer(prompt, history, template=None)
+                sr = score_humaneval_candidate(task, a_s)
+                passes.append(bool(sr.get('passed', False)))
+            acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
         else:
-            acc0 = accuracy(a0, ref)
+            acc0 = gsm8k_em(a0, ref)
             execution_details = {}
         
         # Only run bias detection and confidence if enabled
@@ -179,8 +192,8 @@ def run_dataset(
                       task_type='humaneval' if is_humaneval else 'standard',
                       execution_details=execution_details if is_humaneval else None)
 
-        # Multi-turn loop only if enabled
-        if enable_multi_turn:
+# Multi-turn loop only if enabled (GSM8K only)
+        if enable_multi_turn and not is_humaneval:
             acc_prev = acc0
             t = 1
             while t < max_turns and acc_prev == 0:
@@ -200,14 +213,9 @@ def run_dataset(
                 # send template to learner
                 a1, self_conf = learner.answer(prompt, history + turns, template=template)
 
-                # Score based on task type
-                if is_humaneval:
-                    acc1 = humaneval_accuracy(task, a1)
-                    score_result = score_humaneval_candidate(task, a1)
-                    execution_details = score_result.get('execution_result', {})
-                else:
-                    acc1 = accuracy(a1, ref)
-                    execution_details = {}
+# For GSM8K follow-up turns, use EM
+                acc1 = gsm8k_em(a1, ref)
+                execution_details = {}
 
                 # Only run bias detection and confidence if enabled (after the new response)
                 if enable_error_awareness:
