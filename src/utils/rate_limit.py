@@ -27,7 +27,14 @@ except Exception:
 
 def _rl_log(msg: str):
     try:
-        with open(RATE_LIMIT_LOG, "a", encoding="utf-8") as fh:
+        path = os.getenv("RATE_LIMIT_LOG", RATE_LIMIT_LOG)
+        parent = os.path.dirname(path)
+        if parent:
+            try:
+                _osmakedir(parent, exist_ok=True)
+            except Exception:
+                pass
+        with open(path, "a", encoding="utf-8") as fh:
             fh.write(f"{time.time():.3f} {msg}\n")
     except Exception:
         pass
@@ -144,13 +151,14 @@ def call_with_backoff_sync(
     
     last_exception = None
     base_delay = 1.0
+    prev_delay = base_delay
     
     for attempt in range(MAX_RETRIES + 1):
         try:
             # Check rate limits before making request
             delay = _check_rate_limits(estimate_tokens)
             if delay and delay > 0:
-logger.warning(f"Rate limit pre-check: waiting {delay:.2f}s"); _rl_log(f"pre_wait={delay:.2f}")
+                logger.warning(f"Rate limit pre-check: waiting {delay:.2f}s"); _rl_log(f"pre_wait={delay:.2f}")
                 time.sleep(delay)
             
             # Make the request
@@ -186,20 +194,17 @@ logger.warning(f"Rate limit pre-check: waiting {delay:.2f}s"); _rl_log(f"pre_wai
                 raise e
             
             # Calculate backoff delay
-retry_after = _parse_retry_after(e)
+            retry_after = _parse_retry_after(e)
             if retry_after:
                 _rl_log(f"retry_after={retry_after:.2f}")
-            if retry_after:
                 delay = retry_after
             else:
                 # Decorrelated jitter: delay = random(base_delay, prev_delay * 3)
-                if attempt == 0:
-                    delay = base_delay
-                else:
-                    delay = random.uniform(base_delay, delay * 3)
+                delay = random.uniform(base_delay, prev_delay * 3)
                 delay = min(delay, 60.0)  # Cap at 60 seconds
+            prev_delay = delay
             
-logger.warning(f"API error (attempt {attempt + 1}/{MAX_RETRIES + 1}): {e}. Retrying in {delay:.2f}s"); _rl_log(f"backoff={delay:.2f} attempt={attempt+1}")
+            logger.warning(f"API error (attempt {attempt + 1}/{MAX_RETRIES + 1}): {e}. Retrying in {delay:.2f}s"); _rl_log(f"backoff={delay:.2f} attempt={attempt+1}")
             time.sleep(delay)
     
     # Should never reach here, but just in case

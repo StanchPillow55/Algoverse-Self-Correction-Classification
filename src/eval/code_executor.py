@@ -73,14 +73,13 @@ def create_test_module(function_code: str, test_code: str, entry_point: str) -> 
     """
     # Ensure function code is properly indented (if it's just the body)
     if not function_code.strip().startswith('def '):
-        # This is just the function body, need to add the signature
-        # We'll get this from parsing or assume it's properly formatted
         function_code = function_code.rstrip()
     
     module_template = f'''
 # Generated test module for HumanEval
 import sys
 import time
+import traceback
 
 # Candidate implementation
 {function_code}
@@ -94,9 +93,19 @@ if __name__ == "__main__":
         check({entry_point})
         print("PASS: All tests passed")
         sys.exit(0)
-    except Exception as e:
-        print(f"FAIL: {{e}}")
-        sys.exit(1)
+    except AssertionError:
+        tb = traceback.format_exc(limit=3)
+        # Include a tag the harness can grep for, with a brief traceback excerpt
+        print("FAIL_ASSERTION:\n" + "\n".join(tb.strip().splitlines()[-3:]))
+        sys.exit(2)
+    except SyntaxError:
+        tb = traceback.format_exc(limit=1)
+        print("FAIL_SYNTAX:\n" + tb.strip().splitlines()[-1])
+        sys.exit(3)
+    except Exception:
+        tb = traceback.format_exc(limit=3)
+        print("FAIL_RUNTIME:\n" + "\n".join(tb.strip().splitlines()[-3:]))
+        sys.exit(4)
 '''
     
     return module_template
@@ -136,7 +145,10 @@ def execute_code_safely(
         'stdout': '',
         'stderr': '',
         'runtime_ms': 0.0,
-        'error': ''
+        'error': '',
+        'error_type': '',
+        'traceback_excerpt': '',
+        'failing_location': ''
     }
     
     # Basic safety check
@@ -191,15 +203,35 @@ def execute_code_safely(
                     result['passed'] = False
                     result['total_count'] = test_code.count('assert ')
                     result['passed_count'] = 0  # None passed if any failed
-                    if stderr:
-                        result['error'] = stderr
-                    elif 'FAIL' in stdout:
-                        result['error'] = stdout
+                    # Error classification based on tagged output and return codes
+                    out = stdout or ''
+                    err = stderr or ''
+                    if 'FAIL_SYNTAX:' in out or return_code == 3 or 'SyntaxError' in err:
+                        result['error_type'] = 'compile_error'
+                    elif 'FAIL_ASSERTION:' in out or return_code == 2:
+                        result['error_type'] = 'wrong_answer'
+                    elif 'FAIL_RUNTIME:' in out or return_code == 4:
+                        result['error_type'] = 'runtime_error'
+                    else:
+                        result['error_type'] = 'unknown_error'
+                    # Extract brief traceback excerpt from stdout tags or stderr
+                    excerpt = ''
+                    for tag in ('FAIL_SYNTAX:', 'FAIL_ASSERTION:', 'FAIL_RUNTIME:'):
+                        if tag in out:
+                            excerpt = out.split(tag,1)[1].strip()
+                            break
+                    if not excerpt and err:
+                        excerpt = err.strip()
+                    result['traceback_excerpt'] = excerpt.splitlines()[-1] if excerpt else ''
+                    # Failing location: best-effort from traceback last line
+                    result['failing_location'] = result['traceback_excerpt']
+                    result['error'] = (stderr or out).strip()
                 
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait()
                 result['error'] = f'Code execution timed out after {timeout} seconds'
+                result['error_type'] = 'timeout'
                 result['runtime_ms'] = timeout * 1000
         
         except Exception as e:
