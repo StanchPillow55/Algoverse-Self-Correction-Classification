@@ -14,8 +14,14 @@ class LearnerBot:
     def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None) -> Tuple[str, float]:
         if os.getenv("DEMO_MODE", "0") == "1" or self.provider == "demo":
             try:
-                # Basic arithmetic eval for demo
-                expr = "".join(c for c in q if c in "0123456789+-*/. ")
+                # Try to isolate the actual question portion if present
+                q_text = q
+                if "Question:\n" in q:
+                    q_text = q.split("Question:\n",1)[1]
+                if "Output format:" in q_text:
+                    q_text = q_text.split("Output format:",1)[0]
+                # Basic arithmetic eval for demo over the question only
+                expr = "".join(c for c in q_text if c in "0123456789+-*/. ")
                 val = eval(expr)
                 return (str(int(val)) if float(val).is_integer() else f"{val:.2f}"), 0.95
             except:
@@ -25,20 +31,26 @@ class LearnerBot:
             from openai import OpenAI
             from ..utils.rate_limit import safe_openai_chat_completion
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-            sys_prompt = "Answer concisely. If numeric, return the number only. No explanations."
+            # Avoid global terse constraints; let dataset-level prompt dictate behavior
+            sys_prompt = ""
             
-            # FIX: Properly handle template parameter (was: tmpl vs template mismatch)
+            # Handle template parameter
             user_prompt = f"{q}\n[Instruction]: {template}" if template else q
+            
+            # Heuristic: detect code-generation tasks (HumanEval) to allow larger outputs and avoid numeric-only parsing
+            is_code_task = ("Python function" in q) or ("code block" in q) or ("def " in q)
+            max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "1024" if is_code_task else "256"))
+            temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.2"))
             
             try:
                 resp = safe_openai_chat_completion(
                     client=client,
                     model=self.model,
-                    messages=[{"role":"system","content":sys_prompt}, {"role":"user","content":user_prompt}],
-                    temperature=0.2, max_tokens=40
+                    messages=(([{"role":"system","content":sys_prompt}] if sys_prompt else []) + [{"role":"user","content":user_prompt}]),
+                    temperature=temperature, max_tokens=max_tokens
                 )
                 
-                # FIX: Properly extract from OpenAI SDK v1.x - choices[0].message.content
+                # Extract content
                 raw_text = resp.choices[0].message.content
                 if raw_text is None:
                     self._safe_debug_log(q, template, "<NULL_RESPONSE>", "ERROR")
@@ -49,9 +61,15 @@ class LearnerBot:
                     self._safe_debug_log(q, template, "<EMPTY_RESPONSE>", "ERROR")
                     return "ERROR_EMPTY_RESPONSE", 0.1
                 
-                # Extract numeric answer or return cleaned text
-                ans = _first_number(text) or text[:64]
-                conf = 0.85 if _first_number(text) == text else 0.6
+                if is_code_task:
+                    # Return full text for code tasks
+                    ans = text
+                    conf = 0.6
+                else:
+                    # Extract numeric answer or return cleaned text
+                    num = _first_number(text)
+                    ans = num if num is not None else text[:256]
+                    conf = 0.85 if (num is not None and num == text.strip()) else 0.6
                 self._safe_debug_log(q, template, text, ans)
                 return ans, conf
                 

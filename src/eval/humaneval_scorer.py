@@ -143,8 +143,15 @@ def score_humaneval_candidate(
         result['passed_count'] = execution_result['passed_count']
         result['total_count'] = execution_result['total_count']
         
+        # Propagate structured error info
         if execution_result.get('error'):
             result['error'] = execution_result['error']
+            if 'error_type' in execution_result:
+                result['error_type'] = execution_result.get('error_type')
+            if 'traceback_excerpt' in execution_result:
+                result['traceback_excerpt'] = execution_result.get('traceback_excerpt')
+            if 'failing_location' in execution_result:
+                result['failing_location'] = execution_result.get('failing_location')
     
     except Exception as e:
         result['error'] = f'Scoring error: {str(e)}'
