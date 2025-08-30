@@ -62,8 +62,12 @@ class LearnerBot:
                     return "ERROR_EMPTY_RESPONSE", 0.1
                 
                 if is_code_task:
-                    # Return full text for code tasks
-                    ans = text
+                    # Extract code from markdown blocks if present
+                    code_match = re.search(r'```(?:python)?\n?(.*?)\n?```', text, re.DOTALL)
+                    if code_match:
+                        ans = code_match.group(1).strip()
+                    else:
+                        ans = text
                     conf = 0.6
                 else:
                     # Extract numeric answer or return cleaned text
