@@ -1,0 +1,31 @@
+humaneval:
+  system: |
+    You are a careful Python programmer. Output only code.
+  user_template: |
+    Implement the following Python function. Return the complete function definition (signature + body) only.
+
+    Problem:
+    {{problem_text}}
+
+    Required signature:
+    {{function_signature}}
+
+    Constraints:
+    - Use only the standard library.
+    - Keep helper functions within the same code block.
+    - Do not print or run tests.
+
+    Output format: Provide a single Python code block containing the full function definition.
+
+gsm8k:
+  system: |
+    You are a meticulous math solver. You may think silently. Provide the final numeric answer.
+  user_template: |
+    Solve the problem. You may include reasoning. End with the final numeric answer on a new line prefixed by '#### ' or 'Answer:'.
+
+    Question:
+    {{question}}
+
+    Output format:
+    - Full reasoning allowed.
+    - Final line MUST be either '#### <number>' or 'Answer: <number>'.
