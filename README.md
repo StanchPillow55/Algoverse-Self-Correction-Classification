@@ -192,3 +192,34 @@ python -m src.main run --dataset humaneval --subset full       --max-turns 3 --o
 * HumanEval requires `requests` for dataset downloading (installed via requirements.txt)
 * Code execution is sandboxed but still runs locally - exercise caution in production environments
 
+
+## Latest Results (UTC 2025-08-30T20:43:16.849775Z)
+
+### HumanEval (gpt-4o)
+- Results: results/heval_metrics.csv
+- Experiments: runs/experiments/*/heval_*.json
+- Summary: reports/experiment_summary.md
+
+### GSM8K (gpt-4o, 1000 problems)
+- Results: results/gsm8k_metrics.csv  
+- Experiments: runs/experiments/*/gsm8k_*.json
+- Summary: reports/experiment_summary.md
+
+### Ablation Experiments
+- baseline: Single turn, no confidence, plain prompting
+- confidence_only: Single turn with confidence scoring
+- error_awareness_only: Single turn with error-aware prompting
+- multiturn_only: 3 turns with plain prompting
+- full_system: 3 turns with confidence and error-aware prompting
+
+### Reproduction
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+set -a; source .env; set +a
+export PROVIDER=openai OPENAI_MODEL=gpt-4o MAX_CONCURRENCY=2 RPS_LIMIT=2 TPM_LIMIT=120000 MAX_RETRIES=6 RETRIES_ENABLED=1
+python -m src.main run --dataset humaneval --subset subset_20 --max-turns 2 --out runs/smoke/heval20.json --provider "$PROVIDER"
+python -m src.main run --dataset runs/tmp/inputs/gsm8k_20.csv --max-turns 2 --out runs/smoke/gsm8k20.json --provider "$PROVIDER"
+python -m src.main run --dataset humaneval --subset full --max-turns 3 --out runs/full/heval_full.json --provider "$PROVIDER"
+python -m src.main run --dataset runs/tmp/inputs/gsm8k_1k.csv --max-turns 3 --out runs/full/gsm8k_1k.json --provider "$PROVIDER"
+```
