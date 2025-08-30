@@ -1,9 +1,10 @@
 from src.utils.dataset_loader import read_csv_flexible
-import csv, json, os
+import csv, json, os, yaml
 from pathlib import Path
 from typing import Dict, Any, List
 from src.utils.trace_logger import TraceLogger
 from src.metrics.accuracy import gsm8k_em, humaneval_pass_at_k
+from src.evaluation.gsm8k_evaluator import GSM8KEvaluator
 
 from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
@@ -130,18 +131,32 @@ def run_dataset(
         
         history: List[Dict[str, Any]] = []
         
+        # Load dataset-scoped prompts
+        prompts_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "dataset_prompts.yaml")
+        try:
+            with open(prompts_path, 'r') as f:
+                prompt_config = yaml.safe_load(f)
+        except Exception:
+            # Fallback to hardcoded prompts if file not found
+            prompt_config = {
+                'humaneval': {
+                    'system': 'You are a careful Python programmer. Output only code.',
+                    'user_template': 'Implement the following Python function. Return the complete function definition (signature + body) only.\n\nProblem:\n{{problem_text}}\n\nOutput format: Provide a single Python code block containing the full function definition.'
+                },
+                'gsm8k': {
+                    'system': 'You are a meticulous math solver. You may think silently. Provide the final numeric answer.',
+                    'user_template': 'Solve the problem. You may include reasoning. End with the final numeric answer on a new line prefixed by "####" or "Answer:".\n\nQuestion:\n{{question}}\n\nOutput format:\n- Full reasoning allowed.\n- Final line MUST be either "#### <number>" or "Answer: <number>".'
+                }
+            }
+        
         # Prepare prompt for HumanEval vs standard tasks
         if is_humaneval:
-            prompt = (
-                "You are a careful Python programmer. Do not include explanations or tests in your output.\n\n"
-                "Implement the following Python function. Return the complete function definition (signature + body).\n"
-                "Do not include any text outside code.\n\nProblem:\n" + q + "\n\nOutput format: Provide only a single Python code block containing the full function definition."
-            )
+            pconf = prompt_config.get('humaneval', {})
+            # Use template with problem text
+            prompt = pconf.get('user_template', '').replace('{{problem_text}}', q).replace('{{function_signature}}', row.get('function_signature', ''))
         else:
-            prompt = (
-                "You are a meticulous math solver. Think privately. Provide only the final numeric answer.\n\n"
-                "Solve the problem. Think silently and provide only the final numeric answer with no units.\n\nQuestion:\n" + q + "\n\nOutput format: a single line containing only the final number."
-            )
+            pconf = prompt_config.get('gsm8k', {})
+            prompt = pconf.get('user_template', '').replace('{{question}}', q)
         
         # First attempt
         a0, self_conf = learner.answer(prompt, history, template=None)
@@ -160,8 +175,11 @@ def run_dataset(
                 passes.append(bool(sr.get('passed', False)))
             acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
         else:
-            acc0 = gsm8k_em(a0, ref)
-            execution_details = {}
+            # Use enhanced GSM8K evaluator for better extraction and diagnosis
+            gsm_eval = GSM8KEvaluator()
+            eval_result = gsm_eval.compare(a0, ref)
+            acc0 = int(eval_result['em'])
+            execution_details = {'diagnosis': eval_result.get('diagnosis', 'unknown')}
         
         # Only run bias detection and confidence if enabled
         if enable_error_awareness:
@@ -177,7 +195,7 @@ def run_dataset(
         turns = [{
             "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
             "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0,
-            "execution_details": execution_details if is_humaneval else {}
+            "execution_details": execution_details
         }]
         
         # Log first turn
@@ -213,9 +231,11 @@ def run_dataset(
                 # send template to learner
                 a1, self_conf = learner.answer(prompt, history + turns, template=template)
 
-                # For GSM8K follow-up turns, use EM
-                acc1 = gsm8k_em(a1, ref)
-                execution_details = {}
+                # For GSM8K follow-up turns, use enhanced evaluator
+                gsm_eval = GSM8KEvaluator()
+                eval_result = gsm_eval.compare(a1, ref)
+                acc1 = int(eval_result['em'])
+                execution_details = {'diagnosis': eval_result.get('diagnosis', 'unknown')}
 
                 # Only run bias detection and confidence if enabled (after the new response)
                 if enable_error_awareness:
@@ -239,7 +259,7 @@ def run_dataset(
                     "evaluator_bias_label_before": bias_for_template,
                     "evaluator_bias_label_after": bias_after,
                     "accuracy": acc1,
-                    "execution_details": execution_details if is_humaneval else {}
+                    "execution_details": execution_details
                 })
 
                 # Log this turn with feedback aligned to the bias used for template selection

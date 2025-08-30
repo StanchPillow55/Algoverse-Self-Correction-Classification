@@ -192,3 +192,24 @@ python -m src.main run --dataset humaneval --subset full       --max-turns 3 --o
 * HumanEval requires `requests` for dataset downloading (installed via requirements.txt)
 * Code execution is sandboxed but still runs locally - exercise caution in production environments
 
+
+
+<!-- RESULTS_START -->
+**Latest Results (UTC 2025-08-30T10:51:18.046464Z)**
+
+**HumanEval (exec-based)**  
+- subset_100 (100 samples): **63.0%** accuracy
+- subset_20 (20 samples): **95.0%** accuracy
+
+**GSM8K (full-output parsed)**  
+- 100 samples: **94.0%** accuracy with full reasoning extraction
+- 20 samples: **100.0%** accuracy (smoke test)
+
+**Key Improvements:**
+- ✅ Enhanced GSM8K evaluator with full-output parsing and diagnosis
+- ✅ Fixed learner to return complete reasoning for math problems
+- ✅ Dataset-scoped prompts for optimal performance
+- ✅ Execution-based HumanEval evaluation (not string matching)
+- ✅ Rate limiting with exponential backoff and jitter
+- ✅ Comprehensive ablation study framework
+<!-- RESULTS_END -->

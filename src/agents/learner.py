@@ -37,9 +37,10 @@ class LearnerBot:
             # Handle template parameter
             user_prompt = f"{q}\n[Instruction]: {template}" if template else q
             
-            # Heuristic: detect code-generation tasks (HumanEval) to allow larger outputs and avoid numeric-only parsing
+            # Heuristic: detect code-generation tasks (HumanEval) and math tasks (GSM8K) to allow larger outputs
             is_code_task = ("Python function" in q) or ("code block" in q) or ("def " in q)
-            max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "1024" if is_code_task else "256"))
+            is_math_task = ("####" in q) or ("Answer:" in q) or ("final numeric answer" in q)
+            max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "1024" if (is_code_task or is_math_task) else "256"))
             temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.2"))
             
             try:
@@ -69,6 +70,10 @@ class LearnerBot:
                     else:
                         ans = text
                     conf = 0.6
+                elif is_math_task:
+                    # For GSM8K, return the full response with reasoning
+                    ans = text
+                    conf = 0.7
                 else:
                     # Extract numeric answer or return cleaned text
                     num = _first_number(text)
