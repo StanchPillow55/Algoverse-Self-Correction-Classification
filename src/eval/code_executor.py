@@ -75,7 +75,7 @@ def create_test_module(function_code: str, test_code: str, entry_point: str) -> 
     if not function_code.strip().startswith('def '):
         function_code = function_code.rstrip()
     
-    module_template = f'''
+    module_template = '''
 # Generated test module for HumanEval
 import sys
 import time
@@ -96,17 +96,20 @@ if __name__ == "__main__":
     except AssertionError:
         tb = traceback.format_exc(limit=3)
         # Include a tag the harness can grep for, with a brief traceback excerpt
-        print("FAIL_ASSERTION:\n" + "\n".join(tb.strip().splitlines()[-3:]))
+        print("FAIL_ASSERTION:")
+        print("\\n".join(tb.strip().splitlines()[-3:]))
         sys.exit(2)
     except SyntaxError:
         tb = traceback.format_exc(limit=1)
-        print("FAIL_SYNTAX:\n" + tb.strip().splitlines()[-1])
+        print("FAIL_SYNTAX:")
+        print(tb.strip().splitlines()[-1])
         sys.exit(3)
     except Exception:
         tb = traceback.format_exc(limit=3)
-        print("FAIL_RUNTIME:\n" + "\n".join(tb.strip().splitlines()[-3:]))
+        print("FAIL_RUNTIME:")
+        print("\\n".join(tb.strip().splitlines()[-3:]))
         sys.exit(4)
-'''
+'''.format(function_code=function_code, test_code=test_code, entry_point=entry_point)
     
     return module_template
 
