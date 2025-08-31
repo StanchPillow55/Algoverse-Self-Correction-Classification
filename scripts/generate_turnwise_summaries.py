@@ -80,14 +80,18 @@ def parse_gsm8k_traces(base_dir: Path) -> pd.DataFrame:
                 if 'traces' in data:
                     traces = data['traces']
                     for trace in traces:
-                        problem_id = trace.get('problem_id', 'unknown')
-                        for turn in trace.get('turns', []):
+                        problem_id = trace.get('qid', trace.get('problem_id', 'unknown'))
+                        turns = trace.get('turns', [])
+                        final_correct = trace.get('final_accuracy', False)
+                        
+                        # GSM8K doesn't have turn_index, so enumerate turns
+                        for turn_idx, turn in enumerate(turns):
                             trace_data.append({
                                 'dataset': 'gsm8k',
                                 'problem_id': problem_id,
-                                'turn': turn.get('turn_index', 0) + 1,
-                                'is_correct': turn.get('is_correct', False),
-                                'final_correct': trace.get('final_correct', False)
+                                'turn': turn_idx + 1,  # 1-indexed
+                                'is_correct': bool(turn.get('accuracy', False)),
+                                'final_correct': bool(final_correct)
                             })
         except Exception as e:
             print(f"Error parsing {json_file}: {e}")
