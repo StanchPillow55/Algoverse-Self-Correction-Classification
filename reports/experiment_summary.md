@@ -67,3 +67,8 @@ Model: gpt-4o
 |humaneval|auto|gpt-4o|0.2|1|pass@k|0.33||
 |humaneval|auto|gpt-4o|0.2|1|pass@k|0.95||
 
+
+
+## Full GSM8K run (gpt-4o, 1000 problems)
+- Model: gpt-4o — EM = 0.000
+
