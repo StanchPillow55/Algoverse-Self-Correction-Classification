@@ -1,6 +1,6 @@
 # Ablation Study Summary Report
 
-**Generated:** 2025-08-30 23:24:33
+**Generated:** 2025-08-30 23:57:59
 
 ## Overview
 
@@ -33,12 +33,12 @@ This report presents the results of the ablation study comparing different syste
 
 | Ablation Arm | Accuracy | Num Problems | Model |
 |--------------|----------|--------------|-------|
-| Baseline | 0.0000 | 1000 | gpt-4o |
-| Confidence Only | 0.0000 | 1000 | gpt-4o |
-| Error Awareness Only | 0.0000 | 1000 | gpt-4o |
-| Full System | 0.0000 | 1000 | gpt-4o |
-| Multiturn Only | 0.0000 | 1000 | gpt-4o |
-| Unknown | 0.0000 | 1000 | gpt-4o |
+| Baseline | 0.5490 | 1000 | gpt-4o |
+| Confidence Only | 0.5420 | 1000 | gpt-4o |
+| Error Awareness Only | 0.5450 | 1000 | gpt-4o |
+| Full System | 0.5350 | 1000 | gpt-4o |
+| Multiturn Only | 0.5370 | 1000 | gpt-4o |
+| Unknown | 0.5410 | 1000 | gpt-4o |
 
 
 ## Key Findings
@@ -52,8 +52,9 @@ This report presents the results of the ablation study comparing different syste
 
 ### GSM8K Performance
 
-
-**Note:** All GSM8K configurations show zero accuracy. This may indicate an issue with the evaluation pipeline or dataset processing that requires investigation.
+- **Best performing configuration:** Baseline with Accuracy = 0.5490
+- **Worst performing configuration:** Full System with Accuracy = 0.5350
+- **Performance range:** 0.0140
 
 
 ## Conclusions
