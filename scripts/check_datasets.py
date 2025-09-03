@@ -38,6 +38,11 @@ def human_eval_count() -> int:
 
 
 def gsm8k_count() -> int:
+    # Check for our standardized test_1k.jsonl first
+    test_1k = Path("data/gsm8k/test_1k.jsonl")
+    if test_1k.exists():
+        return sum(1 for _ in test_1k.open("r", encoding="utf-8"))
+    
     # Prefer local csv under data/gsm8k*.csv
     for p in Path("data").glob("**/*gsm8k*.csv"):
         try:

@@ -33,7 +33,7 @@ smoke:
 	@/bin/bash -lc 'set -euo pipefail; . .venv/bin/activate; python scripts/check_datasets.py || true'
 	@echo "==> Smoke: running baseline/full_system (demo mode)"
 	@/bin/bash -lc 'set -euo pipefail; . .venv/bin/activate; DEMO_MODE=1 PROVIDER=demo RUN_ID=baseline OPENAI_TEMPERATURE=0.2 SEEDS=1,2,3 python -m src.main run --dataset humaneval --subset subset_20 --max-turns 2 --out runs/smoke/heval20_traces.json --provider $$PROVIDER'
-	@/bin/bash -lc 'set -euo pipefail; . .venv/bin/activate; DEMO_MODE=1 PROVIDER=demo RUN_ID=full_system OPENAI_TEMPERATURE=0.2 SEEDS=1,2,3 python -m src.main run --dataset data/smoke/gsm8k16.csv --max-turns 2 --out runs/smoke/gsm8k16_traces.json --provider $$PROVIDER'
+	@/bin/bash -lc 'set -euo pipefail; . .venv/bin/activate; SMOKE_TEST=1 DEMO_MODE=1 PROVIDER=demo RUN_ID=full_system OPENAI_TEMPERATURE=0.2 SEEDS=1,2,3 python -m src.main run --dataset gsm8k --max-turns 2 --out runs/smoke/gsm8k_traces.json --provider $$PROVIDER'
 	@echo "==> Smoke: generating plot and table"
 	@/bin/bash -lc 'set -euo pipefail; . .venv/bin/activate; python scripts/analyze_results.py --raw runs/smoke --out reports/smoke && ls -1 reports/smoke/figures | head -5'
 	@echo "smoke: OK"
