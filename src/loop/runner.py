@@ -4,6 +4,10 @@ from pathlib import Path
 from typing import Dict, Any, List
 from src.utils.trace_logger import TraceLogger
 from src.metrics.accuracy import gsm8k_em, humaneval_pass_at_k
+from src.utils.tracing import RunWriter, RunMeta, sha256_text
+from src.utils.ci_bootstrap import mean_ci95
+from src.utils.harness_parity import harness_versions
+from dataclasses import asdict
 
 from src.agents.learner import LearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
@@ -287,7 +291,101 @@ def run_dataset(
     out = {"summary": summary, "traces": traces}
     with open(traces_out, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
-    
+
+    # New: emit paper-ready run directory with per-turn artifacts and structured traces
+    try:
+        # Derive run metadata
+        seeds_env = os.getenv("SEEDS", "1,2,3")
+        seeds = [int(s) for s in seeds_env.split(",") if s.strip().isdigit()]
+        temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.2"))
+        model_name = os.getenv('OPENAI_MODEL') or getattr(learner, 'model', provider)
+        arm = os.getenv('RUN_ID', 'dev').lower()
+        dataset_name = 'humaneval' if (isinstance(rows[0], dict) and rows[0].get('topic') == 'humaneval') else Path(str(dataset_csv)).stem
+        meta = RunMeta(
+            arm=arm,
+            model=model_name,
+            dataset=dataset_name,
+            seeds=seeds,
+            temperature=temperature,
+            max_turns=max_turns,
+            harness_versions=harness_versions(),
+            start_time=os.getenv('RUN_START', ''),
+            end_time=os.getenv('RUN_END', ''),
+            git_commit=os.getenv('GIT_COMMIT', '')
+        )
+        writer = RunWriter(Path('runs'))
+        # Choose first seed for directory naming to keep deterministic single-run output
+        run_dir = writer.make_run_dir(meta, seed=seeds[0] if seeds else 1)
+
+        # Save config snapshot
+        cfg_snapshot = {
+            'dataset': dataset_csv,
+            'subset': subset,
+            'max_turns': max_turns,
+            'provider': provider,
+            'model': model_name,
+            'seeds': seeds,
+            'temperature': temperature,
+            'meta': {
+                'git_commit': os.getenv('GIT_COMMIT', ''),
+                'harness_versions': harness_versions(),
+                'os': os.uname().sysname if hasattr(os, 'uname') else 'N/A',
+            }
+        }
+        writer.write_config(run_dir, cfg_snapshot)
+
+        # Build paper traces schema
+        items = []
+        for ex in traces:
+            is_he = 'topic' in ex.get('question','').lower() or (isinstance(rows[0], dict) and rows[0].get('topic')=='humaneval')
+            turns_schema = []
+            for ti, t in enumerate(ex['turns']):
+                # Write per-turn artifacts
+                if is_he:
+                    ref_path = writer.write_he_code(run_dir, ex['qid'], ti, t.get('answer',''))
+                else:
+                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, t.get('answer',''))
+                # Write prompt template record
+                prompt_text = t.get('template') or ''
+                prompt_ref = None
+                if prompt_text:
+                    prompt_ref = writer.write_prompt(run_dir, Path(f"turn_prompt_{ti}_{sha256_text(ex['qid'])[:8]}.txt"), prompt_text)
+                turns_schema.append({
+                    'turn_index': ti,
+                    'prompt_id': t.get('template') or 'base',
+                    'prompt_text_ref': str(prompt_ref) if prompt_ref else '',
+                    'output_sha256': sha256_text(t.get('answer','')),
+                    'learner_output_ref': str(ref_path),
+                    'evaluator_feedback': t.get('execution_details', {}),
+                    'confidence': t.get('self_conf', None),
+                    'normalized_answer': None,
+                    'exec_result': t.get('execution_details', {}) if is_he else None,
+                })
+            items.append({
+                'id': ex['qid'],
+                'turns': turns_schema,
+                'final': {
+                    'predicted': ex['turns'][-1].get('answer',''),
+                    'correct': bool(ex['final_accuracy']),
+                    'error_taxonomy': None
+                }
+            })
+
+        # Metrics with CI
+        accs = [float(x.get('final_accuracy',0)) for x in traces]
+        mean, lo, hi = mean_ci95(accs, reps=1000, rng_seed=0)
+        metrics = {
+            'accuracy_mean': mean,
+            'ci95': [lo, hi],
+            'n': len(accs),
+            'seeds': seeds,
+        }
+        writer.write_metrics(run_dir, metrics)
+        writer.write_traces(run_dir, {'meta': asdict(meta), 'items': items})
+    except Exception as _e:
+        # Do not fail the run if writer errors; proceed silently (logged to stdout)
+        print(f"WARN: tracing writer failed: {_e}")
+
     # Close the trace logger
     logger.close()
     return out
