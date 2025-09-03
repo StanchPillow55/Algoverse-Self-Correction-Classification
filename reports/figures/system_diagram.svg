@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360">
+  <style>
+    .node { fill: #f7f9fc; stroke: #1f77b4; stroke-width: 2; }
+    .arrow { stroke: #444; stroke-width: 1.5; marker-end: url(#arrow); fill: none; }
+    .label { font-family: Arial, sans-serif; font-size: 14px; fill: #222; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#444" />
+    </marker>
+  </defs>
+
+  <!-- Nodes -->
+  <rect class="node" x="40"  y="150" width="120" height="60" rx="8"/>
+  <text class="label" x="100" y="185" text-anchor="middle">Teacher</text>
+
+  <rect class="node" x="560" y="150" width="120" height="60" rx="8"/>
+  <text class="label" x="620" y="185" text-anchor="middle">Learner</text>
+
+  <rect class="node" x="300" y="40" width="120" height="60" rx="8"/>
+  <text class="label" x="360" y="75" text-anchor="middle">Evaluator</text>
+
+  <rect class="node" x="300" y="260" width="120" height="60" rx="8"/>
+  <text class="label" x="360" y="295" text-anchor="middle">Prompt Store</text>
+
+  <rect class="node" x="300" y="150" width="120" height="60" rx="8"/>
+  <text class="label" x="360" y="185" text-anchor="middle">Datasets</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M160,180 L560,180" />
+  <text class="label" x="360" y="170" text-anchor="middle">instructions / feedback</text>
+
+  <path class="arrow" d="M560,170 C500,120 420,120 360,100" />
+  <text class="label" x="460" y="120" text-anchor="middle">predictions</text>
+
+  <path class="arrow" d="M360,100 C300,120 220,120 160,170" />
+  <text class="label" x="260" y="120" text-anchor="middle">feedback</text>
+
+  <path class="arrow" d="M360,210 L360,260" />
+  <text class="label" x="400" y="240">templates</text>
+
+  <path class="arrow" d="M360,210 L360,100" />
+  <text class="label" x="400" y="155">eval settings</text>
+
+  <path class="arrow" d="M300,180 L160,180" />
+  <text class="label" x="230" y="200">questions</text>
+</svg>
+
