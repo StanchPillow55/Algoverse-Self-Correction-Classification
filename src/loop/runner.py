@@ -17,6 +17,7 @@ from src.evaluator_feedback import coaching_from_bias
 # HumanEval support
 from src.data.humaneval_loader import load_humaneval_dataset, create_demo_humaneval_data
 from src.eval.humaneval_scorer import score_humaneval_candidate
+from src.data.gsm8k_loader import load_gsm8k_dataset
 
 mismatch_log = 'outputs/mismatches.log'
 
@@ -54,7 +55,7 @@ def _auto_map_row(row: dict) -> tuple[str, str, str]:
 
 
 def _load_dataset(dataset_csv: str, subset: str = None) -> List[Dict[str, Any]]:
-    """Load dataset, supporting both CSV and HumanEval formats"""
+    """Load dataset, supporting both CSV, HumanEval, and GSM8K formats"""
     # Check if this is a HumanEval dataset request
     if dataset_csv == "humaneval" or "humaneval" in dataset_csv.lower():
         try:
@@ -72,6 +73,9 @@ def _load_dataset(dataset_csv: str, subset: str = None) -> List[Dict[str, Any]]:
             elif subset == "subset_100":
                 return demo_data[:100] if len(demo_data) > 100 else demo_data
             return demo_data
+    elif dataset_csv == "gsm8k" or "gsm8k" in dataset_csv.lower():
+        # Check for GSM8K data
+        return load_gsm8k_dataset()
     else:
         # Traditional CSV loading
         df = read_csv_flexible(dataset_csv)
