@@ -1,0 +1,54 @@
+{
+  "gsm8k_success": [
+    {
+      "qid": "q2",
+      "question": "The gauge on a water tank shows that the tank is 1/3 full of water. To fill the tank, 16 gallons of water are added. How many gallons of water does the tank hold when full?",
+      "reference": "24",
+      "turns": [
+        {
+          "answer": "24",
+          "self_conf": 0.85,
+          "teacher_bias": "None",
+          "teacher_conf": 0.95,
+          "template": null,
+          "accuracy": 1
+        }
+      ],
+      "final_accuracy": 1
+    }
+  ],
+  "gsm8k_failure": [
+    {
+      "qid": "q1",
+      "question": "Stefan goes to a restaurant to eat dinner with his family. They order an appetizer that costs $10 and 4 entrees that are $20 each. If they tip 20% of the total for the waiter, what is the total amount of money that they spend at the restaurant?",
+      "reference": "108",
+      "turns": [
+        {
+          "answer": "88",
+          "self_conf": 0.6,
+          "teacher_bias": "Confirmation",
+          "teacher_conf": 0.6,
+          "template": null,
+          "accuracy": 0
+        },
+        {
+          "answer": "88",
+          "self_conf": 0.6,
+          "teacher_bias": "Confirmation",
+          "teacher_conf": 0.6,
+          "template": "devils_advocate_v1",
+          "accuracy": 0
+        },
+        {
+          "answer": "88",
+          "self_conf": 0.6,
+          "teacher_bias": "Confirmation",
+          "teacher_conf": 0.6,
+          "template": "devils_advocate_v1",
+          "accuracy": 0
+        }
+      ],
+      "final_accuracy": 0
+    }
+  ]
+}
