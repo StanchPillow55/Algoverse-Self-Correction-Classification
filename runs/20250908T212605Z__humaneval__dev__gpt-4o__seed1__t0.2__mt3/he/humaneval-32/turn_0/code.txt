@@ -1,0 +1,14 @@
+def find_zero(xs: list):
+    def poly(xs, x):
+        return sum([coeff * math.pow(x, i) for i, coeff in enumerate(xs)])
+    
+    low, high = -1e6, 1e6
+    while high - low > 1e-7:
+        mid = (low + high) / 2
+        if poly(xs, mid) == 0:
+            return mid
+        elif poly(xs, mid) * poly(xs, low) < 0:
+            high = mid
+        else:
+            low = mid
+    return (low + high) / 2

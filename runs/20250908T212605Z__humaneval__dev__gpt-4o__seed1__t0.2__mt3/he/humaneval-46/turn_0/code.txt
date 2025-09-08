@@ -1,0 +1,10 @@
+def fib4(n: int):
+    if n == 0 or n == 1 or n == 3:
+        return 0
+    if n == 2:
+        return 2
+    fib4_seq = [0, 0, 2, 0]
+    for i in range(4, n + 1):
+        next_value = fib4_seq[-1] + fib4_seq[-2] + fib4_seq[-3] + fib4_seq[-4]
+        fib4_seq.append(next_value)
+    return fib4_seq[n]
