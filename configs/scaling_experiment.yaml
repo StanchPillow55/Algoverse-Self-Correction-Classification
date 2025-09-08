@@ -1,0 +1,94 @@
+# Scaling Experiment Configuration
+# Multi-model self-correction study for ICLR submission
+
+experiment:
+  name: "scaling_law_study"
+  description: "Self-correction scaling laws across model sizes and tasks"
+  max_turns: 3
+  temperature: 0.0
+  max_tokens: 4000
+
+# Model configurations
+models:
+  # Small models (1-7B parameters)
+  small:
+    - name: "gpt-4o-mini"
+      provider: "openai"
+      model_id: "gpt-4o-mini"
+      estimated_cost_per_1k_tokens: 0.00015
+    
+    - name: "claude-haiku"
+      provider: "anthropic"
+      model_id: "claude-3-haiku-20240307"
+      estimated_cost_per_1k_tokens: 0.00025
+  
+  # Medium models (8-70B parameters)
+  medium:
+    - name: "gpt-4o"
+      provider: "openai"
+      model_id: "gpt-4o"
+      estimated_cost_per_1k_tokens: 0.0025
+    
+    - name: "claude-sonnet"
+      provider: "anthropic"
+      model_id: "claude-3-sonnet-20240229"
+      estimated_cost_per_1k_tokens: 0.003
+    
+    - name: "llama-70b"
+      provider: "replicate"
+      model_id: "meta-llama/llama-2-70b-chat"
+      estimated_cost_per_1k_tokens: 0.0007
+  
+  # Large models (100B+ parameters)
+  large:
+    - name: "gpt-4"
+      provider: "openai"
+      model_id: "gpt-4"
+      estimated_cost_per_1k_tokens: 0.03
+    
+    - name: "claude-opus"
+      provider: "anthropic"
+      model_id: "claude-3-opus-20240229"
+      estimated_cost_per_1k_tokens: 0.015
+
+# Dataset configurations
+datasets:
+  - name: "toolqa"
+    description: "QA dataset for tool usage evaluation"
+    sample_sizes: [100, 500, 1000]
+    
+  - name: "superglue"
+    description: "Reasoning benchmark with multiple tasks"
+    sample_sizes: [100, 500, 1000]
+    
+  - name: "mathbench"
+    description: "Hierarchical math reasoning benchmark"
+    sample_sizes: [100, 500, 1000]
+    
+  - name: "gsm8k"
+    description: "Grade school math problems"
+    sample_sizes: [100, 500, 1000]
+    
+  - name: "humaneval"
+    description: "Code generation benchmark"
+    sample_sizes: [20, 100, 164]
+
+# Output configuration
+output:
+  directory: "outputs/scaling_experiments"
+  save_individual_results: true
+  generate_analysis: true
+  cost_tracking: true
+
+# Cost control
+budget:
+  max_total_cost: 1000.0  # Maximum total cost in USD
+  cost_per_experiment_limit: 50.0  # Maximum cost per individual experiment
+  enable_cost_limits: true
+
+# Analysis settings
+analysis:
+  generate_correlations: true
+  create_visualizations: true
+  export_to_csv: true
+  paper_ready_outputs: true

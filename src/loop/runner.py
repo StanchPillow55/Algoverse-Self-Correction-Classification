@@ -87,6 +87,7 @@ def run_dataset(
     traces_out: str = "outputs/traces.json",
     max_turns: int = 3,
     provider: str = "demo",
+    model: str = None,
     k: int = 1,
     subset: str = None,
     config: Dict[str, Any] = None
@@ -95,7 +96,7 @@ def run_dataset(
     output_dir = Path(traces_out).parent
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    learner = LearnerBot(provider=provider)
+    learner = LearnerBot(provider=provider, model=model)
     traces: List[Dict[str, Any]] = []
 
     # Load dataset - supports both CSV and HumanEval formats

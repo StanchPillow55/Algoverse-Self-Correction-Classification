@@ -1,0 +1,130 @@
+{
+  "models": [
+    {
+      "name": "gpt-4o-mini",
+      "provider": "openai",
+      "model_id": "gpt-4o-mini",
+      "size_category": "small",
+      "estimated_cost_per_1k_tokens": 0.00015,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Small OpenAI model, 1.8B parameters"
+    },
+    {
+      "name": "claude-haiku",
+      "provider": "anthropic",
+      "model_id": "claude-3-haiku-20240307",
+      "size_category": "small",
+      "estimated_cost_per_1k_tokens": 0.00025,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Small Claude model, 3B parameters"
+    },
+    {
+      "name": "gpt-4o",
+      "provider": "openai",
+      "model_id": "gpt-4o",
+      "size_category": "medium",
+      "estimated_cost_per_1k_tokens": 0.0025,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Medium OpenAI model, 8B parameters"
+    },
+    {
+      "name": "claude-sonnet",
+      "provider": "anthropic",
+      "model_id": "claude-3-sonnet-20240229",
+      "size_category": "medium",
+      "estimated_cost_per_1k_tokens": 0.003,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Medium Claude model, 70B parameters"
+    },
+    {
+      "name": "llama-70b",
+      "provider": "replicate",
+      "model_id": "meta-llama/llama-2-70b-chat",
+      "size_category": "medium",
+      "estimated_cost_per_1k_tokens": 0.0007,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": false,
+      "description": "Medium Llama model, 70B parameters"
+    },
+    {
+      "name": "gpt-4",
+      "provider": "openai",
+      "model_id": "gpt-4",
+      "size_category": "large",
+      "estimated_cost_per_1k_tokens": 0.03,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Large OpenAI model, 100B+ parameters"
+    },
+    {
+      "name": "claude-opus",
+      "provider": "anthropic",
+      "model_id": "claude-3-opus-20240229",
+      "size_category": "large",
+      "estimated_cost_per_1k_tokens": 0.015,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": false,
+      "description": "Large Claude model, 100B+ parameters"
+    }
+  ],
+  "datasets": [
+    {
+      "name": "toolqa",
+      "description": "Tool usage and external API reasoning",
+      "sample_sizes": [100, 500, 1000],
+      "evaluation_metric": "exact_match"
+    },
+    {
+      "name": "superglue",
+      "description": "Multi-task reasoning and language understanding",
+      "sample_sizes": [100, 500, 1000],
+      "evaluation_metric": "exact_match"
+    },
+    {
+      "name": "college_math",
+      "description": "College-level mathematical reasoning",
+      "sample_sizes": [100, 500, 1000],
+      "evaluation_metric": "exact_match"
+    },
+    {
+      "name": "humaneval",
+      "description": "Code generation and program synthesis",
+      "sample_sizes": [20, 100, 164],
+      "evaluation_metric": "pass_at_k"
+    }
+  ],
+  "experiment_phases": {
+    "phase1": {
+      "name": "validation",
+      "models": ["gpt-4o-mini", "claude-haiku"],
+      "datasets": ["toolqa"],
+      "sample_size": 100,
+      "description": "Validate approach with cheap models"
+    },
+    "phase2": {
+      "name": "medium_scale",
+      "models": ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet"],
+      "datasets": ["toolqa", "superglue"],
+      "sample_size": 500,
+      "description": "Test scaling hypothesis with medium models"
+    },
+    "phase3": {
+      "name": "full_scale",
+      "models": ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet", "gpt-4", "claude-opus"],
+      "datasets": ["toolqa", "superglue", "college_math", "humaneval"],
+      "sample_size": 1000,
+      "description": "Complete scaling study across all models and datasets"
+    }
+  }
+}
