@@ -1,0 +1,8 @@
+def exchange(lst1, lst2):
+    has_even_in_lst2 = any(x % 2 == 0 for x in lst2)
+    all_even_in_lst1 = all(x % 2 == 0 for x in lst1)
+    if all_even_in_lst1:
+        return "YES"
+    if has_even_in_lst2:
+        return "YES"
+    return "NO"

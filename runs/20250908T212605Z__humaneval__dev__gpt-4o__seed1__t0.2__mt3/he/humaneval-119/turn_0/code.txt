@@ -1,0 +1,7 @@
+def match_parens(lst):
+    open1, close1 = lst[0].count('('), lst[0].count(')')
+    open2, close2 = lst[1].count('('), lst[1].count(')')
+    
+    if open1 + open2 == close1 + close2:
+        return 'Yes'
+    return 'No'

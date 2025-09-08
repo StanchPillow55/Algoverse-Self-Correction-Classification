@@ -1,0 +1,4 @@
+def sorted_list_sum(lst):
+    even_length_strings = [s for s in lst if len(s) % 2 == 0]
+    even_length_strings.sort(key=lambda x: (len(x), x))
+    return even_length_strings

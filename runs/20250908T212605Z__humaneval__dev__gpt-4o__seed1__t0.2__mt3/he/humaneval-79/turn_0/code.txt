@@ -1,0 +1,3 @@
+def decimal_to_binary(decimal):
+    binary_representation = bin(decimal)[2:]
+    return f"db{binary_representation}db"
