@@ -64,7 +64,7 @@ def main():
         if "DEMO_MODE" not in os.environ and args.provider != "openai":
             os.environ.setdefault("DEMO_MODE", "1")
             
-        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, model=args.model, config=config, subset=args.subset)
+        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, model=args.model, config=config, subset=args.subset, experiment_id="main_run", dataset_name=os.path.basename(args.dataset))
         print(json.dumps(res["summary"], indent=2))
     else:
         p.print_help()
