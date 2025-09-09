@@ -1,0 +1,885 @@
+{
+  "meta": {
+    "arm": "dev",
+    "model": "gpt-4o",
+    "dataset": "humaneval",
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "temperature": 0.2,
+    "max_turns": 2,
+    "harness_versions": {
+      "evalplus_version": "N/A",
+      "humaneval_harness": "local_sandbox_v1",
+      "gsm8k_extractor_version": "metrics/accuracy.py@normalize_v2"
+    },
+    "start_time": "",
+    "end_time": "",
+    "git_commit": "",
+    "tokenizer_version": null
+  },
+  "items": [
+    {
+      "id": "HumanEval/0",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "62f9a562870196244b5f65ea73b8ea8af31e88b79164569bf86f28a175b64cd0",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-0/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 7,
+            "total_count": 7,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 44.53706741333008,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 7,
+            "total_count": 7,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 44.53706741333008,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    numbers.sort()\n    for i in range(len(numbers) - 1):\n        if numbers[i + 1] - numbers[i] < threshold:\n            return True\n    return False",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/1",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "4f92bc1789e23ae53544ba226558a254294ecbd0817c5c99fadf75ac907a1ad2",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-1/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 47.7290153503418,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 47.7290153503418,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    balance = 0\n    current_group = []\n    \n    for char in paren_string:\n        current_group.append(char)\n        if char == '(':\n            balance += 1\n        elif char == ')':\n            balance -= 1\n        \n        if balance == 0 and current_group:\n            result.append(''.join(current_group))\n            current_group = []\n    \n    return result",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/2",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "6785b92bf5ebff14732ea258b824e39b07868e217376522c33c1e2d4313ba8df",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-2/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 40.91024398803711,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 40.91024398803711,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def truncate_number(number: float) -> float:\n    return number - int(number)",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/3",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "79d8b412a2383a8c95bdc422350dacadf38387e6bd055a885fe17d59b9ebd55e",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-3/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 6,
+            "total_count": 6,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 42.127132415771484,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 6,
+            "total_count": 6,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 42.127132415771484,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef below_zero(operations: List[int]) -> bool:\n    balance = 0\n    for operation in operations:\n        balance += operation\n        if balance < 0:\n            return True\n    return False",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/4",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "9681ec78d1a3cef3d03c8ddf05751649f33c0d8237f62fd9ed912fc3c0e395d8",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-4/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 47.41692543029785,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 47.41692543029785,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef mean_absolute_deviation(numbers: List[float]) -> float:\n    if not numbers:\n        return 0.0\n    mean = sum(numbers) / len(numbers)\n    deviations = [abs(x - mean) for x in numbers]\n    return sum(deviations) / len(numbers)",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/5",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "7a66460825d2e8667fcc333989919bbb9b1ae47fbe8a12c85f6c5b395dac9942",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-5/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 40.50302505493164,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 40.50302505493164,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef intersperse(numbers: List[int], delimeter: int) -> List[int]:\n    if not numbers:\n        return []\n    result = []\n    for i in range(len(numbers) - 1):\n        result.append(numbers[i])\n        result.append(delimeter)\n    result.append(numbers[-1])\n    return result",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/6",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "1accc54c08ba0f16ab85187cb4f6a13b90b15a55900153a75f35410536ad9aef",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-6/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 38.77091407775879,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 38.77091407775879,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef parse_nested_parens(paren_string: str) -> List[int]:\n    def max_nesting_level(s: str) -> int:\n        max_level = 0\n        current_level = 0\n        for char in s:\n            if char == '(':\n                current_level += 1\n                max_level = max(max_level, current_level)\n            elif char == ')':\n                current_level -= 1\n        return max_level\n\n    return [max_nesting_level(group) for group in paren_string.split()]",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/7",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "807f22a9eff7bf17bd5c249edbe3f69b436ff9db7213a2117ff9ba2410ab951b",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-7/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 43.95008087158203,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 43.95008087158203,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    return [s for s in strings if substring in s]",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/8",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "ae3a5409939effa82c394952ec7b0490c781097c9de247851cf92abc3d5937ef",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-8/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 59.68308448791504,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 59.68308448791504,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    total_sum = sum(numbers)\n    total_product = 1\n    for number in numbers:\n        total_product *= number\n    return total_sum, total_product",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/9",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "364fc0e9ceded920a1a59c568db1536dc152f329c0f884c59ca58a9d111bce05",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-9/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 54.00395393371582,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 54.00395393371582,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    result = []\n    current_max = float('-inf')\n    for number in numbers:\n        current_max = max(current_max, number)\n        result.append(current_max)\n    return result",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/10",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "606806b1067cce90bf1a1fea95b0507339554797d2671da6c134d6f44a66ea5c",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-10/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": false,
+            "passed_count": 0,
+            "total_count": 5,
+            "stdout": "FAIL_RUNTIME:\n    if is_palindrome(string):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?\n",
+            "stderr": "",
+            "runtime_ms": 44.75998878479004,
+            "error": "FAIL_RUNTIME:\n    if is_palindrome(string):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
+            "error_type": "runtime_error",
+            "traceback_excerpt": "NameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
+            "failing_location": "NameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?"
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": false,
+            "passed_count": 0,
+            "total_count": 5,
+            "stdout": "FAIL_RUNTIME:\n    if is_palindrome(string):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?\n",
+            "stderr": "",
+            "runtime_ms": 44.75998878479004,
+            "error": "FAIL_RUNTIME:\n    if is_palindrome(string):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
+            "error_type": "runtime_error",
+            "traceback_excerpt": "NameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
+            "failing_location": "NameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?"
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string. \"\"\"\n    if is_palindrome(string):\n        return string\n    for i in range(len(string)):\n        if is_palindrome(string[i:]):\n            return string + string[:i][::-1]\n    return string",
+        "correct": false,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/11",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "8540b82fcc55f1832e691a2dea99a93329bf04758df6b520a0b8888415bf9107",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-11/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 35.58087348937988,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 35.58087348937988,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def string_xor(a: str, b: str) -> str:\n    return ''.join('1' if x != y else '0' for x, y in zip(a, b))",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/12",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "85ec32413040562241859066596495fb3e1fd4a249c1ed0a4bf9624ee2bc80fc",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-12/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 53.086042404174805,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 53.086042404174805,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    if not strings:\n        return None\n    return max(strings, key=len)",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/13",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "006436f8ab009f2f1b46f9a12939969c3004206b8cc2d430ea827735afdbcc19",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-13/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 54.534196853637695,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 54.534196853637695,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def greatest_common_divisor(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/14",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "31891bbb85735cf9cb3f2f3aa070d26c0c1d21a56a625861c95159abc1f83f79",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-14/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 56.43296241760254,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 56.43296241760254,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/15",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "63136a62d9243b8e909d12959d105ef95aee360f342fe8af20c3201d292bdd93",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-15/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 53.07126045227051,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 3,
+            "total_count": 3,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 53.07126045227051,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def string_sequence(n: int) -> str:\n    return ' '.join(str(i) for i in range(n + 1))",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/16",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "745716dd90c3869324d79f7fc44ce7a14889f115b32f56be3546a5812e6582d9",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-16/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 47.394752502441406,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 47.394752502441406,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def count_distinct_characters(string: str) -> int:\n    return len(set(string.lower()))",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/17",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "6fe2d5a31116aa90e47e5c0800f28e84680d1738572a5910a6e8bc553da3c39f",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-17/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 58.0747127532959,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 58.0747127532959,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    note_map = {'o': 4, 'o|': 2, '.|': 1}\n    notes = music_string.split()\n    return [note_map[note] for note in notes]",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/18",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "2df11edbd22ced0347014752e67ea74ab4f43cdd3336926abe84c6189f86caea",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-18/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 57.39593505859375,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 4,
+            "total_count": 4,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 57.39593505859375,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def how_many_times(string: str, substring: str) -> int:\n    count = start = 0\n    while True:\n        start = string.find(substring, start) + 1\n        if start > 0:\n            count += 1\n        else:\n            return count",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    },
+    {
+      "id": "HumanEval/19",
+      "turns": [
+        {
+          "turn_index": 0,
+          "prompt_id": "base",
+          "prompt_text_ref": "",
+          "output_sha256": "275d7e93eec452e98a6d5ffeb790b8f39e5121e36f105a04d888d165d23ff272",
+          "learner_output_ref": "runs/20250908T211602Z__humaneval__dev__gpt-4o__seed1__t0.2__mt2/he/humaneval-19/turn_0/code.txt",
+          "evaluator_feedback": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 54.593801498413086,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          },
+          "confidence": 0.6,
+          "normalized_answer": null,
+          "exec_result": {
+            "passed": true,
+            "passed_count": 5,
+            "total_count": 5,
+            "stdout": "PASS: All tests passed\n",
+            "stderr": "",
+            "runtime_ms": 54.593801498413086,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
+          }
+        }
+      ],
+      "final": {
+        "predicted": "def sort_numbers(numbers: str) -> str:\n    num_map = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    words = numbers.split()\n    sorted_words = sorted(words, key=lambda word: num_map[word])\n    return ' '.join(sorted_words)",
+        "correct": true,
+        "error_taxonomy": null
+      }
+    }
+  ]
+}
