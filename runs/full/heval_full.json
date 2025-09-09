@@ -1,7 +1,7 @@
 {
   "summary": {
     "items": 164,
-    "final_accuracy_mean": 0.7804878048780488
+    "final_accuracy_mean": 0.7682926829268293
   },
   "traces": [
     {
@@ -22,7 +22,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.590017318725586,
+            "runtime_ms": 39.212942123413086,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -38,7 +38,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    balance = 0\n    current_group = []\n    \n    for char in paren_string:\n        current_group.append(char)\n        if char == '(':\n            balance += 1\n        elif char == ')':\n            balance -= 1\n        \n        if balance == 0 and current_group:\n            result.append(''.join(current_group))\n            current_group = []\n    \n    return result",
+          "answer": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")\n    result = []\n    current_group = []\n    balance = 0\n    \n    for char in paren_string:\n        current_group.append(char)\n        if char == '(':\n            balance += 1\n        elif char == ')':\n            balance -= 1\n        \n        if balance == 0 and current_group:\n            result.append(''.join(current_group))\n            current_group = []\n    \n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -50,7 +50,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.11408233642578,
+            "runtime_ms": 46.25415802001953,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -78,7 +78,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.24607276916504,
+            "runtime_ms": 47.441959381103516,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -106,7 +106,7 @@
             "total_count": 6,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.291704177856445,
+            "runtime_ms": 47.5468635559082,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -122,7 +122,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "from typing import List\n\ndef mean_absolute_deviation(numbers: List[float]) -> float:\n    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)",
+          "answer": "from typing import List\n\ndef mean_absolute_deviation(numbers: List[float]) -> float:\n    mean = sum(numbers) / len(numbers)\n    deviations = [abs(x - mean) for x in numbers]\n    return sum(deviations) / len(numbers)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -134,7 +134,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 45.642852783203125,
+            "runtime_ms": 52.57916450500488,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -162,7 +162,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.78093910217285,
+            "runtime_ms": 50.73809623718262,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -190,7 +190,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.06925964355469,
+            "runtime_ms": 56.11014366149902,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -218,7 +218,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.932003021240234,
+            "runtime_ms": 55.64618110656738,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -246,7 +246,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.68817329406738,
+            "runtime_ms": 57.65414237976074,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -262,7 +262,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    if not numbers:\n        return []\n    max_so_far = numbers[0]\n    result = [max_so_far]\n    for num in numbers[1:]:\n        if num > max_so_far:\n            max_so_far = num\n        result.append(max_so_far)\n    return result",
+          "answer": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    result = []\n    current_max = float('-inf')\n    for number in numbers:\n        current_max = max(current_max, number)\n        result.append(current_max)\n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -274,7 +274,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.144962310791016,
+            "runtime_ms": 48.60639572143555,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -290,7 +290,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string. \"\"\"\n    if is_palindrome(string):\n        return string\n    for i in range(len(string)):\n        if is_palindrome(string[i:]):\n            return string + string[:i][::-1]\n    return string",
+          "answer": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string. \"\"\"\n    if not string:\n        return ''\n    \n    for i in range(len(string)):\n        if is_palindrome(string[i:]):\n            return string + string[:i][::-1]\n    \n    return string",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -300,10 +300,10 @@
             "passed": false,
             "passed_count": 0,
             "total_count": 5,
-            "stdout": "FAIL_RUNTIME:\n    if is_palindrome(string):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?\n",
+            "stdout": "FAIL_RUNTIME:\n    if is_palindrome(string[i:]):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?\n",
             "stderr": "",
-            "runtime_ms": 48.45476150512695,
-            "error": "FAIL_RUNTIME:\n    if is_palindrome(string):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
+            "runtime_ms": 64.78428840637207,
+            "error": "FAIL_RUNTIME:\n    if is_palindrome(string[i:]):\n       ^^^^^^^^^^^^^\nNameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
             "error_type": "runtime_error",
             "traceback_excerpt": "NameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?",
             "failing_location": "NameError: name 'is_palindrome' is not defined. Did you mean: 'make_palindrome'?"
@@ -330,7 +330,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.25186729431152,
+            "runtime_ms": 47.284841537475586,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -358,7 +358,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.99384689331055,
+            "runtime_ms": 53.270816802978516,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -386,7 +386,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.45111274719238,
+            "runtime_ms": 54.94284629821777,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -414,7 +414,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.52583122253418,
+            "runtime_ms": 52.00910568237305,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -442,7 +442,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.60408401489258,
+            "runtime_ms": 52.43492126464844,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -470,7 +470,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 44.73710060119629,
+            "runtime_ms": 53.36499214172363,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -486,7 +486,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    note_map = {\n        'o': 4,\n        'o|': 2,\n        '.|': 1\n    }\n    notes = music_string.split()\n    return [note_map[note] for note in notes]",
+          "answer": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    notes = music_string.split()\n    beats = []\n    for note in notes:\n        if note == 'o':\n            beats.append(4)\n        elif note == 'o|':\n            beats.append(2)\n        elif note == '.|':\n            beats.append(1)\n    return beats",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -498,7 +498,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.171064376831055,
+            "runtime_ms": 45.38607597351074,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -526,7 +526,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.83599281311035,
+            "runtime_ms": 57.36374855041504,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -542,7 +542,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def sort_numbers(numbers: str) -> str:\n    num_map = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    words = numbers.split()\n    sorted_words = sorted(words, key=lambda word: num_map[word])\n    return ' '.join(sorted_words)",
+          "answer": "def sort_numbers(numbers: str) -> str:\n    number_map = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    words = numbers.split()\n    sorted_words = sorted(words, key=lambda word: number_map[word])\n    return ' '.join(sorted_words)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -554,7 +554,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 44.74592208862305,
+            "runtime_ms": 52.742719650268555,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -582,7 +582,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.31609535217285,
+            "runtime_ms": 55.60612678527832,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -610,7 +610,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.67107963562012,
+            "runtime_ms": 59.18073654174805,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -638,7 +638,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.53320121765137,
+            "runtime_ms": 55.83786964416504,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -666,7 +666,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.42495918273926,
+            "runtime_ms": 53.13825607299805,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -694,7 +694,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 52.44183540344238,
+            "runtime_ms": 39.75319862365723,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -722,7 +722,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.12679100036621,
+            "runtime_ms": 45.23015022277832,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -738,7 +738,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "from typing import List\n\ndef remove_duplicates(numbers: List[int]) -> List[int]:\n    seen = {}\n    result = []\n    for number in numbers:\n        if number in seen:\n            seen[number] += 1\n        else:\n            seen[number] = 1\n    for number in numbers:\n        if seen[number] == 1:\n            result.append(number)\n    return result",
+          "answer": "from typing import List\n\ndef remove_duplicates(numbers: List[int]) -> List[int]:\n    seen = set()\n    duplicates = set()\n    for number in numbers:\n        if number in seen:\n            duplicates.add(number)\n        else:\n            seen.add(number)\n    return [number for number in numbers if number not in duplicates]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -750,7 +750,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.588918685913086,
+            "runtime_ms": 38.41996192932129,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -778,7 +778,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 44.30079460144043,
+            "runtime_ms": 46.0200309753418,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -806,7 +806,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.75485801696777,
+            "runtime_ms": 57.01398849487305,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -834,7 +834,7 @@
             "total_count": 2,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.15318298339844,
+            "runtime_ms": 46.0820198059082,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -862,7 +862,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.556182861328125,
+            "runtime_ms": 52.62589454650879,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -890,7 +890,7 @@
             "total_count": 13,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.183990478515625,
+            "runtime_ms": 57.553768157958984,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -916,13 +916,13 @@
             "passed": false,
             "passed_count": 0,
             "total_count": 1,
-            "stdout": "FAIL_RUNTIME:\n    if poly(xs, mid) == 0:\n       ^^^^^^^^^^^^^\nNameError: name 'math' is not defined. Did you forget to import 'math'\n",
+            "stdout": "FAIL_RUNTIME:\n    if poly(xs, mid) == 0:\n       ~~~~^^^^^^^^^\nNameError: name 'math' is not defined. Did you forget to import 'math'?\n",
             "stderr": "",
-            "runtime_ms": 54.25620079040527,
-            "error": "FAIL_RUNTIME:\n    if poly(xs, mid) == 0:\n       ^^^^^^^^^^^^^\nNameError: name 'math' is not defined. Did you forget to import 'math'",
+            "runtime_ms": 60.62817573547363,
+            "error": "FAIL_RUNTIME:\n    if poly(xs, mid) == 0:\n       ~~~~^^^^^^^^^\nNameError: name 'math' is not defined. Did you forget to import 'math'?",
             "error_type": "runtime_error",
-            "traceback_excerpt": "NameError: name 'math' is not defined. Did you forget to import 'math'",
-            "failing_location": "NameError: name 'math' is not defined. Did you forget to import 'math'"
+            "traceback_excerpt": "NameError: name 'math' is not defined. Did you forget to import 'math'?",
+            "failing_location": "NameError: name 'math' is not defined. Did you forget to import 'math'?"
           }
         }
       ],
@@ -934,7 +934,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def sort_third(l: list):\n    \"\"\"This function takes a list l and returns a list l' such that\n    l' is identical to l in the indices that are not divisible by three, while its values at the indices that are divisible by three are equal\n    to the values of the corresponding indices of l, but sorted.\n    \"\"\"\n    indices = [i for i in range(len(l)) if i % 3 == 0]\n    sorted_values = sorted(l[i] for i in indices)\n    result = l[:]\n    for i, value in zip(indices, sorted_values):\n        result[i] = value\n    return result",
+          "answer": "def sort_third(l: list):\n    \"\"\"This function takes a list l and returns a list l' such that\n    l' is identical to l in the indicies that are not divisible by three, while its values at the indicies that are divisible by three are equal\n    to the values of the corresponding indicies of l, but sorted.\n    >>> sort_third([1, 2, 3])\n    [1, 2, 3]\n    >>> sort_third([5, 6, 3, 4, 8, 9, 2])\n    [2, 6, 3, 4, 8, 9, 5]\n    \"\"\"\n    third_indices = [i for i in range(len(l)) if i % 3 == 0]\n    third_values = sorted(l[i] for i in third_indices)\n    result = l[:]\n    for idx, value in zip(third_indices, third_values):\n        result[idx] = value\n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -946,7 +946,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 42.205810546875,
+            "runtime_ms": 57.144880294799805,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -962,7 +962,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def unique(l: list):\n    \"\"\"Return sorted unique elements in a list\n    >>> unique([5, 3, 5, 2, 3, 3, 9, 0, 123])\n    [0, 2, 3, 5, 9, 123]\n    \"\"\"\n    return sorted(set(l))",
+          "answer": "def unique(l: list):\n    return sorted(set(l))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -974,7 +974,7 @@
             "total_count": 1,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.48885536193848,
+            "runtime_ms": 56.28705024719238,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1002,7 +1002,7 @@
             "total_count": 2,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 45.384883880615234,
+            "runtime_ms": 58.43186378479004,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1030,7 +1030,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 58.279991149902344,
+            "runtime_ms": 63.16184997558594,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1058,7 +1058,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.844886779785156,
+            "runtime_ms": 55.69815635681152,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1086,7 +1086,7 @@
             "total_count": 1,
             "stdout": "FAIL_RUNTIME:\n    encoded_str = encode_cyclic(str)\n                  ^^^^^^^^^^^^^\nNameError: name 'encode_cyclic' is not defined. Did you mean: 'decode_cyclic'?\n",
             "stderr": "",
-            "runtime_ms": 52.90484428405762,
+            "runtime_ms": 60.33587455749512,
             "error": "FAIL_RUNTIME:\n    encoded_str = encode_cyclic(str)\n                  ^^^^^^^^^^^^^\nNameError: name 'encode_cyclic' is not defined. Did you mean: 'decode_cyclic'?",
             "error_type": "runtime_error",
             "traceback_excerpt": "NameError: name 'encode_cyclic' is not defined. Did you mean: 'decode_cyclic'?",
@@ -1102,7 +1102,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def prime_fib(n: int):\n    \"\"\"\n    prime_fib returns n-th number that is a Fibonacci number and it's also prime.\n    \"\"\"\n    def is_prime(num):\n        if num <= 1:\n            return False\n        if num <= 3:\n            return True\n        if num % 2 == 0 or num % 3 == 0:\n            return False\n        i = 5\n        while i * i <= num:\n            if num % i == 0 or num % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    fibs = [0, 1]\n    prime_fibs = []\n    a, b = 0, 1\n    while len(prime_fibs) < n:\n        a, b = b, a + b\n        if is_prime(b):\n            prime_fibs.append(b)\n    return prime_fibs[-1]",
+          "answer": "def prime_fib(n: int):\n    def is_prime(num):\n        if num <= 1:\n            return False\n        if num <= 3:\n            return True\n        if num % 2 == 0 or num % 3 == 0:\n            return False\n        i = 5\n        while i * i <= num:\n            if num % i == 0 or num % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    def fibonacci():\n        a, b = 0, 1\n        while True:\n            yield b\n            a, b = b, a + b\n\n    fib_gen = fibonacci()\n    count = 0\n    while True:\n        fib_num = next(fib_gen)\n        if is_prime(fib_num):\n            count += 1\n            if count == n:\n                return fib_num",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1114,7 +1114,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(1) == 2\n           ^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 48.13504219055176,
+            "runtime_ms": 61.70392036437988,
             "error": "FAIL_ASSERTION:\n    assert candidate(1) == 2\n           ^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -1130,7 +1130,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def triples_sum_to_zero(l: list):\n    n = len(l)\n    l.sort()\n    for i in range(n - 2):\n        if i > 0 and l[i] == l[i - 1]:\n            continue\n        left, right = i + 1, n - 1\n        while left < right:\n            total = l[i] + l[left] + l[right]\n            if total == 0:\n                return True\n            elif total < 0:\n                left += 1\n            else:\n                right -= 1\n    return False",
+          "answer": "def triples_sum_to_zero(l: list):\n    \"\"\"\n    triples_sum_to_zero takes a list of integers as an input.\n    it returns True if there are three distinct elements in the list that\n    sum to zero, and False otherwise.\n    \"\"\"\n    n = len(l)\n    l.sort()\n    for i in range(n - 2):\n        if i > 0 and l[i] == l[i - 1]:\n            continue\n        left, right = i + 1, n - 1\n        while left < right:\n            total = l[i] + l[left] + l[right]\n            if total == 0:\n                return True\n            elif total < 0:\n                left += 1\n            else:\n                right -= 1\n    return False",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1142,7 +1142,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.23405838012695,
+            "runtime_ms": 55.78899383544922,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1169,9 +1169,9 @@
             "passed_count": 0,
             "total_count": 5,
             "stdout": "",
-            "stderr": "  File \"/var/folders/bs/1c6zdbzj6w79xtnhmf7r6hl80000gn/T/tmph0lgvyku/test_module.py\", line 9\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 54)\n",
-            "runtime_ms": 41.914939880371094,
-            "error": "File \"/var/folders/bs/1c6zdbzj6w79xtnhmf7r6hl80000gn/T/tmph0lgvyku/test_module.py\", line 9\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 54)",
+            "stderr": "  File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmp3nc5wdad/test_module.py\", line 9\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 54)\n",
+            "runtime_ms": 54.96382713317871,
+            "error": "File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmp3nc5wdad/test_module.py\", line 9\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 54)",
             "error_type": "compile_error",
             "traceback_excerpt": "SyntaxError: unterminated triple-quoted string literal (detected at line 54)",
             "failing_location": "SyntaxError: unterminated triple-quoted string literal (detected at line 54)"
@@ -1198,7 +1198,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.80182647705078,
+            "runtime_ms": 58.1209659576416,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1226,7 +1226,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.139116287231445,
+            "runtime_ms": 57.71303176879883,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1242,7 +1242,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def change_base(x: int, base: int):\n    \"\"\"Change numerical base of input number x to base.\n    return string representation after the conversion.\n    base numbers are less than 10.\n    >>> change_base(8, 3)\n    '22'\n    >>> change_base(8, 2)\n    '1000'\n    >>> change_base(7, 2)\n    '111'\n    \"\"\"\n    if x == 0:\n        return '0'\n    digits = []\n    while x:\n        digits.append(str(x % base))\n        x //= base\n    return ''.join(reversed(digits))",
+          "answer": "def change_base(x: int, base: int):\n    if x == 0:\n        return '0'\n    digits = []\n    while x:\n        digits.append(str(x % base))\n        x //= base\n    return ''.join(reversed(digits))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1254,7 +1254,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.98588562011719,
+            "runtime_ms": 56.95486068725586,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1282,7 +1282,7 @@
             "total_count": 3,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.169851303100586,
+            "runtime_ms": 57.43002891540527,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1298,7 +1298,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def fib4(n: int):\n    if n == 0 or n == 1 or n == 3:\n        return 0\n    elif n == 2:\n        return 2\n    \n    fib = [0, 0, 2, 0]\n    for i in range(4, n + 1):\n        next_fib = fib[0] + fib[1] + fib[2] + fib[3]\n        fib[0], fib[1], fib[2], fib[3] = fib[1], fib[2], fib[3], next_fib\n    return fib[3]",
+          "answer": "def fib4(n: int):\n    if n == 0 or n == 1 or n == 3:\n        return 0\n    if n == 2:\n        return 2\n    fib4_seq = [0, 0, 2, 0]\n    for i in range(4, n + 1):\n        next_value = fib4_seq[-1] + fib4_seq[-2] + fib4_seq[-3] + fib4_seq[-4]\n        fib4_seq.append(next_value)\n    return fib4_seq[n]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1310,7 +1310,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.22404479980469,
+            "runtime_ms": 59.3259334564209,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1338,7 +1338,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.30470275878906,
+            "runtime_ms": 48.37775230407715,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1366,7 +1366,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.333717346191406,
+            "runtime_ms": 53.50303649902344,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1394,7 +1394,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.73094367980957,
+            "runtime_ms": 57.30795860290527,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1422,7 +1422,7 @@
             "total_count": 1,
             "stdout": "FAIL_RUNTIME:\n    encoded_str = encode_shift(str)\n                  ^^^^^^^^^^^^\nNameError: name 'encode_shift' is not defined. Did you mean: 'decode_shift'?\n",
             "stderr": "",
-            "runtime_ms": 56.8389892578125,
+            "runtime_ms": 67.51489639282227,
             "error": "FAIL_RUNTIME:\n    encoded_str = encode_shift(str)\n                  ^^^^^^^^^^^^\nNameError: name 'encode_shift' is not defined. Did you mean: 'decode_shift'?",
             "error_type": "runtime_error",
             "traceback_excerpt": "NameError: name 'encode_shift' is not defined. Did you mean: 'decode_shift'?",
@@ -1450,7 +1450,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 39.331912994384766,
+            "runtime_ms": 56.35499954223633,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1478,7 +1478,7 @@
             "total_count": 6,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 52.14095115661621,
+            "runtime_ms": 50.53901672363281,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1506,7 +1506,7 @@
             "total_count": 6,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.566123962402344,
+            "runtime_ms": 60.78505516052246,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1534,7 +1534,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.525001525878906,
+            "runtime_ms": 49.78609085083008,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1562,7 +1562,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.00820350646973,
+            "runtime_ms": 53.03621292114258,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1590,7 +1590,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.1938591003418,
+            "runtime_ms": 48.72322082519531,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1606,7 +1606,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def monotonic(l: list):\n    if not l:\n        return True\n    increasing = decreasing = True\n    for i in range(1, len(l)):\n        if l[i] > l[i - 1]:\n            decreasing = False\n        if l[i] < l[i - 1]:\n            increasing = False\n    return increasing or decreasing",
+          "answer": "def monotonic(l: list):\n    if all(l[i] <= l[i + 1] for i in range(len(l) - 1)):\n        return True\n    if all(l[i] >= l[i + 1] for i in range(len(l) - 1)):\n        return True\n    return False",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1618,7 +1618,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 41.910648345947266,
+            "runtime_ms": 50.21309852600098,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1634,27 +1634,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def common(l1: list, l2: list):\n    \"\"\"Return sorted unique common elements for two lists.\"\"\"\n    return sorted(set(l1) & set(l2))",
+          "answer": "def common(l1: list, l2: list):\n    \"\"\"Return sorted unique common elements for two lists.\n    >>> common([1, 4, 3, 34, 653, 2, 5], [5, 7, 1, 5, 9, 653, 121])\n    [1, 5, 653]\n    >>> common([5, 3, 2, 8], [3, 2])\n    [2, 3]\n\n    \"\"\"\n    return sorted(set(l1) & set(l2))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 4,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 4,
-            "stdout": "PASS: All tests passed\n",
-            "stderr": "",
-            "runtime_ms": 48.60210418701172,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "stdout": "",
+            "stderr": "  File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmpxnjr8erh/test_module.py\", line 9\n    \"\"\"Return sorted unique common elements for two lists.\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 50)\n",
+            "runtime_ms": 53.18021774291992,
+            "error": "File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmpxnjr8erh/test_module.py\", line 9\n    \"\"\"Return sorted unique common elements for two lists.\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 50)",
+            "error_type": "compile_error",
+            "traceback_excerpt": "SyntaxError: unterminated triple-quoted string literal (detected at line 50)",
+            "failing_location": "SyntaxError: unterminated triple-quoted string literal (detected at line 50)"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/59",
@@ -1662,7 +1662,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def largest_prime_factor(n: int):\n    \"\"\"Return the largest prime factor of n. Assume n > 1 and is not a prime.\"\"\"\n    def is_prime(num):\n        if num <= 1:\n            return False\n        if num <= 3:\n            return True\n        if num % 2 == 0 or num % 3 == 0:\n            return False\n        i = 5\n        while i * i <= num:\n            if num % i == 0 or num % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    largest_factor = 1\n    factor = 2\n    while n % factor == 0:\n        largest_factor = factor\n        n //= factor\n    factor = 3\n    while factor * factor <= n:\n        while n % factor == 0:\n            largest_factor = factor\n            n //= factor\n        factor += 2\n    if n > 2:\n        largest_factor = n\n    return largest_factor",
+          "answer": "def largest_prime_factor(n: int):\n    \"\"\"Return the largest prime factor of n. Assume n > 1 and is not a prime.\"\"\"\n    def is_prime(x):\n        if x <= 1:\n            return False\n        if x <= 3:\n            return True\n        if x % 2 == 0 or x % 3 == 0:\n            return False\n        i = 5\n        while i * i <= x:\n            if x % i == 0 or x % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    factor = 2\n    while n % factor == 0:\n        n //= factor\n    factor = 3\n    while factor * factor <= n:\n        while n % factor == 0:\n            n //= factor\n        factor += 2\n    if n > 2:\n        return n\n    return factor - 2",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1674,7 +1674,7 @@
             "total_count": 5,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(15) == 5\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 56.207895278930664,
+            "runtime_ms": 59.7078800201416,
             "error": "FAIL_ASSERTION:\n    assert candidate(15) == 5\n           ^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -1702,7 +1702,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.02513122558594,
+            "runtime_ms": 54.834842681884766,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1718,7 +1718,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def correct_bracketing(brackets: str):\n    balance = 0\n    for char in brackets:\n        if char == '(':\n            balance += 1\n        elif char == ')':\n            balance -= 1\n        if balance < 0:\n            return False\n    return balance == 0",
+          "answer": "def correct_bracketing(brackets: str):\n    count = 0\n    for char in brackets:\n        if char == '(':\n            count += 1\n        elif char == ')':\n            count -= 1\n        if count < 0:\n            return False\n    return count == 0",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1730,7 +1730,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 43.15495491027832,
+            "runtime_ms": 56.47706985473633,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1758,7 +1758,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 44.217824935913086,
+            "runtime_ms": 55.64713478088379,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1774,27 +1774,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def fibfib(n: int):\n    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 1\n\n    a, b, c = 0, 0, 1\n    for _ in range(3, n + 1):\n        a, b, c = b, c, a + b + c\n    return c",
+          "answer": "def fibfib(n: int):\n    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 1\n    \n    a, b, c = 0, 0, 1\n    for _ in range(3, n + 1):\n        a, b, c = b, c, a + b + c\n    return c",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 0,
+          "accuracy": 1,
           "execution_details": {
-            "passed": false,
-            "passed_count": 0,
+            "passed": true,
+            "passed_count": 7,
             "total_count": 7,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate(5) == 4\n           ^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.81906509399414,
-            "error": "FAIL_ASSERTION:\n    assert candidate(5) == 4\n           ^^^^^^^^^^^^^^^^^\nAssertionError",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError",
-            "failing_location": "AssertionError"
+            "runtime_ms": 58.39991569519043,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
           }
         }
       ],
-      "final_accuracy": 0
+      "final_accuracy": 1
     },
     {
       "qid": "HumanEval/64",
@@ -1814,7 +1814,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 53.85923385620117,
+            "runtime_ms": 54.14605140686035,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1830,27 +1830,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def circular_shift(x, shift):\n    digits = str(x)\n    n = len(digits)\n    if shift >= n:\n        return digits[::-1]\n    shift = shift % n\n    return digits[-shift:] + digits[:-shift]",
+          "answer": "def circular_shift(x, shift):\n    s = str(x)\n    n = len(s)\n    if shift > n:\n        return s[::-1]\n    shift = shift % n\n    return s[-shift:] + s[:-shift]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 0,
+          "accuracy": 1,
           "execution_details": {
-            "passed": false,
-            "passed_count": 0,
+            "passed": true,
+            "passed_count": 7,
             "total_count": 7,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate(12, 2) == \"12\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 52.796363830566406,
-            "error": "FAIL_ASSERTION:\n    assert candidate(12, 2) == \"12\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError",
-            "failing_location": "AssertionError"
+            "runtime_ms": 55.377960205078125,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
           }
         }
       ],
-      "final_accuracy": 0
+      "final_accuracy": 1
     },
     {
       "qid": "HumanEval/66",
@@ -1870,7 +1870,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.79395866394043,
+            "runtime_ms": 57.218074798583984,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1898,7 +1898,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.51284217834473,
+            "runtime_ms": 50.58479309082031,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1914,7 +1914,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def pluck(arr):\n    smallest_even = float('inf')\n    index = -1\n    for i, num in enumerate(arr):\n        if num % 2 == 0 and num < smallest_even:\n            smallest_even = num\n            index = i\n    return [smallest_even, index] if index != -1 else []",
+          "answer": "def pluck(arr):\n    smallest_even = float('inf')\n    index = -1\n    for i, value in enumerate(arr):\n        if value % 2 == 0 and value < smallest_even:\n            smallest_even = value\n            index = i\n    return [smallest_even, index] if index != -1 else []",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1926,7 +1926,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 44.33488845825195,
+            "runtime_ms": 56.742191314697266,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1942,7 +1942,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def search(lst):\n    from collections import Counter\n    freq = Counter(lst)\n    result = -1\n    for num, count in freq.items():\n        if count >= num and num > result:\n            result = num\n    return result",
+          "answer": "def search(lst):\n    from collections import Counter\n    count = Counter(lst)\n    result = -1\n    for num in count:\n        if count[num] >= num and num > result:\n            result = num\n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -1954,7 +1954,7 @@
             "total_count": 25,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.978878021240234,
+            "runtime_ms": 56.34498596191406,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -1982,7 +1982,7 @@
             "total_count": 10,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 43.718814849853516,
+            "runtime_ms": 56.07295036315918,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2010,7 +2010,7 @@
             "total_count": 11,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.64215850830078,
+            "runtime_ms": 55.44304847717285,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2038,7 +2038,7 @@
             "total_count": 6,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.87190055847168,
+            "runtime_ms": 53.97605895996094,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2066,7 +2066,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.36208915710449,
+            "runtime_ms": 53.942203521728516,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2082,27 +2082,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def total_match(lst1, lst2):\n    def total_chars(lst):\n        return sum(len(s) for s in lst)\n    \n    total1 = total_chars(lst1)\n    total2 = total_chars(lst2)\n    \n    if total1 < total2:\n        return lst1\n    elif total2 < total1:\n        return lst2\n    else:\n        return lst1",
+          "answer": "def total_match(lst1, lst2):\n    '''\n    Write a function that accepts two lists of strings and returns the list that has \n    total number of chars in the all strings of the list less than the other list.\n\n    if the two lists have the same number of chars, return the first list.\n\n    Examples\n    total_match([], []) \u279e []\n    total_match(['hi', 'admin'], ['hI', 'Hi']) \u279e ['hI', 'Hi']\n    total_match(['hi', 'admin'], ['hi', 'hi', 'admin', 'project']) \u279e ['hi', 'admin']\n    total_match(['hi', 'admin'], ['hI', 'hi', 'hi']) \u279e ['hI', 'hi', 'hi']\n    total_match(['4'], ['1', '2', '3', '4', '5']) \u279e ['4']\n    '''\n    total_chars_lst1 = sum(len(s) for s in lst1)\n    total_chars_lst2 = sum(len(s) for s in lst2)\n    \n    if total_chars_lst1 < total_chars_lst2:\n        return lst1\n    elif total_chars_lst2 < total_chars_lst1:\n        return lst2\n    else:\n        return lst1",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 13,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 13,
-            "stdout": "PASS: All tests passed\n",
-            "stderr": "",
-            "runtime_ms": 47.4398136138916,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "stdout": "",
+            "stderr": "  File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmpynpb19eh/test_module.py\", line 9\n    '''\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 55)\n",
+            "runtime_ms": 57.31487274169922,
+            "error": "File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmpynpb19eh/test_module.py\", line 9\n    '''\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 55)",
+            "error_type": "compile_error",
+            "traceback_excerpt": "SyntaxError: unterminated triple-quoted string literal (detected at line 55)",
+            "failing_location": "SyntaxError: unterminated triple-quoted string literal (detected at line 55)"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/75",
@@ -2110,7 +2110,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def is_multiply_prime(a):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    primes = [i for i in range(2, 100) if is_prime(i)]\n    \n    for i in range(len(primes)):\n        for j in range(i, len(primes)):\n            for k in range(j, len(primes)):\n                if primes[i] * primes[j] * primes[k] == a:\n                    return True\n    return False",
+          "answer": "def is_multiply_prime(a):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    if a < 2:\n        return False\n\n    primes = [i for i in range(2, a) if is_prime(i)]\n\n    for i in range(len(primes)):\n        for j in range(i, len(primes)):\n            for k in range(j, len(primes)):\n                if primes[i] * primes[j] * primes[k] == a:\n                    return True\n    return False",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2122,7 +2122,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(5) == False\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 56.56313896179199,
+            "runtime_ms": 59.04412269592285,
             "error": "FAIL_ASSERTION:\n    assert candidate(5) == False\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -2150,7 +2150,7 @@
             "total_count": 20,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.93812942504883,
+            "runtime_ms": 55.803775787353516,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2178,7 +2178,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.045894622802734,
+            "runtime_ms": 55.41682243347168,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2206,7 +2206,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 45.202016830444336,
+            "runtime_ms": 57.708024978637695,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2234,7 +2234,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.33977127075195,
+            "runtime_ms": 50.267934799194336,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2262,7 +2262,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.63786697387695,
+            "runtime_ms": 43.0450439453125,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2278,7 +2278,35 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def numerical_letter_grade(grades):\n    letter_grades = []\n    for gpa in grades:\n        if gpa == 4.0:\n            letter_grades.append('A+')\n        elif gpa > 3.7:\n            letter_grades.append('A')\n        elif gpa > 3.3:\n            letter_grades.append('A-')\n        elif gpa > 3.0:\n            letter_grades.append('B+')\n        elif gpa > 2.7:\n            letter_grades.append('B')\n        elif gpa > 2.3:\n            letter_grades.append('B-')\n        elif gpa > 2.0:\n            letter_grades.append('C+')\n        elif gpa > 1.7:\n            letter_grades.append('C')\n        elif gpa > 1.3:\n            letter_grades.append('C-')\n        elif gpa > 1.0:\n            letter_grades.append('D+')\n        elif gpa > 0.7:\n            letter_grades.append('D')\n        elif gpa > 0.0:\n            letter_grades.append('D-')\n        else:\n            letter_grades.append('E')\n    return letter_grades",
+          "answer": "def numerical_letter_grade(grades):\n    def gpa_to_letter(gpa):\n        if gpa == 4.0:\n            return 'A+'\n        elif gpa > 3.7:\n            return 'A'\n        elif gpa > 3.3:\n            return 'A-'\n        elif gpa > 3.0:\n            return 'B+'\n        elif gpa > 2.7:\n            return 'B'\n        elif gpa > 2.3:\n            return 'B-'\n        elif gpa > 2.0:\n            return 'C+'\n        elif gpa > 1.7:\n            return 'C'\n        elif gpa > 1.3:\n            return 'C-'\n        elif gpa > 1.0:\n            return 'D+'\n        elif gpa > 0.7:\n            return 'D'\n        elif gpa > 0.0:\n            return 'D-'\n        else:\n            return 'E'\n\n    return [gpa_to_letter(gpa) for gpa in grades]",
+          "self_conf": 0.6,
+          "teacher_bias": "Confirmation",
+          "teacher_conf": 0.6,
+          "template": null,
+          "accuracy": 0,
+          "execution_details": {
+            "passed": false,
+            "passed_count": 0,
+            "total_count": 7,
+            "stdout": "FAIL_ASSERTION:\n    assert candidate([4.0, 3, 1.7, 2, 3.5]) == ['A+', 'B', 'C-', 'C', 'A-']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "stderr": "",
+            "runtime_ms": 57.98077583312988,
+            "error": "FAIL_ASSERTION:\n    assert candidate([4.0, 3, 1.7, 2, 3.5]) == ['A+', 'B', 'C-', 'C', 'A-']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError",
+            "failing_location": "AssertionError"
+          }
+        }
+      ],
+      "final_accuracy": 0
+    },
+    {
+      "qid": "HumanEval/82",
+      "question": "\ndef prime_length(string):\n    \"\"\"Write a function that takes a string and returns True if the string\n    length is a prime number or False otherwise\n    Examples\n    prime_length('Hello') == True\n    prime_length('abcdcba') == True\n    prime_length('kittens') == True\n    prime_length('orange') == False\n    \"\"\"\n",
+      "reference": "",
+      "turns": [
+        {
+          "answer": "def prime_length(string):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n    \n    return is_prime(len(string))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2286,11 +2314,11 @@
           "accuracy": 1,
           "execution_details": {
             "passed": true,
-            "passed_count": 7,
-            "total_count": 7,
+            "passed_count": 16,
+            "total_count": 16,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.42782020568848,
+            "runtime_ms": 51.60999298095703,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2301,60 +2329,32 @@
       "final_accuracy": 1
     },
     {
-      "qid": "HumanEval/82",
-      "question": "\ndef prime_length(string):\n    \"\"\"Write a function that takes a string and returns True if the string\n    length is a prime number or False otherwise\n    Examples\n    prime_length('Hello') == True\n    prime_length('abcdcba') == True\n    prime_length('kittens') == True\n    prime_length('orange') == False\n    \"\"\"\n",
-      "reference": "",
-      "turns": [
-        {
-          "answer": "def prime_length(string):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    return is_prime(len(string))",
-          "self_conf": 0.6,
-          "teacher_bias": "Confirmation",
-          "teacher_conf": 0.6,
-          "template": null,
-          "accuracy": 0,
-          "execution_details": {
-            "passed": false,
-            "passed_count": 0,
-            "total_count": 16,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate('Hello') == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
-            "stderr": "",
-            "runtime_ms": 53.1010627746582,
-            "error": "FAIL_ASSERTION:\n    assert candidate('Hello') == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError",
-            "failing_location": "AssertionError"
-          }
-        }
-      ],
-      "final_accuracy": 0
-    },
-    {
       "qid": "HumanEval/83",
       "question": "\ndef starts_one_ends(n):\n    \"\"\"\n    Given a positive integer n, return the count of the numbers of n-digit\n    positive integers that start or end with 1.\n    \"\"\"\n",
       "reference": "",
       "turns": [
         {
-          "answer": "def starts_one_ends(n):\n    \"\"\"\n    Given a positive integer n, return the count of the numbers of n-digit\n    positive integers that start or end with 1.\n    \"\"\"\n    if n == 1:\n        return 1\n    total_numbers = 9 * 10**(n-1)\n    start_with_1 = 10**(n-1)\n    end_with_1 = 10**(n-1)\n    start_and_end_with_1 = 10**(n-2)\n    return start_with_1 + end_with_1 - start_and_end_with_1",
+          "answer": "def starts_one_ends(n):\n    \"\"\"\n    Given a positive integer n, return the count of the numbers of n-digit\n    positive integers that start or end with 1.\n    \"\"\"\n    if n == 1:\n        return 1\n    return 9 * (10 ** (n - 2)) * 2",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 0,
+          "accuracy": 1,
           "execution_details": {
-            "passed": false,
-            "passed_count": 0,
+            "passed": true,
+            "passed_count": 9,
             "total_count": 9,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate(2) == 18\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.37591743469238,
-            "error": "FAIL_ASSERTION:\n    assert candidate(2) == 18\n           ^^^^^^^^^^^^^^^^^^\nAssertionError",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError",
-            "failing_location": "AssertionError"
+            "runtime_ms": 40.284156799316406,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
           }
         }
       ],
-      "final_accuracy": 0
+      "final_accuracy": 1
     },
     {
       "qid": "HumanEval/84",
@@ -2374,7 +2374,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.7750301361084,
+            "runtime_ms": 41.844844818115234,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2402,7 +2402,7 @@
             "total_count": 4,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.00693893432617,
+            "runtime_ms": 43.357133865356445,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2430,7 +2430,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.262834548950195,
+            "runtime_ms": 55.580854415893555,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2458,7 +2458,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.186872482299805,
+            "runtime_ms": 58.712005615234375,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2486,7 +2486,7 @@
             "total_count": 11,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.6370792388916,
+            "runtime_ms": 57.67202377319336,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2502,27 +2502,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def encrypt(s):\n    def rotate_char(c):\n        if 'a' <= c <= 'z':\n            return chr((ord(c) - ord('a') + 4) % 26 + ord('a'))\n        return c\n\n    return ''.join(rotate_char(c) for c in s)",
+          "answer": "def encrypt(s):\n    def rotate_char(c):\n        if 'a' <= c <= 'z':\n            return chr(((ord(c) - ord('a') + 4) % 26) + ord('a'))\n        return c\n    \n    return ''.join(rotate_char(c) for c in s)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 0,
+          "accuracy": 1,
           "execution_details": {
-            "passed": false,
-            "passed_count": 0,
+            "passed": true,
+            "passed_count": 16,
             "total_count": 16,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate('hi') == 'lm', \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)\n",
+            "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 52.71196365356445,
-            "error": "FAIL_ASSERTION:\n    assert candidate('hi') == 'lm', \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError: This prints if this assert fails 1 (good for debugging!)",
-            "failing_location": "AssertionError: This prints if this assert fails 1 (good for debugging!)"
+            "runtime_ms": 56.915998458862305,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
           }
         }
       ],
-      "final_accuracy": 0
+      "final_accuracy": 1
     },
     {
       "qid": "HumanEval/90",
@@ -2542,7 +2542,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.55885696411133,
+            "runtime_ms": 59.45897102355957,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2558,7 +2558,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def is_bored(S):\n    sentences = S.split('.')\n    count = 0\n    for sentence in sentences:\n        sentence = sentence.strip()\n        if sentence.startswith('I'):\n            count += 1\n    return count",
+          "answer": "def is_bored(S):\n    count = 0\n    sentences = S.split('.')\n    for sentence in sentences:\n        sentence = sentence.strip()\n        if sentence.startswith('I'):\n            count += 1\n    return count",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2570,7 +2570,7 @@
             "total_count": 8,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(\"Is the sky blue?\") == 0, \"Test 2\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 2\n",
             "stderr": "",
-            "runtime_ms": 52.2618293762207,
+            "runtime_ms": 63.784122467041016,
             "error": "FAIL_ASSERTION:\n    assert candidate(\"Is the sky blue?\") == 0, \"Test 2\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 2",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError: Test 2",
@@ -2586,7 +2586,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def any_int(x, y, z):\n    if all(isinstance(i, int) for i in (x, y, z)):\n        return x == y + z or y == x + z or z == x + y\n    return False",
+          "answer": "def any_int(x, y, z):\n    '''\n    Create a function that takes 3 numbers.\n    Returns true if one of the numbers is equal to the sum of the other two, and all numbers are integers.\n    Returns false in any other cases.\n    '''\n    if all(isinstance(i, int) for i in (x, y, z)):\n        return x == y + z or y == x + z or z == x + y\n    return False",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2598,7 +2598,7 @@
             "total_count": 20,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.917842864990234,
+            "runtime_ms": 57.314157485961914,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2614,7 +2614,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def encode(message):\n    def swap_case_and_replace_vowels(char):\n        vowels = 'aeiouAEIOU'\n        replacements = {'a': 'c', 'e': 'g', 'i': 'k', 'o': 'q', 'u': 'w',\n                        'A': 'C', 'E': 'G', 'I': 'K', 'O': 'Q', 'U': 'W'}\n        if char in vowels:\n            return replacements[char]\n        else:\n            return char.swapcase()\n\n    return ''.join(swap_case_and_replace_vowels(char) for char in message)",
+          "answer": "def encode(message):\n    def swap_case_and_replace_vowels(char):\n        vowels = 'aeiouAEIOU'\n        replacements = 'cgkqwCGKQW'\n        if char in vowels:\n            return replacements[vowels.index(char)]\n        return char.swapcase()\n    \n    return ''.join(swap_case_and_replace_vowels(char) for char in message)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2626,7 +2626,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate('TEST') == 'tgst', \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)\n",
             "stderr": "",
-            "runtime_ms": 48.92420768737793,
+            "runtime_ms": 42.63114929199219,
             "error": "FAIL_ASSERTION:\n    assert candidate('TEST') == 'tgst', \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError: This prints if this assert fails 1 (good for debugging!)",
@@ -2642,7 +2642,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def skjkasdkd(lst):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    largest_prime = None\n    for num in lst:\n        if is_prime(num):\n            if largest_prime is None or num > largest_prime:\n                largest_prime = num\n\n    if largest_prime is None:\n        return 0\n\n    return sum(int(digit) for digit in str(largest_prime))",
+          "answer": "def skjkasdkd(lst):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    def sum_of_digits(n):\n        return sum(int(digit) for digit in str(n))\n\n    largest_prime = -1\n    for num in lst:\n        if is_prime(num):\n            largest_prime = max(largest_prime, num)\n\n    return sum_of_digits(largest_prime)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2654,7 +2654,7 @@
             "total_count": 18,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([0,3,2,1,3,5,7,4,5,5,5,2,181,32,4,32,3,2,32,324,4,3]) == 10, \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)\n",
             "stderr": "",
-            "runtime_ms": 54.325103759765625,
+            "runtime_ms": 61.0809326171875,
             "error": "FAIL_ASSERTION:\n    assert candidate([0,3,2,1,3,5,7,4,5,5,5,2,181,32,4,32,3,2,32,324,4,3]) == 10, \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError: This prints if this assert fails 1 (good for debugging!)",
@@ -2670,7 +2670,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def check_dict_case(dict):\n    if not dict:\n        return False\n    lower_case = all(isinstance(k, str) and k.islower() for k in dict)\n    upper_case = all(isinstance(k, str) and k.isupper() for k in dict)\n    return lower_case or upper_case",
+          "answer": "def check_dict_case(dict):\n    if not dict:\n        return False\n    all_lower = all(isinstance(k, str) and k.islower() for k in dict.keys())\n    all_upper = all(isinstance(k, str) and k.isupper() for k in dict.keys())\n    return all_lower or all_upper",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2682,7 +2682,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 45.25637626647949,
+            "runtime_ms": 56.11705780029297,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2710,7 +2710,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(5) == [2,3]\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 45.687198638916016,
+            "runtime_ms": 58.56609344482422,
             "error": "FAIL_ASSERTION:\n    assert candidate(5) == [2,3]\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -2726,7 +2726,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def multiply(a, b):\n    return (abs(a) % 10) * (abs(b) % 10)",
+          "answer": "def multiply(a, b):\n    return abs((a % 10) * (b % 10))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2738,7 +2738,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.19989204406738,
+            "runtime_ms": 39.68691825866699,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2766,7 +2766,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.86770248413086,
+            "runtime_ms": 39.34621810913086,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2794,7 +2794,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 46.0970401763916,
+            "runtime_ms": 56.397199630737305,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2822,7 +2822,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.08809471130371,
+            "runtime_ms": 51.83005332946777,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2850,7 +2850,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(\"One,, two, three, four, five, six,\") == [\"One\", \"two\", \"three\", \"four\", \"five\", \"six\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 44.608116149902344,
+            "runtime_ms": 51.90134048461914,
             "error": "FAIL_ASSERTION:\n    assert candidate(\"One,, two, three, four, five, six,\") == [\"One\", \"two\", \"three\", \"four\", \"five\", \"six\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -2878,7 +2878,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 54.574012756347656,
+            "runtime_ms": 50.18281936645508,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2906,7 +2906,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.494028091430664,
+            "runtime_ms": 53.38311195373535,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2922,7 +2922,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def unique_digits(x):\n    def has_even_digit(n):\n        return any(int(d) % 2 == 0 for d in str(n))\n    \n    result = [num for num in x if not has_even_digit(num)]\n    return sorted(result)",
+          "answer": "def unique_digits(x):\n    def has_even_digit(n):\n        return any(d in '02468' for d in str(n))\n    \n    result = [num for num in x if not has_even_digit(num)]\n    return sorted(result)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2934,7 +2934,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.82392692565918,
+            "runtime_ms": 43.95914077758789,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2950,7 +2950,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def by_length(arr):\n    digit_names = {\n        1: \"One\",\n        2: \"Two\",\n        3: \"Three\",\n        4: \"Four\",\n        5: \"Five\",\n        6: \"Six\",\n        7: \"Seven\",\n        8: \"Eight\",\n        9: \"Nine\"\n    }\n    filtered = [x for x in arr if 1 <= x <= 9]\n    filtered.sort(reverse=True)\n    return [digit_names[x] for x in filtered]",
+          "answer": "def by_length(arr):\n    digit_names = {\n        1: \"One\", 2: \"Two\", 3: \"Three\", 4: \"Four\", 5: \"Five\",\n        6: \"Six\", 7: \"Seven\", 8: \"Eight\", 9: \"Nine\"\n    }\n    filtered_sorted = sorted([x for x in arr if 1 <= x <= 9], reverse=True)\n    return [digit_names[x] for x in filtered_sorted]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -2962,7 +2962,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.86708068847656,
+            "runtime_ms": 54.62288856506348,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -2978,27 +2978,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def f(n):\n    def factorial(x):\n        result = 1\n        for i in range(1, x + 1):\n            result *= i\n        return result\n\n    def sum_to(x):\n        return x * (x + 1) // 2\n\n    result = []\n    for i in range(1, n + 1):\n        if i % 2 == 0:\n            result.append(factorial(i))\n        else:\n            result.append(sum_to(i))\n    return result",
+          "answer": "def f(n):\n    def factorial(x):\n        result = 1\n        for i in range(1, x + 1):\n            result *= i\n        return result\n    \n    def sum_of_numbers(x):\n        return x * (x + 1) // 2\n    \n    result = []\n    for i in range(1, n + 1):\n        if i % 2 == 0:\n            result.append(factorial(i))\n        else:\n            result.append(sum_of_numbers(i))\n    \n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 0,
+          "accuracy": 1,
           "execution_details": {
-            "passed": false,
-            "passed_count": 0,
+            "passed": true,
+            "passed_count": 4,
             "total_count": 4,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate(5) == [1, 2, 6, 24, 15]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 55.43780326843262,
-            "error": "FAIL_ASSERTION:\n    assert candidate(5) == [1, 2, 6, 24, 15]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError",
-            "failing_location": "AssertionError"
+            "runtime_ms": 52.91295051574707,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
           }
         }
       ],
-      "final_accuracy": 0
+      "final_accuracy": 1
     },
     {
       "qid": "HumanEval/107",
@@ -3018,7 +3018,7 @@
             "total_count": 10,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.076080322265625,
+            "runtime_ms": 56.82086944580078,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3034,7 +3034,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def count_nums(arr):\n    def sum_of_digits(n):\n        s = 0\n        str_n = str(n)\n        for i, char in enumerate(str_n):\n            if i == 0 and char == '-':\n                s -= int(str_n[i+1])\n            elif char.isdigit():\n                s += int(char)\n        return s\n\n    count = 0\n    for num in arr:\n        if sum_of_digits(num) > 0:\n            count += 1\n    return count",
+          "answer": "def count_nums(arr):\n    def sum_of_digits(n):\n        s = 0\n        is_negative = n < 0\n        n = abs(n)\n        while n > 0:\n            s += n % 10\n            n //= 10\n        return -s if is_negative else s\n\n    count = 0\n    for num in arr:\n        if sum_of_digits(num) > 0:\n            count += 1\n    return count",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3046,7 +3046,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([]) == 0\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 46.582937240600586,
+            "runtime_ms": 50.241947174072266,
             "error": "FAIL_ASSERTION:\n    assert candidate([]) == 0\n           ^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3074,7 +3074,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 43.035030364990234,
+            "runtime_ms": 50.353050231933594,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3102,7 +3102,7 @@
             "total_count": 7,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([1, 2, 3, 4], [1, 5, 3, 4]) == \"NO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 52.170753479003906,
+            "runtime_ms": 58.58206748962402,
             "error": "FAIL_ASSERTION:\n    assert candidate([1, 2, 3, 4], [1, 5, 3, 4]) == \"NO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3118,7 +3118,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def histogram(test):\n    from collections import Counter\n    if not test:\n        return {}\n    counts = Counter(test.split())\n    max_count = max(counts.values())\n    return {letter: count for letter, count in counts.items() if count == max_count}",
+          "answer": "def histogram(test):\n    from collections import Counter\n    if not test:\n        return {}\n    counts = Counter(test.split())\n    max_count = max(counts.values())\n    return {char: count for char, count in counts.items() if count == max_count}",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3130,7 +3130,7 @@
             "total_count": 16,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.6149787902832,
+            "runtime_ms": 55.18198013305664,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3146,7 +3146,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def reverse_delete(s, c):\n    result = ''.join(char for char in s if char not in c)\n    is_palindrome = result == result[::-1]\n    return result, is_palindrome",
+          "answer": "def reverse_delete(s, c):\n    result = ''.join(char for char in s if char not in c)\n    is_palindrome = result == result[::-1]\n    return (result, is_palindrome)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3158,7 +3158,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.11882972717285,
+            "runtime_ms": 54.40711975097656,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3174,7 +3174,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def odd_count(lst):\n    def count_odds(s):\n        return sum(1 for char in s if char in '13579')\n    \n    result = []\n    for s in lst:\n        count = count_odds(s)\n        result.append(f\"the number of odd elements {count}n the str{count}ng {count} of the {count}nput.\")\n    \n    return result",
+          "answer": "def odd_count(lst):\n    def count_odds(s):\n        return sum(1 for char in s if char in '13579')\n    \n    result = []\n    for s in lst:\n        odd_count = count_odds(s)\n        result.append(f\"the number of odd elements {odd_count}n the str{odd_count}ng {odd_count} of the {odd_count}nput.\")\n    \n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3186,7 +3186,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.67086219787598,
+            "runtime_ms": 54.482221603393555,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3214,7 +3214,7 @@
             "total_count": 14,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.107147216796875,
+            "runtime_ms": 55.81188201904297,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3242,7 +3242,7 @@
             "total_count": 9,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([[1,1,1,1], [1,1,1,1]], 9) == 2, \"Error\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Error\n",
             "stderr": "",
-            "runtime_ms": 51.14603042602539,
+            "runtime_ms": 53.6189079284668,
             "error": "FAIL_ASSERTION:\n    assert candidate([[1,1,1,1], [1,1,1,1]], 9) == 2, \"Error\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Error",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError: Error",
@@ -3270,7 +3270,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.27372932434082,
+            "runtime_ms": 33.82706642150879,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3286,7 +3286,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def select_words(s, n):\n    vowels = set('aeiouAEIOU')\n    words = s.split()\n    result = []\n    for word in words:\n        consonant_count = sum(1 for char in word if char not in vowels)\n        if consonant_count == n:\n            result.append(word)\n    return result",
+          "answer": "def select_words(s, n):\n    vowels = set('aeiouAEIOU')\n    words = s.split()\n    result = []\n    for word in words:\n        consonant_count = sum(1 for char in word if char.isalpha() and char not in vowels)\n        if consonant_count == n:\n            result.append(word)\n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3298,7 +3298,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 44.61169242858887,
+            "runtime_ms": 54.33487892150879,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3314,7 +3314,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def get_closest_vowel(word):\n    vowels = \"aeiouAEIOU\"\n    length = len(word)\n    for i in range(length - 2, 0, -1):\n        if word[i] in vowels and word[i - 1] not in vowels and word[i + 1] not in vowels:\n            return word[i]\n    return \"\"",
+          "answer": "def get_closest_vowel(word):\n    vowels = \"aeiouAEIOU\"\n    n = len(word)\n    for i in range(n - 2, 0, -1):\n        if word[i] in vowels and word[i - 1] not in vowels and word[i + 1] not in vowels:\n            return word[i]\n    return \"\"",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3326,7 +3326,7 @@
             "total_count": 14,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 41.497230529785156,
+            "runtime_ms": 54.5651912689209,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3342,7 +3342,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def match_parens(lst):\n    open1, close1 = lst[0].count('('), lst[0].count(')')\n    open2, close2 = lst[1].count('('), lst[1].count(')')\n    \n    if open1 + open2 != close1 + close2:\n        return 'No'\n    \n    if open1 >= close2 or open2 >= close1:\n        return 'Yes'\n    \n    return 'No'",
+          "answer": "def match_parens(lst):\n    open1, close1 = lst[0].count('('), lst[0].count(')')\n    open2, close2 = lst[1].count('('), lst[1].count(')')\n    \n    if open1 + open2 == close1 + close2:\n        return 'Yes'\n    return 'No'",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3354,7 +3354,7 @@
             "total_count": 12,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([')(', ')(']) == 'No'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 51.23591423034668,
+            "runtime_ms": 55.61494827270508,
             "error": "FAIL_ASSERTION:\n    assert candidate([')(', ')(']) == 'No'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3382,7 +3382,7 @@
             "total_count": 11,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.71416091918945,
+            "runtime_ms": 46.68283462524414,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3410,7 +3410,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.49505424499512,
+            "runtime_ms": 52.80494689941406,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3438,7 +3438,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.0870475769043,
+            "runtime_ms": 52.9332160949707,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3466,7 +3466,7 @@
             "total_count": 6,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.695180892944336,
+            "runtime_ms": 57.21926689147949,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3482,7 +3482,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def valid_date(date):\n    if not date:\n        return False\n    if len(date) != 10 or date[2] != '-' or date[5] != '-':\n        return False\n    try:\n        month, day, year = map(int, date.split('-'))\n    except ValueError:\n        return False\n    if month < 1 or month > 12:\n        return False\n    if month in {1, 3, 5, 7, 8, 10, 12}:\n        if day < 1 or day > 31:\n            return False\n    elif month in {4, 6, 9, 11}:\n        if day < 1 or day > 30:\n            return False\n    elif month == 2:\n        if day < 1 or day > 29:\n            return False\n    return True",
+          "answer": "def valid_date(date):\n    if not date:\n        return False\n    \n    if len(date) != 10 or date[2] != '-' or date[5] != '-':\n        return False\n    \n    try:\n        month, day, year = map(int, date.split('-'))\n    except ValueError:\n        return False\n    \n    if month < 1 or month > 12:\n        return False\n    \n    if month in {1, 3, 5, 7, 8, 10, 12}:\n        if day < 1 or day > 31:\n            return False\n    elif month in {4, 6, 9, 11}:\n        if day < 1 or day > 30:\n            return False\n    elif month == 2:\n        if day < 1 or day > 29:\n            return False\n    \n    return True",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3494,7 +3494,7 @@
             "total_count": 16,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.00193214416504,
+            "runtime_ms": 62.355995178222656,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3510,7 +3510,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def split_words(txt):\n    if ' ' in txt:\n        return txt.split()\n    elif ',' in txt:\n        return txt.split(',')\n    else:\n        return sum(1 for char in txt if char.islower() and (ord(char) - ord('a')) % 2 == 0)",
+          "answer": "def split_words(txt):\n    if ' ' in txt:\n        return txt.split()\n    elif ',' in txt:\n        return txt.split(',')\n    else:\n        return sum(1 for c in txt if c.islower() and (ord(c) - ord('a')) % 2 == 0)",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3522,7 +3522,7 @@
             "total_count": 8,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(\"aaabb\") == 2\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 50.74119567871094,
+            "runtime_ms": 68.40872764587402,
             "error": "FAIL_ASSERTION:\n    assert candidate(\"aaabb\") == 2\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3538,7 +3538,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def is_sorted(lst):\n    if not lst:\n        return True\n    for i in range(1, len(lst)):\n        if lst[i] < lst[i - 1]:\n            return False\n        if i > 1 and lst[i] == lst[i - 1] == lst[i - 2]:\n            return False\n    return True",
+          "answer": "def is_sorted(lst):\n    if len(lst) <= 1:\n        return True\n    for i in range(1, len(lst)):\n        if lst[i] < lst[i - 1]:\n            return False\n        if i > 1 and lst[i] == lst[i - 1] == lst[i - 2]:\n            return False\n    return True",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3550,7 +3550,7 @@
             "total_count": 21,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 42.259931564331055,
+            "runtime_ms": 57.92117118835449,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3566,27 +3566,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def intersection(interval1, interval2):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n    \n    start1, end1 = interval1\n    start2, end2 = interval2\n    \n    intersection_start = max(start1, start2)\n    intersection_end = min(end1, end2)\n    \n    if intersection_start > intersection_end:\n        return \"NO\"\n    \n    intersection_length = intersection_end - intersection_start\n    \n    if is_prime(intersection_length):\n        return \"YES\"\n    else:\n        return \"NO\"",
+          "answer": "def intersection(interval1, interval2):\n    def is_prime(n):\n        if n <= 1:\n            return False\n        if n <= 3:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        i = 5\n        while i * i <= n:\n            if n % i == 0 or n % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    start1, end1 = interval1\n    start2, end2 = interval2\n\n    intersection_start = max(start1, start2)\n    intersection_end = min(end1, end2)\n\n    if intersection_start > intersection_end:\n        return \"NO\"\n\n    intersection_length = intersection_end - intersection_start\n\n    if is_prime(intersection_length):\n        return \"YES\"\n    else:\n        return \"NO\"",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 8,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 8,
-            "stdout": "PASS: All tests passed\n",
+            "stdout": "FAIL_ASSERTION:\n    assert candidate((1, 2), (2, 3)) == \"NO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 49.54862594604492,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "runtime_ms": 61.12408638000488,
+            "error": "FAIL_ASSERTION:\n    assert candidate((1, 2), (2, 3)) == \"NO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError",
+            "failing_location": "AssertionError"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/128",
@@ -3606,7 +3606,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 40.46916961669922,
+            "runtime_ms": 54.003000259399414,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3622,7 +3622,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def minPath(grid, k):\n    from heapq import heappush, heappop\n\n    def neighbors(x, y):\n        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < len(grid) and 0 <= ny < len(grid):\n                yield nx, ny\n\n    n = len(grid)\n    min_heap = []\n    for i in range(n):\n        for j in range(n):\n            heappush(min_heap, (grid[i][j], [(i, j)]))\n\n    while min_heap:\n        current_value, path = heappop(min_heap)\n        if len(path) == k:\n            return [grid[x][y] for x, y in path]\n        last_x, last_y = path[-1]\n        for nx, ny in neighbors(last_x, last_y):\n            new_path = path + [(nx, ny)]\n            new_value = [grid[x][y] for x, y in new_path]\n            heappush(min_heap, (new_value, new_path))",
+          "answer": "def minPath(grid, k):\n    from heapq import heappush, heappop\n\n    def neighbors(r, c):\n        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):\n                yield nr, nc\n\n    n = len(grid)\n    pq = []\n    for r in range(n):\n        for c in range(n):\n            heappush(pq, (grid[r][c], r, c, [grid[r][c]]))\n\n    while pq:\n        value, r, c, path = heappop(pq)\n        if len(path) == k:\n            return path\n        for nr, nc in neighbors(r, c):\n            heappush(pq, (grid[nr][nc], nr, nc, path + [grid[nr][nc]]))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3634,7 +3634,7 @@
             "total_count": 11,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([[1, 2, 3], [4, 5, 6], [7, 8, 9]], 3) == [1, 2, 1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 56.787967681884766,
+            "runtime_ms": 59.144020080566406,
             "error": "FAIL_ASSERTION:\n    assert candidate([[1, 2, 3], [4, 5, 6], [7, 8, 9]], 3) == [1, 2, 1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3650,27 +3650,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def tri(n):\n    def tribonacci(k):\n        if k == 1:\n            return 3\n        elif k % 2 == 0:\n            return 1 + k / 2\n        else:\n            return tribonacci(k - 1) + tribonacci(k - 2) + tribonacci(k + 1)\n    \n    return [tribonacci(i) for i in range(n + 1)]",
+          "answer": "def tri(n):\n    def tribonacci(k):\n        if k == 0:\n            return 1\n        elif k == 1:\n            return 3\n        elif k % 2 == 0:\n            return 1 + k / 2\n        else:\n            return tribonacci(k - 1) + tribonacci(k - 2) + tribonacci(k + 1)\n\n    return [tribonacci(i) for i in range(n + 1)]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 10,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 10,
-            "stdout": "PASS: All tests passed\n",
+            "stdout": "FAIL_ASSERTION:\n    assert candidate(3) == [1, 3, 2.0, 8.0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 48.60091209411621,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "runtime_ms": 61.842918395996094,
+            "error": "FAIL_ASSERTION:\n    assert candidate(3) == [1, 3, 2.0, 8.0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError",
+            "failing_location": "AssertionError"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/131",
@@ -3690,7 +3690,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.33531379699707,
+            "runtime_ms": 49.226999282836914,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3706,7 +3706,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def is_nested(string):\n    stack = []\n    for char in string:\n        if char == '[':\n            stack.append(char)\n        elif char == ']':\n            if stack:\n                stack.pop()\n                if stack:\n                    return True\n    return False",
+          "answer": "def is_nested(string):\n    stack = []\n    for char in string:\n        if char == '[':\n            stack.append(char)\n        elif char == ']' and stack:\n            stack.pop()\n            if stack:\n                return True\n    return False",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3718,7 +3718,7 @@
             "total_count": 16,
             "stdout": "FAIL_ASSERTION:\n    assert candidate('[]]]]]]][[[[[]') == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 44.75998878479004,
+            "runtime_ms": 54.35490608215332,
             "error": "FAIL_ASSERTION:\n    assert candidate('[]]]]]]][[[[[]') == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3744,13 +3744,13 @@
             "passed": false,
             "passed_count": 0,
             "total_count": 24,
-            "stdout": "FAIL_RUNTIME:\n    return sum(math.ceil(x) ** 2 for x in lst)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'math' is not defined. Did you forget to import 'math'\n",
+            "stdout": "FAIL_RUNTIME:\n  File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmpe5trhy33/test_module.py\", line 9, in sum_squares\n    return sum(math.ceil(x) ** 2 for x in lst)\nNameError: name 'math' is not defined. Did you forget to import 'math'?\n",
             "stderr": "",
-            "runtime_ms": 51.29885673522949,
-            "error": "FAIL_RUNTIME:\n    return sum(math.ceil(x) ** 2 for x in lst)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'math' is not defined. Did you forget to import 'math'",
+            "runtime_ms": 57.94787406921387,
+            "error": "FAIL_RUNTIME:\n  File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmpe5trhy33/test_module.py\", line 9, in sum_squares\n    return sum(math.ceil(x) ** 2 for x in lst)\nNameError: name 'math' is not defined. Did you forget to import 'math'?",
             "error_type": "runtime_error",
-            "traceback_excerpt": "NameError: name 'math' is not defined. Did you forget to import 'math'",
-            "failing_location": "NameError: name 'math' is not defined. Did you forget to import 'math'"
+            "traceback_excerpt": "NameError: name 'math' is not defined. Did you forget to import 'math'?",
+            "failing_location": "NameError: name 'math' is not defined. Did you forget to import 'math'?"
           }
         }
       ],
@@ -3762,7 +3762,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def check_if_last_char_is_a_letter(txt):\n    txt = txt.rstrip()\n    if not txt or not txt[-1].isalpha():\n        return False\n    words = txt.split()\n    return len(words) > 0 and words[-1] == txt[-1]",
+          "answer": "def check_if_last_char_is_a_letter(txt):\n    txt = txt.rstrip()\n    if not txt or not txt[-1].isalpha():\n        return False\n    return txt.split()[-1] == txt[-1]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3774,7 +3774,7 @@
             "total_count": 11,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(\"eeeee e \") == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 51.98407173156738,
+            "runtime_ms": 41.25499725341797,
             "error": "FAIL_ASSERTION:\n    assert candidate(\"eeeee e \") == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -3802,7 +3802,7 @@
             "total_count": 5,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.02591896057129,
+            "runtime_ms": 57.01613426208496,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3830,7 +3830,7 @@
             "total_count": 12,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.88908767700195,
+            "runtime_ms": 53.90501022338867,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3858,7 +3858,7 @@
             "total_count": 9,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.867225646972656,
+            "runtime_ms": 57.9829216003418,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3886,7 +3886,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 43.3201789855957,
+            "runtime_ms": 56.78606033325195,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3902,27 +3902,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def special_factorial(n):\n    from math import factorial\n    result = 1\n    for i in range(1, n + 1):\n        result *= factorial(i)\n    return result",
+          "answer": "def special_factorial(n):\n    def factorial(x):\n        result = 1\n        for i in range(2, x + 1):\n            result *= i\n        return result\n\n    special_fact = 1\n    for i in range(1, n + 1):\n        special_fact *= factorial(i)\n    \n    return special_fact",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 4,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 4,
-            "stdout": "PASS: All tests passed\n",
+            "stdout": "FAIL_ASSERTION:\n    assert candidate(4) == 288, \"Test 4\"\n           ^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 4\n",
             "stderr": "",
-            "runtime_ms": 45.99905014038086,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "runtime_ms": 57.534217834472656,
+            "error": "FAIL_ASSERTION:\n    assert candidate(4) == 288, \"Test 4\"\n           ^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 4",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError: Test 4",
+            "failing_location": "AssertionError: Test 4"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/140",
@@ -3942,7 +3942,7 @@
             "total_count": 10,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(\"Exa   mple\") == \"Exa-mple\", \"This prints if this assert fails 4 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 4 (good for debugging!)\n",
             "stderr": "",
-            "runtime_ms": 54.15487289428711,
+            "runtime_ms": 51.779985427856445,
             "error": "FAIL_ASSERTION:\n    assert candidate(\"Exa   mple\") == \"Exa-mple\", \"This prints if this assert fails 4 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 4 (good for debugging!)",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError: This prints if this assert fails 4 (good for debugging!)",
@@ -3958,7 +3958,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def file_name_check(file_name):\n    if file_name.count('.') != 1:\n        return 'No'\n    \n    name, extension = file_name.split('.')\n    \n    if not name or not name[0].isalpha():\n        return 'No'\n    \n    if sum(c.isdigit() for c in name) > 3:\n        return 'No'\n    \n    if extension not in ['txt', 'exe', 'dll']:\n        return 'No'\n    \n    return 'Yes'",
+          "answer": "def file_name_check(file_name):\n    import re\n    \n    if file_name.count('.') != 1:\n        return 'No'\n    \n    name, ext = file_name.split('.')\n    \n    if not name or not name[0].isalpha():\n        return 'No'\n    \n    if ext not in ['txt', 'exe', 'dll']:\n        return 'No'\n    \n    if len(re.findall(r'\\d', name)) > 3:\n        return 'No'\n    \n    return 'Yes'",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3970,7 +3970,7 @@
             "total_count": 26,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 41.570186614990234,
+            "runtime_ms": 54.12697792053223,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -3986,7 +3986,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def sum_squares(lst):\n    total = 0\n    for i, num in enumerate(lst):\n        if i % 3 == 0:\n            total += num ** 2\n        elif i % 4 == 0:\n            total += num ** 3\n        else:\n            total += num\n    return total",
+          "answer": "def sum_squares(lst):\n    return sum(x**2 if i % 3 == 0 else x**3 if i % 4 == 0 else x for i, x in enumerate(lst))",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -3998,7 +3998,7 @@
             "total_count": 11,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 52.67500877380371,
+            "runtime_ms": 56.70928955078125,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4026,7 +4026,7 @@
             "total_count": 7,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(\"This is a test\") == \"is\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 53.00307273864746,
+            "runtime_ms": 58.88795852661133,
             "error": "FAIL_ASSERTION:\n    assert candidate(\"This is a test\") == \"is\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -4054,7 +4054,7 @@
             "total_count": 13,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 45.68004608154297,
+            "runtime_ms": 54.98075485229492,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4082,7 +4082,7 @@
             "total_count": 8,
             "stdout": "FAIL_ASSERTION:\n    assert candidate([1, 11, -1, -11, -12]) == [-1, -11, 1, -12, 11]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 45.62711715698242,
+            "runtime_ms": 58.72201919555664,
             "error": "FAIL_ASSERTION:\n    assert candidate([1, 11, -1, -11, -12]) == [-1, -11, 1, -12, 11]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -4098,7 +4098,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def specialFilter(nums):\n    def is_odd_digit(n):\n        return n in {'1', '3', '5', '7', '9'}\n    \n    count = 0\n    for num in nums:\n        if num > 10:\n            num_str = str(num)\n            if is_odd_digit(num_str[0]) and is_odd_digit(num_str[-1]):\n                count += 1\n    return count",
+          "answer": "def specialFilter(nums):\n    def is_odd_digit(digit):\n        return digit in {'1', '3', '5', '7', '9'}\n    \n    count = 0\n    for num in nums:\n        if num > 10:\n            str_num = str(num)\n            if is_odd_digit(str_num[0]) and is_odd_digit(str_num[-1]):\n                count += 1\n    return count",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -4110,7 +4110,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 52.02794075012207,
+            "runtime_ms": 59.767961502075195,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4126,27 +4126,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def get_max_triples(n):\n    a = [(i * i - i + 1) % 3 for i in range(1, n + 1)]\n    count = [0, 0, 0]\n    for value in a:\n        count[value] += 1\n    result = (count[0] * (count[0] - 1) * (count[0] - 2)) // 6\n    result += (count[0] * count[1] * count[2])\n    result += (count[1] * (count[1] - 1) * (count[1] - 2)) // 6\n    result += (count[2] * (count[2] - 1) * (count[2] - 2)) // 6\n    return result",
+          "answer": "def get_max_triples(n):\n    a = [(i * i - i + 1) % 3 for i in range(1, n + 1)]\n    count = [0, 0, 0]\n    for value in a:\n        count[value] += 1\n    result = (count[0] * (count[0] - 1) * (count[0] - 2)) // 6\n    result += (count[0] * (count[1] * (count[1] - 1)) // 2)\n    result += (count[0] * (count[2] * (count[2] - 1)) // 2)\n    result += (count[1] * (count[2] * (count[2] - 1)) // 2)\n    result += (count[2] * (count[1] * (count[1] - 1)) // 2)\n    result += (count[1] * (count[0] * (count[0] - 1)) // 2)\n    return result",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 4,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 4,
-            "stdout": "PASS: All tests passed\n",
+            "stdout": "FAIL_ASSERTION:\n    assert candidate(5) == 1\n           ^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 50.53210258483887,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "runtime_ms": 50.39501190185547,
+            "error": "FAIL_ASSERTION:\n    assert candidate(5) == 1\n           ^^^^^^^^^^^^^^^^^\nAssertionError",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError",
+            "failing_location": "AssertionError"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/148",
@@ -4166,7 +4166,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.50094223022461,
+            "runtime_ms": 61.283111572265625,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4182,7 +4182,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def sorted_list_sum(lst):\n    lst = [s for s in lst if len(s) % 2 == 0]\n    lst.sort(key=lambda x: (len(x), x))\n    return lst",
+          "answer": "def sorted_list_sum(lst):\n    even_length_strings = [s for s in lst if len(s) % 2 == 0]\n    even_length_strings.sort(key=lambda x: (len(x), x))\n    return even_length_strings",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -4194,7 +4194,7 @@
             "total_count": 7,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.53105545043945,
+            "runtime_ms": 47.467947006225586,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4210,27 +4210,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def x_or_y(n, x, y):\n    \"\"\"A simple program which should return the value of x if n is \n    a prime number and should return the value of y otherwise.\n    \"\"\"\n    if n <= 1:\n        return y\n    if n <= 3:\n        return x\n    if n % 2 == 0 or n % 3 == 0:\n        return y\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return y\n        i += 6\n    return x",
+          "answer": "def x_or_y(n, x, y):\n    def is_prime(num):\n        if num <= 1:\n            return False\n        if num <= 3:\n            return True\n        if num % 2 == 0 or num % 3 == 0:\n            return False\n        i = 5\n        while i * i <= num:\n            if num % i == 0 or num % (i + 2) == 0:\n                return False\n            i += 6\n        return True\n\n    return x if is_prime(n) else y",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 10,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 10,
-            "stdout": "PASS: All tests passed\n",
+            "stdout": "FAIL_ASSERTION:\n    assert candidate(7, 34, 12) == 34\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 49.1337776184082,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "runtime_ms": 56.860923767089844,
+            "error": "FAIL_ASSERTION:\n    assert candidate(7, 34, 12) == 34\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError",
+            "failing_location": "AssertionError"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/151",
@@ -4250,7 +4250,7 @@
             "total_count": 14,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.776865005493164,
+            "runtime_ms": 46.44608497619629,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4278,7 +4278,7 @@
             "total_count": 10,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.15189743041992,
+            "runtime_ms": 51.78117752075195,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4294,27 +4294,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def Strongest_Extension(class_name, extensions):\n    def strength(extension):\n        cap = sum(1 for c in extension if c.isupper())\n        sm = sum(1 for c in extension if c.islower())\n        return cap - sm\n\n    strongest = max(extensions, key=strength)\n    return f\"{class_name}.{strongest}\"",
+          "answer": "def Strongest_Extension(class_name, extensions):\n    def strength(extension):\n        CAP = sum(1 for c in extension if c.isupper())\n        SM = sum(1 for c in extension if c.islower())\n        return CAP - SM\n    \n    strongest_extension = max(extensions, key=strength)\n    return f\"{class_name}.{strongest_extension}\"",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 0,
+          "accuracy": 1,
           "execution_details": {
-            "passed": false,
-            "passed_count": 0,
+            "passed": true,
+            "passed_count": 9,
             "total_count": 9,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate('Watashi', ['tEN', 'niNE', 'eIGHt8OKe']) == 'Watashi.eIGHt8OKe'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+            "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 47.31416702270508,
-            "error": "FAIL_ASSERTION:\n    assert candidate('Watashi', ['tEN', 'niNE', 'eIGHt8OKe']) == 'Watashi.eIGHt8OKe'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError",
-            "failing_location": "AssertionError"
+            "runtime_ms": 59.967041015625,
+            "error": "",
+            "error_type": "",
+            "traceback_excerpt": "",
+            "failing_location": ""
           }
         }
       ],
-      "final_accuracy": 0
+      "final_accuracy": 1
     },
     {
       "qid": "HumanEval/154",
@@ -4322,7 +4322,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def cycpattern_check(a, b):\n    if len(b) > len(a):\n        return False\n    b_rotations = [b[i:] + b[:i] for i in range(len(b))]\n    return any(rotation in a for rotation in b_rotations)",
+          "answer": "def cycpattern_check(a, b):\n    n = len(b)\n    for i in range(n):\n        rotated_b = b[i:] + b[:i]\n        if rotated_b in a:\n            return True\n    return False",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -4334,7 +4334,7 @@
             "total_count": 10,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.005104064941406,
+            "runtime_ms": 55.21106719970703,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4362,7 +4362,7 @@
             "total_count": 9,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(0) == (1, 0)\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 53.81608009338379,
+            "runtime_ms": 60.40191650390625,
             "error": "FAIL_ASSERTION:\n    assert candidate(0) == (1, 0)\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -4390,7 +4390,7 @@
             "total_count": 15,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 51.67794227600098,
+            "runtime_ms": 53.69377136230469,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4418,7 +4418,7 @@
             "total_count": 13,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 50.42266845703125,
+            "runtime_ms": 54.43310737609863,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4434,27 +4434,27 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def find_max(words):\n    max_unique_chars = -1\n    result_word = \"\"\n    for word in words:\n        unique_chars = len(set(word))\n        if unique_chars > max_unique_chars or (unique_chars == max_unique_chars and word < result_word):\n            max_unique_chars = unique_chars\n            result_word = word\n    return result_word",
+          "answer": "def find_max(words):\n    max_unique_chars = 0\n    result_word = None\n\n    for word in words:\n        unique_chars = len(set(word))\n        if unique_chars > max_unique_chars or (unique_chars == max_unique_chars and word < result_word):\n            max_unique_chars = unique_chars\n            result_word = word\n\n    return result_word",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
           "template": null,
-          "accuracy": 1,
+          "accuracy": 0,
           "execution_details": {
-            "passed": true,
-            "passed_count": 10,
+            "passed": false,
+            "passed_count": 0,
             "total_count": 10,
-            "stdout": "PASS: All tests passed\n",
+            "stdout": "FAIL_ASSERTION:\n    assert (candidate([\"name\", \"of\", \"string\"]) == \"string\"), \"t1\"\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: t1\n",
             "stderr": "",
-            "runtime_ms": 43.875932693481445,
-            "error": "",
-            "error_type": "",
-            "traceback_excerpt": "",
-            "failing_location": ""
+            "runtime_ms": 58.86697769165039,
+            "error": "FAIL_ASSERTION:\n    assert (candidate([\"name\", \"of\", \"string\"]) == \"string\"), \"t1\"\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: t1",
+            "error_type": "wrong_answer",
+            "traceback_excerpt": "AssertionError: t1",
+            "failing_location": "AssertionError: t1"
           }
         }
       ],
-      "final_accuracy": 1
+      "final_accuracy": 0
     },
     {
       "qid": "HumanEval/159",
@@ -4462,7 +4462,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def eat(number, need, remaining):\n    total_eaten = number + min(need, remaining)\n    remaining_carrots = max(0, remaining - need)\n    return [total_eaten, remaining_carrots]",
+          "answer": "def eat(number, need, remaining):\n    total_eaten = number + min(need, remaining)\n    carrots_left = max(0, remaining - need)\n    return [total_eaten, carrots_left]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -4474,7 +4474,7 @@
             "total_count": 10,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 49.449920654296875,
+            "runtime_ms": 53.79295349121094,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4502,7 +4502,7 @@
             "total_count": 6,
             "stdout": "FAIL_ASSERTION:\n    assert candidate(['+', '*', '-'], [2, 3, 4, 5]) == 9\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
             "stderr": "",
-            "runtime_ms": 52.74009704589844,
+            "runtime_ms": 56.365966796875,
             "error": "FAIL_ASSERTION:\n    assert candidate(['+', '*', '-'], [2, 3, 4, 5]) == 9\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
             "error_type": "wrong_answer",
             "traceback_excerpt": "AssertionError",
@@ -4530,7 +4530,7 @@
             "total_count": 8,
             "stdout": "PASS: All tests passed\n",
             "stderr": "",
-            "runtime_ms": 48.22111129760742,
+            "runtime_ms": 59.987783432006836,
             "error": "",
             "error_type": "",
             "traceback_excerpt": "",
@@ -4556,13 +4556,13 @@
             "passed": false,
             "passed_count": 0,
             "total_count": 5,
-            "stdout": "FAIL_RUNTIME:\n    return hashlib.md5(text.encode()).hexdigest()\n           ^^^^^^^\nNameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'\n",
+            "stdout": "FAIL_RUNTIME:\n    return hashlib.md5(text.encode()).hexdigest()\n           ^^^^^^^\nNameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'?\n",
             "stderr": "",
-            "runtime_ms": 57.274818420410156,
-            "error": "FAIL_RUNTIME:\n    return hashlib.md5(text.encode()).hexdigest()\n           ^^^^^^^\nNameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'",
+            "runtime_ms": 61.30695343017578,
+            "error": "FAIL_RUNTIME:\n    return hashlib.md5(text.encode()).hexdigest()\n           ^^^^^^^\nNameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'?",
             "error_type": "runtime_error",
-            "traceback_excerpt": "NameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'",
-            "failing_location": "NameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'"
+            "traceback_excerpt": "NameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'?",
+            "failing_location": "NameError: name 'hashlib' is not defined. Did you forget to import 'hashlib'?"
           }
         }
       ],
@@ -4574,7 +4574,7 @@
       "reference": "",
       "turns": [
         {
-          "answer": "def generate_integers(a, b):\n    start, end = min(a, b), max(a, b)\n    return [i for i in range(start, end + 1) if i % 2 == 0]",
+          "answer": "def generate_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the even digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(2, 8) => [2, 4, 6, 8]\n    generate_integers(8, 2) => [2, 4, 6, 8]\n    generate_integers(10, 14) => []\n    \"\"\"\n    return [x for x in range(min(a, b), max(a, b) + 1) if x % 2 == 0]",
           "self_conf": 0.6,
           "teacher_bias": "Confirmation",
           "teacher_conf": 0.6,
@@ -4584,13 +4584,13 @@
             "passed": false,
             "passed_count": 0,
             "total_count": 6,
-            "stdout": "FAIL_ASSERTION:\n    assert candidate(2, 10) == [2, 4, 6, 8], \"Test 1\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 1\n",
-            "stderr": "",
-            "runtime_ms": 52.324771881103516,
-            "error": "FAIL_ASSERTION:\n    assert candidate(2, 10) == [2, 4, 6, 8], \"Test 1\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 1",
-            "error_type": "wrong_answer",
-            "traceback_excerpt": "AssertionError: Test 1",
-            "failing_location": "AssertionError: Test 1"
+            "stdout": "",
+            "stderr": "  File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmp7zzi_bui/test_module.py\", line 9\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 48)\n",
+            "runtime_ms": 53.56884002685547,
+            "error": "File \"/var/folders/y0/06sr1p9x07j2ll_gvtf4x0sm0000gn/T/tmp7zzi_bui/test_module.py\", line 9\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 48)",
+            "error_type": "compile_error",
+            "traceback_excerpt": "SyntaxError: unterminated triple-quoted string literal (detected at line 48)",
+            "failing_location": "SyntaxError: unterminated triple-quoted string literal (detected at line 48)"
           }
         }
       ],

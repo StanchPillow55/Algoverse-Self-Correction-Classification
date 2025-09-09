@@ -1,0 +1,21 @@
+def minPath(grid, k):
+    from heapq import heappush, heappop
+
+    def neighbors(r, c):
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):
+                yield nr, nc
+
+    n = len(grid)
+    pq = []
+    for r in range(n):
+        for c in range(n):
+            heappush(pq, (grid[r][c], r, c, [grid[r][c]]))
+
+    while pq:
+        value, r, c, path = heappop(pq)
+        if len(path) == k:
+            return path
+        for nr, nc in neighbors(r, c):
+            heappush(pq, (grid[nr][nc], nr, nc, path + [grid[nr][nc]]))

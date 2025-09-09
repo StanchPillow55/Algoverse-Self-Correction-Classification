@@ -1,0 +1,15 @@
+def count_nums(arr):
+    def sum_of_digits(n):
+        s = 0
+        is_negative = n < 0
+        n = abs(n)
+        while n > 0:
+            s += n % 10
+            n //= 10
+        return -s if is_negative else s
+
+    count = 0
+    for num in arr:
+        if sum_of_digits(num) > 0:
+            count += 1
+    return count

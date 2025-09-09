@@ -1,0 +1,7 @@
+def encrypt(s):
+    def rotate_char(c):
+        if 'a' <= c <= 'z':
+            return chr(((ord(c) - ord('a') + 4) % 26) + ord('a'))
+        return c
+    
+    return ''.join(rotate_char(c) for c in s)
