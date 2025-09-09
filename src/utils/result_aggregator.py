@@ -203,6 +203,197 @@ class ResultAggregator:
         
         return metrics
     
+    def calculate_delta_improvement(self, traces: List[Dict[str, Any]]) -> Dict[str, float]:
+        """Calculate detailed delta improvement metrics from traces."""
+        if not traces:
+            return {"delta_improvement": 0.0, "initial_accuracy": 0.0, "final_accuracy": 0.0}
+        
+        # Calculate initial accuracy (first turn)
+        initial_correct = 0
+        final_correct = 0
+        total_samples = len(traces)
+        
+        for trace in traces:
+            turns = trace.get('turns', [])
+            if turns:
+                # First turn accuracy
+                first_turn = turns[0]
+                if first_turn.get('accuracy', 0) == 1:
+                    initial_correct += 1
+                
+                # Final accuracy (last turn or final_accuracy field)
+                if 'final_accuracy' in trace:
+                    if trace['final_accuracy'] == 1:
+                        final_correct += 1
+                elif turns:
+                    last_turn = turns[-1]
+                    if last_turn.get('accuracy', 0) == 1:
+                        final_correct += 1
+        
+        initial_accuracy = initial_correct / total_samples if total_samples > 0 else 0.0
+        final_accuracy = final_correct / total_samples if total_samples > 0 else 0.0
+        delta_improvement = final_accuracy - initial_accuracy
+        
+        return {
+            "delta_improvement": delta_improvement,
+            "initial_accuracy": initial_accuracy,
+            "final_accuracy": final_accuracy,
+            "improvement_percentage": (delta_improvement / initial_accuracy * 100) if initial_accuracy > 0 else 0.0
+        }
+    
+    def calculate_cost_benefit_ratios(self) -> Dict[str, Any]:
+        """Calculate cost-benefit ratios for all experiments."""
+        if self.df is None or self.df.empty:
+            return {"error": "No data to calculate cost-benefit ratios"}
+        
+        # Calculate cost-benefit ratios
+        self.df['cost_benefit_ratio'] = self.df['improvement'] / self.df['cost']
+        self.df['improvement_per_dollar'] = self.df['improvement'] / self.df['cost']
+        
+        # Group by model
+        model_analysis = {}
+        for model in self.df['model_name'].unique():
+            model_data = self.df[self.df['model_name'] == model]
+            
+            model_analysis[model] = {
+                "avg_improvement": model_data['improvement'].mean(),
+                "avg_cost": model_data['cost'].mean(),
+                "avg_cost_benefit_ratio": model_data['cost_benefit_ratio'].mean(),
+                "avg_improvement_per_dollar": model_data['improvement_per_dollar'].mean(),
+                "total_cost": model_data['cost'].sum(),
+                "total_improvement": model_data['improvement'].sum(),
+                "efficiency_score": model_data['improvement'].sum() / model_data['cost'].sum() if model_data['cost'].sum() > 0 else 0
+            }
+        
+        # Find most efficient models
+        most_efficient = self.df.loc[self.df['cost_benefit_ratio'].idxmax()] if not self.df.empty else None
+        least_efficient = self.df.loc[self.df['cost_benefit_ratio'].idxmin()] if not self.df.empty else None
+        
+        return {
+            "model_analysis": model_analysis,
+            "overall_metrics": {
+                "avg_cost_benefit_ratio": self.df['cost_benefit_ratio'].mean(),
+                "avg_improvement_per_dollar": self.df['improvement_per_dollar'].mean(),
+                "total_cost": self.df['cost'].sum(),
+                "total_improvement": self.df['improvement'].sum(),
+                "overall_efficiency": self.df['improvement'].sum() / self.df['cost'].sum() if self.df['cost'].sum() > 0 else 0
+            },
+            "most_efficient_model": {
+                "model_name": most_efficient['model_name'] if most_efficient is not None else "N/A",
+                "cost_benefit_ratio": most_efficient['cost_benefit_ratio'] if most_efficient is not None else 0,
+                "improvement": most_efficient['improvement'] if most_efficient is not None else 0,
+                "cost": most_efficient['cost'] if most_efficient is not None else 0
+            },
+            "least_efficient_model": {
+                "model_name": least_efficient['model_name'] if least_efficient is not None else "N/A",
+                "cost_benefit_ratio": least_efficient['cost_benefit_ratio'] if least_efficient is not None else 0,
+                "improvement": least_efficient['improvement'] if least_efficient is not None else 0,
+                "cost": least_efficient['cost'] if least_efficient is not None else 0
+            }
+        }
+    
+    def calculate_statistical_significance(self) -> Dict[str, Any]:
+        """Calculate statistical significance tests between models and conditions."""
+        if self.df is None or self.df.empty:
+            return {"error": "No data for statistical analysis"}
+        
+        try:
+            from scipy import stats
+            SCIPY_AVAILABLE = True
+        except ImportError:
+            SCIPY_AVAILABLE = False
+            return {"error": "SciPy not available for statistical tests"}
+        
+        significance_tests = {}
+        
+        # Test 1: Improvement differences between models
+        if len(self.df['model_name'].unique()) > 1:
+            model_groups = [group['improvement'].values for name, group in self.df.groupby('model_name')]
+            model_names = list(self.df['model_name'].unique())
+            
+            if len(model_groups) == 2:
+                # Two-sample t-test
+                stat, p_value = stats.ttest_ind(model_groups[0], model_groups[1])
+                significance_tests['model_comparison'] = {
+                    "test_type": "two_sample_t_test",
+                    "models": model_names,
+                    "statistic": stat,
+                    "p_value": p_value,
+                    "significant": p_value < 0.05,
+                    "interpretation": f"Models {model_names[0]} and {model_names[1]} {'are' if p_value < 0.05 else 'are not'} significantly different"
+                }
+            else:
+                # ANOVA
+                f_stat, p_value = stats.f_oneway(*model_groups)
+                significance_tests['model_comparison'] = {
+                    "test_type": "anova",
+                    "models": model_names,
+                    "f_statistic": f_stat,
+                    "p_value": p_value,
+                    "significant": p_value < 0.05,
+                    "interpretation": f"Model differences {'are' if p_value < 0.05 else 'are not'} statistically significant"
+                }
+        
+        # Test 2: Correlation between model size and improvement
+        if 'model_size' in self.df.columns:
+            correlation, p_value = stats.pearsonr(self.df['model_size'], self.df['improvement'])
+            significance_tests['size_improvement_correlation'] = {
+                "test_type": "pearson_correlation",
+                "correlation": correlation,
+                "p_value": p_value,
+                "significant": p_value < 0.05,
+                "interpretation": f"Model size and improvement {'are' if p_value < 0.05 else 'are not'} significantly correlated"
+            }
+        
+        # Test 3: Cost-benefit ratio differences
+        if 'cost_benefit_ratio' in self.df.columns and len(self.df['model_name'].unique()) > 1:
+            cost_groups = [group['cost_benefit_ratio'].values for name, group in self.df.groupby('model_name')]
+            
+            if len(cost_groups) == 2:
+                stat, p_value = stats.ttest_ind(cost_groups[0], cost_groups[1])
+                significance_tests['cost_efficiency_comparison'] = {
+                    "test_type": "two_sample_t_test",
+                    "models": model_names,
+                    "statistic": stat,
+                    "p_value": p_value,
+                    "significant": p_value < 0.05,
+                    "interpretation": f"Cost efficiency between models {'is' if p_value < 0.05 else 'is not'} significantly different"
+                }
+            else:
+                f_stat, p_value = stats.f_oneway(*cost_groups)
+                significance_tests['cost_efficiency_comparison'] = {
+                    "test_type": "anova",
+                    "models": model_names,
+                    "f_statistic": f_stat,
+                    "p_value": p_value,
+                    "significant": p_value < 0.05,
+                    "interpretation": f"Cost efficiency differences {'are' if p_value < 0.05 else 'are not'} statistically significant"
+                }
+        
+        # Test 4: Confidence intervals for key metrics
+        confidence_intervals = {}
+        for metric in ['improvement', 'cost', 'cost_benefit_ratio']:
+            if metric in self.df.columns:
+                data = self.df[metric].dropna()
+                if len(data) > 0:
+                    mean = data.mean()
+                    std = data.std()
+                    n = len(data)
+                    se = std / np.sqrt(n)
+                    ci_95 = stats.t.interval(0.95, n-1, loc=mean, scale=se)
+                    confidence_intervals[metric] = {
+                        "mean": mean,
+                        "std": std,
+                        "n": n,
+                        "ci_95_lower": ci_95[0],
+                        "ci_95_upper": ci_95[1],
+                        "ci_95_width": ci_95[1] - ci_95[0]
+                    }
+        
+        significance_tests['confidence_intervals'] = confidence_intervals
+        
+        return significance_tests
+    
     def generate_report(self) -> Dict[str, Any]:
         """Generate comprehensive analysis report."""
         if not self.results:
@@ -215,6 +406,10 @@ class ResultAggregator:
         # Calculate metrics
         metrics = self.calculate_scaling_metrics()
         
+        # Calculate additional analyses
+        cost_benefit = self.calculate_cost_benefit_ratios()
+        significance = self.calculate_statistical_significance()
+        
         # Add detailed analysis
         report = {
             "metadata": {
@@ -223,6 +418,8 @@ class ResultAggregator:
                 "generated_at": pd.Timestamp.now().isoformat()
             },
             "metrics": metrics,
+            "cost_benefit_analysis": cost_benefit,
+            "statistical_significance": significance,
             "recommendations": self._generate_recommendations(metrics)
         }
         

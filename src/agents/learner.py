@@ -11,7 +11,9 @@ class LearnerBot:
         self.provider = provider
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
-    def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None) -> Tuple[str, float]:
+    def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None, 
+               experiment_id: str = "unknown", dataset_name: str = "unknown", 
+               sample_id: str = "unknown", turn_number: int = 0) -> Tuple[str, float]:
         if os.getenv("DEMO_MODE", "0") == "1" or self.provider == "demo":
             try:
                 # Try to isolate the actual question portion if present
@@ -28,15 +30,17 @@ class LearnerBot:
                 return "0", 0.3
 
         if self.provider == "openai":
-            return self._call_openai(q, template)
+            return self._call_openai(q, template, experiment_id, dataset_name, sample_id, turn_number)
         elif self.provider == "anthropic":
-            return self._call_anthropic(q, template)
+            return self._call_anthropic(q, template, experiment_id, dataset_name, sample_id, turn_number)
         elif self.provider == "replicate":
-            return self._call_replicate(q, template)
+            return self._call_replicate(q, template, experiment_id, dataset_name, sample_id, turn_number)
         else:
             return "UNKNOWN_PROVIDER", 0.1
 
-    def _call_openai(self, q: str, template: str | None = None) -> Tuple[str, float]:
+    def _call_openai(self, q: str, template: str | None = None, 
+                     experiment_id: str = "unknown", dataset_name: str = "unknown", 
+                     sample_id: str = "unknown", turn_number: int = 0) -> Tuple[str, float]:
         """Call OpenAI API."""
         from openai import OpenAI
         from ..utils.rate_limit import safe_openai_chat_completion
@@ -85,6 +89,18 @@ class LearnerBot:
                 ans = num if num is not None else text[:256]
                 conf = 0.85 if (num is not None and num == text.strip()) else 0.6
             self._safe_debug_log(q, template, text, ans)
+            
+            # Track cost and token usage
+            try:
+                from ..utils.cost_tracker import record_cost
+                input_tokens = resp.usage.prompt_tokens if hasattr(resp, 'usage') and resp.usage else 0
+                output_tokens = resp.usage.completion_tokens if hasattr(resp, 'usage') and resp.usage else 0
+                record_cost(self.model, "openai", input_tokens, output_tokens, 
+                           experiment_id, dataset_name, sample_id, turn_number)
+            except Exception as e:
+                # Don't fail the main operation if cost tracking fails
+                pass
+            
             return ans, conf
             
         except Exception as e:
@@ -93,7 +109,9 @@ class LearnerBot:
             self._safe_debug_log(q, template, error_msg, "ERROR")
             return f"ERROR_{type(e).__name__}", 0.1
 
-    def _call_anthropic(self, q: str, template: str | None = None) -> Tuple[str, float]:
+    def _call_anthropic(self, q: str, template: str | None = None, 
+                        experiment_id: str = "unknown", dataset_name: str = "unknown", 
+                        sample_id: str = "unknown", turn_number: int = 0) -> Tuple[str, float]:
         """Call Anthropic Claude API."""
         try:
             import anthropic
@@ -133,6 +151,18 @@ class LearnerBot:
                 conf = 0.85 if (num is not None and num == text.strip()) else 0.6
             
             self._safe_debug_log(q, template, text, ans)
+            
+            # Track cost and token usage
+            try:
+                from ..utils.cost_tracker import record_cost
+                input_tokens = response.usage.input_tokens if hasattr(response, 'usage') and response.usage else 0
+                output_tokens = response.usage.output_tokens if hasattr(response, 'usage') and response.usage else 0
+                record_cost(self.model, "anthropic", input_tokens, output_tokens, 
+                           experiment_id, dataset_name, sample_id, turn_number)
+            except Exception as e:
+                # Don't fail the main operation if cost tracking fails
+                pass
+            
             return ans, conf
             
         except Exception as e:
@@ -140,7 +170,9 @@ class LearnerBot:
             self._safe_debug_log(q, template, error_msg, "ERROR")
             return f"ERROR_{type(e).__name__}", 0.1
 
-    def _call_replicate(self, q: str, template: str | None = None) -> Tuple[str, float]:
+    def _call_replicate(self, q: str, template: str | None = None, 
+                        experiment_id: str = "unknown", dataset_name: str = "unknown", 
+                        sample_id: str = "unknown", turn_number: int = 0) -> Tuple[str, float]:
         """Call Replicate API (for Llama models)."""
         try:
             import replicate
@@ -186,6 +218,19 @@ class LearnerBot:
                 conf = 0.85 if (num is not None and num == text.strip()) else 0.6
             
             self._safe_debug_log(q, template, text, ans)
+            
+            # Track cost and token usage (Replicate doesn't provide token counts, estimate)
+            try:
+                from ..utils.cost_tracker import record_cost
+                # Estimate tokens based on text length (rough approximation)
+                input_tokens = len(user_prompt.split()) * 1.3  # Rough token estimation
+                output_tokens = len(text.split()) * 1.3
+                record_cost(self.model, "replicate", int(input_tokens), int(output_tokens), 
+                           experiment_id, dataset_name, sample_id, turn_number)
+            except Exception as e:
+                # Don't fail the main operation if cost tracking fails
+                pass
+            
             return ans, conf
             
         except Exception as e:

@@ -16,7 +16,7 @@ import pandas as pd
 
 from ..utils.scaling_model_manager import ScalingModelManager, ModelConfig
 from ..data.scaling_datasets import ScalingDatasetManager
-from ..utils.tracing import TraceLogger
+from ..utils.trace_logger import TraceLogger
 
 logger = logging.getLogger(__name__)
 
@@ -53,11 +53,18 @@ class ScalingExperimentRunner:
         self.config = config
         self.model_manager = ScalingModelManager()
         self.dataset_manager = ScalingDatasetManager()
-        self.trace_logger = TraceLogger()
         
         # Create output directory
         self.output_dir = Path(config.output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize trace logger with a run ID
+        run_id = f"scaling_{int(time.time())}"
+        self.trace_logger = TraceLogger(
+            run_id=run_id,
+            out_dir=str(self.output_dir),
+            dataset_split="scaling_study"
+        )
         
         # Results storage
         self.results: List[ExperimentResult] = []
