@@ -229,7 +229,7 @@ def run_dataset(
                 # send template to learner
                 a1, self_conf = learner.answer(prompt, history + turns, template=template, 
                                               experiment_id=experiment_id, dataset_name=dataset_name, 
-                                              sample_id=sample_id, turn_number=turn)
+                                              sample_id=sample_id, turn_number=t)
 
                 # For GSM8K follow-up turns, use EM
                 acc1 = gsm8k_em(a1, ref)
