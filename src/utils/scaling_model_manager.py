@@ -17,7 +17,10 @@ import logging
 try:
     from .config import Config
 except ImportError:
-    from config import Config
+    try:
+        from src.utils.config import Config
+    except ImportError:
+        from config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +35,7 @@ class ModelConfig:
     max_tokens: int = 4000
     temperature: float = 0.0
     available: bool = True
+    description: str = ""
 
 @dataclass
 class ExperimentConfig:

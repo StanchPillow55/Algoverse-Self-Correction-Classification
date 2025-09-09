@@ -17,7 +17,10 @@ import logging
 try:
     from ..utils.config import Config
 except ImportError:
-    from config import Config
+    try:
+        from src.utils.config import Config
+    except ImportError:
+        from config import Config
 
 logger = logging.getLogger(__name__)
 

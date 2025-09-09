@@ -90,7 +90,9 @@ def run_dataset(
     model: str = None,
     k: int = 1,
     subset: str = None,
-    config: Dict[str, Any] = None
+    config: Dict[str, Any] = None,
+    experiment_id: str = "unknown",
+    dataset_name: str = "unknown"
 ) -> Dict[str, Any]:
     # Ensure output directory exists
     output_dir = Path(traces_out).parent
@@ -135,6 +137,7 @@ def run_dataset(
             is_humaneval = False
         
         # Start trace for this example
+        sample_id = qid
         ex = logger.start_example(problem_id=qid, text=q)
         
         history: List[Dict[str, Any]] = []
@@ -153,7 +156,9 @@ def run_dataset(
             )
         
         # First attempt
-        a0, self_conf = learner.answer(prompt, history, template=None)
+        a0, self_conf = learner.answer(prompt, history, template=None, 
+                                      experiment_id=experiment_id, dataset_name=dataset_name, 
+                                      sample_id=sample_id, turn_number=0)
         
         # Score based on task type
         if is_humaneval:
@@ -164,7 +169,9 @@ def run_dataset(
             execution_details = score_result.get('execution_result', {})
             passes.append(bool(score_result.get('passed', False)))
             for _ in range(max(0, k_try - 1)):
-                a_s, _ = learner.answer(prompt, history, template=None)
+                a_s, _ = learner.answer(prompt, history, template=None, 
+                                        experiment_id=experiment_id, dataset_name=dataset_name, 
+                                        sample_id=sample_id, turn_number=0)
                 sr = score_humaneval_candidate(task, a_s)
                 passes.append(bool(sr.get('passed', False)))
             acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
@@ -220,7 +227,9 @@ def run_dataset(
                 bias_for_template = bias
 
                 # send template to learner
-                a1, self_conf = learner.answer(prompt, history + turns, template=template)
+                a1, self_conf = learner.answer(prompt, history + turns, template=template, 
+                                              experiment_id=experiment_id, dataset_name=dataset_name, 
+                                              sample_id=sample_id, turn_number=turn)
 
                 # For GSM8K follow-up turns, use EM
                 acc1 = gsm8k_em(a1, ref)
