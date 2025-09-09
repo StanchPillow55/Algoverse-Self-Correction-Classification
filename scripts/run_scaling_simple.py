@@ -42,6 +42,13 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
             os.environ["OPENAI_MODEL"] = "gpt-4o"
         else:
             os.environ["OPENAI_MODEL"] = "gpt-4"
+    elif provider == "anthropic":
+        if "haiku" in model_name:
+            os.environ["ANTHROPIC_MODEL"] = "claude-3-haiku-20240307"
+        elif "sonnet" in model_name:
+            os.environ["ANTHROPIC_MODEL"] = "claude-3-sonnet-20240229"
+        elif "opus" in model_name:
+            os.environ["ANTHROPIC_MODEL"] = "claude-3-opus-20240229"
     
     # Create output file
     output_file = output_dir / f"{model_name}_scaling_result.json"
@@ -52,7 +59,8 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         --dataset {dataset_path} \
         --out {output_file} \
         --max-turns {max_turns} \
-        --provider {provider}
+        --provider {provider} \
+        --model {model_name}
     """
     
     print(f"Running: {model_name} on {dataset_path}")
