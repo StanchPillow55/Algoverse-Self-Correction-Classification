@@ -1,7 +1,7 @@
 # Algoverse — Teacher/Learner RTS Pipeline
 
 This repo provides a teacher–learner pipeline with confidence-aware reprompt selection,
-full per-turn trace logging, evaluator bias feedback, and rate-limited OpenAI calls.
+full per-turn trace logging,evaluator bias feedback, and rate-limited OpenAI calls.
 
 
 ## Quickstart
