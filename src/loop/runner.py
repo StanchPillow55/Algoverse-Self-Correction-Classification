@@ -109,7 +109,7 @@ def run_dataset(
     split = os.environ.get('DATASET_SPLIT', 'unknown')
     git_sha = os.environ.get('GIT_COMMIT', '')
     logger = TraceLogger(run_id=run_id, dataset_split=split, git_commit=git_sha)
-    logger.write_run_config({'dataset': dataset_csv, 'max_turns': max_turns, 'provider': provider, 'split': split, 'model': os.getenv('OPENAI_MODEL')})
+    logger.write_run_config({'dataset': dataset_csv, 'max_turns': max_turns, 'provider': provider, 'split': split, 'model': getattr(learner, 'model', provider)})
 
     # Apply feature flags from config
     enable_confidence = config.get('features', {}).get('enable_confidence', True) if config else True
@@ -312,7 +312,7 @@ def run_dataset(
         seeds_env = os.getenv("SEEDS", "1,2,3")
         seeds = [int(s) for s in seeds_env.split(",") if s.strip().isdigit()]
         temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.2"))
-        model_name = os.getenv('OPENAI_MODEL') or getattr(learner, 'model', provider)
+        model_name = getattr(learner, 'model', provider)
         arm = os.getenv('RUN_ID', 'dev').lower()
         dataset_name = 'humaneval' if (isinstance(rows[0], dict) and rows[0].get('topic') == 'humaneval') else Path(str(dataset_csv)).stem
         meta = RunMeta(

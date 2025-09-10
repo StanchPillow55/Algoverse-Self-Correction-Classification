@@ -9,7 +9,17 @@ def _first_number(s: str):
 class LearnerBot:
     def __init__(self, provider: str = "demo", model: str | None = None):
         self.provider = provider
-        self.model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+        # self.model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+        if model:
+            self.model = model
+        elif provider == "openai":
+            self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+        elif provider == "anthropic":
+            self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-haiku-20240307")
+        elif provider == "replicate":
+            self.model = os.getenv("REPLICATE_MODEL", "meta/llama-2-7b-chat")
+        else:
+            self.model = "gpt-4o-mini"  # fallback
 
     def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None, 
                experiment_id: str = "unknown", dataset_name: str = "unknown", 
@@ -115,6 +125,7 @@ class LearnerBot:
         """Call Anthropic Claude API."""
         try:
             import anthropic
+            from ..utils.rate_limit import safe_anthropic_messages_create
             client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
             
             # Handle template parameter
@@ -125,7 +136,8 @@ class LearnerBot:
             max_tokens = 1024 if is_code_task else 256
             temperature = float(os.getenv("ANTHROPIC_TEMPERATURE", "0.0"))
             
-            response = client.messages.create(
+            response = safe_anthropic_messages_create(
+                client=client,
                 model=self.model,
                 messages=[{"role": "user", "content": user_prompt}],
                 temperature=temperature,
