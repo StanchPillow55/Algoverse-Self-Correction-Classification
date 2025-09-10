@@ -29,19 +29,24 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         "claude-opus": "anthropic"
     }
     
+    # Map display names to actual API model names
+    api_model_mapping = {
+        "gpt-4o-mini": "gpt-4o-mini",
+        "gpt-4o": "gpt-4o", 
+        "gpt-4": "gpt-4",
+        "claude-haiku": "claude-3-haiku-20240307",
+        # Update Sonnet to current ID; keep an explicit 3.5 alias
+        "claude-sonnet": "claude-3-5-sonnet-20241022",
+        "claude-sonnet-3.5": "claude-3-5-sonnet-20241022",
+        "claude-opus": "claude-3-opus-20240229"
+    }
+    
     provider = model_mapping.get(model_name, "openai")
+    api_model_name = api_model_mapping.get(model_name, model_name)
     
     # Set environment variables for the model
     os.environ["PROVIDER"] = provider
     os.environ["DEMO_MODE"] = "0"  # Use real API
-    
-    if provider == "openai":
-        if "mini" in model_name:
-            os.environ["OPENAI_MODEL"] = "gpt-4o-mini"
-        elif "gpt-4o" in model_name:
-            os.environ["OPENAI_MODEL"] = "gpt-4o"
-        else:
-            os.environ["OPENAI_MODEL"] = "gpt-4"
     
     # Create output file
     output_file = output_dir / f"{model_name}_scaling_result.json"
@@ -52,7 +57,8 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         --dataset {dataset_path} \
         --out {output_file} \
         --max-turns {max_turns} \
-        --provider {provider}
+        --provider {provider} \
+        --model {api_model_name}
     """
     
     print(f"Running: {model_name} on {dataset_path}")

@@ -265,6 +265,26 @@ def safe_openai_chat_completion(client, messages, model="gpt-4o-mini", **kwargs)
     return call_with_backoff_sync(_make_request, estimate_tokens=tokens)
 
 
+# Convenience function for Anthropic messages.create with rate limiting
+def safe_anthropic_messages_create(client, messages, model="claude-3-haiku-20240307", **kwargs):
+    """
+    Wrapper for Anthropic messages.create with automatic rate limiting and logging.
+    Mirrors OpenAI wrapper so logs like "Rate limit pre-check: waiting ..." appear symmetrically.
+    """
+    # Estimate tokens from concatenated message content (rough)
+    total_text = " ".join(m.get("content", "") if isinstance(m, dict) else str(m) for m in messages)
+    tokens = estimate_tokens(total_text, model)
+
+    def _make_request():
+        return client.messages.create(
+            model=model,
+            messages=messages,
+            **kwargs
+        )
+
+    return call_with_backoff_sync(_make_request, estimate_tokens=tokens)
+
+
 if __name__ == "__main__":
     # Simple test
     def test_func():

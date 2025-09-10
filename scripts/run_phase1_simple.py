@@ -36,11 +36,21 @@ def run_phase1_simple():
     # Initialize trace formatter
     trace_formatter = TraceFormatter(str(output_dir / "formatted_traces"))
     
-    # Models to test
+    # Models to test (display names)
     models = [
         {"name": "gpt-4o-mini", "provider": "openai"},
         {"name": "claude-haiku", "provider": "anthropic"}
     ]
+
+    # Map display names to API model IDs
+    api_model_mapping = {
+        "gpt-4o-mini": "gpt-4o-mini",
+        "gpt-4o": "gpt-4o",
+        "gpt-4": "gpt-4",
+        "claude-haiku": "claude-3-haiku-20240307",
+        "claude-sonnet": "claude-3-sonnet-20240229",
+        "claude-opus": "claude-3-opus-20240229",
+    }
     
     # Dataset
     dataset = "data/gsm8k/test_100.jsonl"
@@ -55,14 +65,15 @@ def run_phase1_simple():
         model_output_dir = output_dir / f"{model['name']}_gsm8k"
         model_output_dir.mkdir(exist_ok=True)
         
-        # Run the experiment using the main pipeline
+        # Resolve API model ID and run the experiment using the main pipeline
+        api_model = api_model_mapping.get(model["name"], model["name"])
         cmd = [
-            "python", "src/main.py",
+            "python", "-m", "src.main", "run",
             "--dataset", dataset,
             "--out", str(model_output_dir / "traces.jsonl"),
-            "--max_turns", "3",
+            "--max-turns", "3",
             "--provider", model["provider"],
-            "--model", model["name"]
+            "--model", api_model,
         ]
         
         try:
