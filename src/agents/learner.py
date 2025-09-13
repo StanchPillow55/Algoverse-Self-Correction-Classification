@@ -17,7 +17,7 @@ class LearnerBot:
         elif provider == "anthropic":
             self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-haiku-20240307")
         elif provider == "replicate":
-            self.model = os.getenv("REPLICATE_MODEL", "meta/llama-2-7b-chat")
+            self.model = os.getenv("REPLICATE_MODEL", "meta/meta-llama-3-70b")
         else:
             self.model = "gpt-4o-mini"  # fallback
 
