@@ -26,7 +26,8 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         "gpt-4": "openai",
         "claude-haiku": "anthropic",
         "claude-sonnet": "anthropic",
-        "claude-opus": "anthropic"
+        "claude-opus": "anthropic",
+        "llama-70b": "replicate"
     }
     
     # Map display names to actual API model names
@@ -38,7 +39,8 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         # Update Sonnet to current ID; keep an explicit 3.5 alias
         "claude-sonnet": "claude-3-5-sonnet-20241022",
         "claude-sonnet-3.5": "claude-3-5-sonnet-20241022",
-        "claude-opus": "claude-3-opus-20240229"
+        "claude-opus": "claude-3-opus-20240229",
+        "llama-70b": "meta/meta-llama-3-70b"
     }
     
     provider = model_mapping.get(model_name, "openai")
@@ -105,7 +107,10 @@ def main():
         print("🚀 Phase 2: Medium Scale")
     else:
         # Phase 3: Full scale
-        models = args.models
+        if args.models == ["gpt-4o-mini", "claude-haiku", "gpt-4o"]:  # Default models
+            models = ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet", "llama-70b", "gpt-4"]
+        else:
+            models = args.models
         print("🚀 Phase 3: Full Scale")
     
     print(f"Models: {', '.join(models)}")
