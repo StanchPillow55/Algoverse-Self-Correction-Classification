@@ -82,9 +82,9 @@ class LearnerBot:
         # Handle template parameter
         user_prompt = f"{q}\n[Instruction]: {template}" if template else q
         
-        # Heuristic: detect code-generation tasks (HumanEval) to allow larger outputs and avoid numeric-only parsing
-        is_code_task = ("Python function" in q) or ("code block" in q) or ("def " in q)
-        max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "1024" if is_code_task else "256"))
+        # Heuristic: detect code-generation tasks (HumanEval) to allow larger outputs for reasoning traces
+        is_code_task = ("Python function" in q) or ("code block" in q) or ("def " in q) or ("reasoning" in q)
+        max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "2048" if is_code_task else "1024"))  # Increased for reasoning traces
         temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.2"))
         
         try:
@@ -107,18 +107,13 @@ class LearnerBot:
                 return "ERROR_EMPTY_RESPONSE", 0.1, "<EMPTY_RESPONSE>"
             
             if is_code_task:
-                # Extract code from markdown blocks if present
-                code_match = re.search(r'```(?:python)?\n?(.*?)\n?```', text, re.DOTALL)
-                if code_match:
-                    ans = code_match.group(1).strip()
-                else:
-                    ans = text
+                # For reasoning traces, return full text - extraction will be done later
+                ans = text  # Keep full reasoning trace
                 conf = 0.6
             else:
-                # Extract numeric answer or return cleaned text
-                num = _first_number(text)
-                ans = num if num is not None else text[:256]
-                conf = 0.85 if (num is not None and num == text.strip()) else 0.6
+                # For reasoning traces, return full text - extraction will be done later
+                ans = text  # Keep full reasoning trace instead of just the number
+                conf = 0.6
             self._safe_debug_log(q, template, text, ans, "openai")
             
             # Track cost and token usage
@@ -168,18 +163,13 @@ class LearnerBot:
                 return "ERROR_EMPTY_RESPONSE", 0.1, "<EMPTY_RESPONSE>"
             
             if is_code_task:
-                # Extract code from markdown blocks if present
-                code_match = re.search(r'```(?:python)?\n?(.*?)\n?```', text, re.DOTALL)
-                if code_match:
-                    ans = code_match.group(1).strip()
-                else:
-                    ans = text
+                # For reasoning traces, return full text - extraction will be done later
+                ans = text  # Keep full reasoning trace
                 conf = 0.6
             else:
-                # Extract numeric answer or return cleaned text
-                num = _first_number(text)
-                ans = num if num is not None else text[:256]
-                conf = 0.85 if (num is not None and num == text.strip()) else 0.6
+                # For reasoning traces, return full text - extraction will be done later
+                ans = text  # Keep full reasoning trace
+                conf = 0.6
             
             self._safe_debug_log(q, template, text, ans, "anthropic")
             
