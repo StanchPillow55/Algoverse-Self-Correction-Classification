@@ -72,6 +72,8 @@ class EnhancedTraceFormatter:
                     traces = data
                 elif isinstance(data, dict) and 'traces' in data:
                     traces = data['traces']
+                elif isinstance(data, dict) and 'items' in data:
+                    traces = data['items']
                 elif isinstance(data, dict) and 'summary' in data:
                     traces = data.get('traces', [])
         except json.JSONDecodeError:
@@ -91,7 +93,7 @@ class EnhancedTraceFormatter:
     def _save_full_traces_txt(self, traces: List[Dict[str, Any]], output_dir: Path):
         """Save full traces as individual .txt files for each sample."""
         for i, trace in enumerate(traces):
-            sample_id = trace.get('qid', f'sample_{i}')
+            sample_id = trace.get('id', f'sample_{i}')
             filename = f"{sample_id}_full_trace.txt"
             filepath = output_dir / filename
             
@@ -100,9 +102,9 @@ class EnhancedTraceFormatter:
                 f.write("=" * 50 + "\n\n")
                 
                 # Basic info
-                f.write(f"Question: {trace.get('question', trace.get('original_problem_text', 'N/A'))}\n")
-                f.write(f"Reference Answer: {trace.get('reference', 'N/A')}\n")
-                f.write(f"Final Accuracy: {trace.get('final_accuracy', trace.get('final_correct', 'N/A'))}\n")
+                f.write(f"Sample ID: {sample_id}\n")
+                f.write(f"Final Prediction: {trace.get('final', {}).get('predicted', 'N/A')}\n")
+                f.write(f"Final Correct: {trace.get('final', {}).get('correct', 'N/A')}\n")
                 f.write(f"Total Turns: {len(trace.get('turns', []))}\n\n")
                 
                 # Turn-by-turn details
@@ -111,26 +113,27 @@ class EnhancedTraceFormatter:
                     f.write(f"TURN {turn_idx + 1}:\n")
                     f.write("-" * 20 + "\n")
                     
-                    # Answer/Code generated
-                    answer = turn.get('answer', turn.get('response_text', ''))
-                    f.write(f"Answer/Code Generated:\n{answer}\n\n")
-                    
-                    # Reasoning/Chain of thought
-                    if 'cot' in turn:
-                        f.write(f"Chain of Thought:\n{turn['cot']}\n\n")
+                    # Prompt ID and reference
+                    f.write(f"Prompt ID: {turn.get('prompt_id', 'N/A')}\n")
+                    f.write(f"Prompt Text Ref: {turn.get('prompt_text_ref', 'N/A')}\n")
+                    f.write(f"Learner Output Ref: {turn.get('learner_output_ref', 'N/A')}\n")
                     
                     # Confidence
-                    confidence = turn.get('confidence', turn.get('model_reported_confidence', 'N/A'))
+                    confidence = turn.get('confidence', 'N/A')
                     f.write(f"Model Confidence: {confidence}\n")
                     
-                    # Accuracy
-                    accuracy = turn.get('accuracy', turn.get('is_correct', 'N/A'))
-                    f.write(f"Accuracy: {accuracy}\n")
+                    # Normalized answer
+                    normalized_answer = turn.get('normalized_answer', 'N/A')
+                    f.write(f"Normalized Answer: {normalized_answer}\n")
                     
-                    # Feedback
-                    feedback = turn.get('feedback', turn.get('evaluator_feedback', ''))
+                    # Execution result
+                    exec_result = turn.get('exec_result', 'N/A')
+                    f.write(f"Execution Result: {exec_result}\n")
+                    
+                    # Evaluator feedback
+                    feedback = turn.get('evaluator_feedback', {})
                     if feedback:
-                        f.write(f"Feedback: {feedback}\n")
+                        f.write(f"Evaluator Feedback: {feedback}\n")
                     
                     f.write("\n" + "=" * 50 + "\n\n")
     
@@ -146,7 +149,7 @@ class EnhancedTraceFormatter:
         }
         
         for trace in traces:
-            sample_id = trace.get('qid', 'unknown')
+            sample_id = trace.get('id', 'unknown')
             turns = trace.get('turns', [])
             
             # Extract accuracy per turn
@@ -175,7 +178,9 @@ class EnhancedTraceFormatter:
             
             # Calculate summary metrics
             initial_accuracy = turn_accuracies[0]['accuracy'] if turn_accuracies else 0
-            final_accuracy = trace.get('final_accuracy', trace.get('final_correct', 0))
+            final_accuracy = trace.get('final', {}).get('correct', 0)
+            if isinstance(final_accuracy, bool):
+                final_accuracy = 1 if final_accuracy else 0
             if final_accuracy == 0 and turn_accuracies:
                 final_accuracy = turn_accuracies[-1]['accuracy']
             improvement = final_accuracy - initial_accuracy

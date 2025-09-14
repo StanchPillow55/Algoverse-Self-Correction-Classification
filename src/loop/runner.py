@@ -19,6 +19,10 @@ from src.data.humaneval_loader import load_humaneval_dataset, create_demo_humane
 from src.eval.humaneval_scorer import score_humaneval_candidate
 from src.data.gsm8k_loader import load_gsm8k_dataset
 
+# Enhanced trace formatting and CSV output
+from src.utils.enhanced_trace_formatter import EnhancedTraceFormatter
+from src.utils.csv_output_formatter import CSVOutputFormatter
+
 mismatch_log = 'outputs/mismatches.log'
 
 def accuracy(answer: str, reference: str) -> int:
@@ -156,9 +160,9 @@ def run_dataset(
             )
         
         # First attempt
-        a0, self_conf = learner.answer(prompt, history, template=None, 
-                                      experiment_id=experiment_id, dataset_name=dataset_name, 
-                                      sample_id=sample_id, turn_number=0)
+        a0, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
+                                                        experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                        sample_id=sample_id, turn_number=0)
         
         # Score based on task type
         if is_humaneval:
@@ -169,9 +173,9 @@ def run_dataset(
             execution_details = score_result.get('execution_result', {})
             passes.append(bool(score_result.get('passed', False)))
             for _ in range(max(0, k_try - 1)):
-                a_s, _ = learner.answer(prompt, history, template=None, 
-                                        experiment_id=experiment_id, dataset_name=dataset_name, 
-                                        sample_id=sample_id, turn_number=0)
+                a_s, _, _ = learner.answer(prompt, history, template=None, 
+                                          experiment_id=experiment_id, dataset_name=dataset_name, 
+                                          sample_id=sample_id, turn_number=0)
                 sr = score_humaneval_candidate(task, a_s)
                 passes.append(bool(sr.get('passed', False)))
             acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
@@ -191,14 +195,19 @@ def run_dataset(
             conf = 0.5
 
         turns = [{
-            "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
-            "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0,
+            "answer": a0, 
+            "response_text": full_response_0,
+            "self_conf": round(self_conf,2), 
+            "teacher_bias": bias,
+            "teacher_conf": round(tconf,2), 
+            "template": None, 
+            "accuracy": acc0,
             "execution_details": execution_details if is_humaneval else {}
         }]
         
         # Log first turn
         coaching_feedback = coaching_from_bias(bias)
-        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=a0, 
+        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=full_response_0, 
                       response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
                       evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
                       model_reported_confidence=self_conf, 
@@ -227,9 +236,9 @@ def run_dataset(
                 bias_for_template = bias
 
                 # send template to learner
-                a1, self_conf = learner.answer(prompt, history + turns, template=template, 
-                                              experiment_id=experiment_id, dataset_name=dataset_name, 
-                                              sample_id=sample_id, turn_number=t)
+                a1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
+                                                               experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                               sample_id=sample_id, turn_number=t)
 
                 # For GSM8K follow-up turns, use EM
                 acc1 = gsm8k_em(a1, ref)
@@ -249,6 +258,7 @@ def run_dataset(
                 # Append turn details with both before/after bias and selected template
                 turns.append({
                     "answer": a1,
+                    "response_text": full_response_1,
                     "self_conf": round(self_conf,2),
                     "teacher_bias": bias_after,
                     "teacher_conf": round(tconf,2),
@@ -266,7 +276,7 @@ def run_dataset(
                     ex,
                     turn_index=t,
                     prompt=f"Template: {template}",
-                    response_text=a1,
+                    response_text=full_response_1,
                     response_is_final=(t == max_turns-1 or acc1 == 1),
                     is_correct=bool(acc1),
                     evaluator_signal=('stop' if acc1 == 1 else 'continue'),
@@ -358,7 +368,9 @@ def run_dataset(
                 if is_he:
                     ref_path = writer.write_he_code(run_dir, ex['qid'], ti, t.get('answer',''))
                 else:
-                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, t.get('answer',''))
+                    # Try to get the actual response content from the turn data
+                    response_content = t.get('response_text', '') or t.get('answer', '') or t.get('normalized_answer', '') or ''
+                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, response_content)
                 # Write prompt template record
                 prompt_text = t.get('template') or ''
                 prompt_ref = None
@@ -374,6 +386,8 @@ def run_dataset(
                     'confidence': t.get('self_conf', None),
                     'normalized_answer': None,
                     'exec_result': t.get('execution_details', {}) if is_he else None,
+                    'accuracy': t.get('accuracy', 0),  # Add accuracy field
+                    'response_text': t.get('response_text', ''),  # Add response_text field
                 })
             items.append({
                 'id': ex['qid'],
@@ -402,4 +416,43 @@ def run_dataset(
 
     # Close the trace logger
     logger.close()
+    
+    # Enhanced trace formatting and CSV output
+    try:
+        print("🔧 Creating enhanced trace formatting and CSV outputs...")
+        
+        # Create enhanced trace formatter
+        enhanced_formatter = EnhancedTraceFormatter()
+        traces_file = str(run_dir / "traces.json")
+        
+        if Path(traces_file).exists():
+            # Format enhanced traces
+            enhanced_outputs = enhanced_formatter.format_experiment_traces(traces_file, experiment_id)
+            print(f"✅ Enhanced traces created: {len(enhanced_outputs)} outputs")
+            
+            # Create CSV outputs
+            csv_formatter = CSVOutputFormatter()
+            final_answers_csv = csv_formatter.create_final_answers_csv(traces_file, experiment_id)
+            multi_turn_csv = csv_formatter.create_multi_turn_accuracy_csv(traces_file, experiment_id)
+            summary_csv = csv_formatter.create_summary_metrics_csv(traces_file, experiment_id)
+            
+            print(f"✅ CSV outputs created:")
+            print(f"  - Final answers: {final_answers_csv}")
+            print(f"  - Multi-turn accuracy: {multi_turn_csv}")
+            print(f"  - Summary metrics: {summary_csv}")
+            
+            # Add CSV paths to output
+            out['enhanced_traces'] = enhanced_outputs
+            out['csv_outputs'] = {
+                'final_answers': final_answers_csv,
+                'multi_turn_accuracy': multi_turn_csv,
+                'summary_metrics': summary_csv
+            }
+        else:
+            print("⚠️ No traces.jsonl found for enhanced formatting")
+            
+    except Exception as e:
+        print(f"⚠️ Enhanced formatting failed: {e}")
+        # Don't fail the run if formatting fails
+    
     return out
