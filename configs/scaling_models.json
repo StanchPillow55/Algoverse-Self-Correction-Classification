@@ -45,15 +45,37 @@
       "description": "Medium Claude model, 70B parameters"
     },
     {
-      "name": "llama-70b",
-      "provider": "replicate",
-      "model_id": "meta-llama/llama-2-70b-chat",
+      "name": "llama-7b",
+      "provider": "huggingface",
+      "model_id": "meta-llama/Llama-2-7b-chat-hf",
+      "size_category": "small",
+      "estimated_cost_per_1k_tokens": 0.0001,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Small Llama model, 7B parameters"
+    },
+    {
+      "name": "llama-13b",
+      "provider": "huggingface",
+      "model_id": "meta-llama/Llama-2-13b-chat-hf",
       "size_category": "medium",
+      "estimated_cost_per_1k_tokens": 0.0002,
+      "max_tokens": 4000,
+      "temperature": 0.0,
+      "available": true,
+      "description": "Medium Llama model, 13B parameters"
+    },
+    {
+      "name": "llama-70b",
+      "provider": "huggingface",
+      "model_id": "meta-llama/Llama-2-70b-chat-hf",
+      "size_category": "large",
       "estimated_cost_per_1k_tokens": 0.0007,
       "max_tokens": 4000,
       "temperature": 0.0,
-      "available": false,
-      "description": "Medium Llama model, 70B parameters"
+      "available": true,
+      "description": "Large Llama model, 70B parameters"
     },
     {
       "name": "gpt-4",
@@ -114,17 +136,17 @@
     },
     "phase2": {
       "name": "medium_scale",
-      "models": ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet"],
+      "models": ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet", "llama-7b", "llama-13b"],
       "datasets": ["toolqa", "superglue"],
       "sample_size": 500,
-      "description": "Test scaling hypothesis with medium models"
+      "description": "Test scaling hypothesis with medium models including Llama"
     },
     "phase3": {
       "name": "full_scale",
-      "models": ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet", "gpt-4", "claude-opus"],
+      "models": ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet", "llama-7b", "llama-13b", "llama-70b", "gpt-4", "claude-opus"],
       "datasets": ["toolqa", "superglue", "college_math", "humaneval"],
       "sample_size": 1000,
-      "description": "Complete scaling study across all models and datasets"
+      "description": "Complete scaling study across all models and datasets including Llama"
     }
   }
 }
