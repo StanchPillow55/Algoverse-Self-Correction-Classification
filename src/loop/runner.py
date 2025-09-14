@@ -23,6 +23,10 @@ from src.data.gsm8k_loader import load_gsm8k_dataset
 from src.utils.enhanced_trace_formatter import EnhancedTraceFormatter
 from src.utils.csv_output_formatter import CSVOutputFormatter
 
+# Reasoning extraction and CSV formatting
+from src.eval.reasoning_extractor import ReasoningExtractor
+from src.utils.csv_formatter import ReasoningCSVFormatter
+
 mismatch_log = 'outputs/mismatches.log'
 
 def accuracy(answer: str, reference: str) -> int:
@@ -104,6 +108,10 @@ def run_dataset(
 
     learner = LearnerBot(provider=provider, model=model)
     traces: List[Dict[str, Any]] = []
+    
+    # Initialize reasoning extractor and CSV formatter for full reasoning traces
+    reasoning_extractor = ReasoningExtractor()
+    csv_formatter = ReasoningCSVFormatter(output_dir / "csv_results")
 
     # Load dataset - supports both CSV and HumanEval formats
     rows = _load_dataset(dataset_csv, subset)
@@ -146,23 +154,44 @@ def run_dataset(
         
         history: List[Dict[str, Any]] = []
         
-        # Prepare prompt for HumanEval vs standard tasks
+        # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
         if is_humaneval:
             prompt = (
-                "You are a careful Python programmer. Do not include explanations or tests in your output.\n\n"
-                "Implement the following Python function. Return the complete function definition (signature + body).\n"
-                "Do not include any text outside code.\n\nProblem:\n" + q + "\n\nOutput format: Provide only a single Python code block containing the full function definition."
+                "You are a Python programmer. Show your complete reasoning and thought process.\n\n"
+                "Think through the problem step by step, explain your approach, then implement the solution.\n"
+                "Include your reasoning, then provide the complete function definition.\n\nProblem:\n" + q + "\n\n"
+                "Please show your full reasoning process and then provide your implementation."
             )
         else:
             prompt = (
-                "You are a meticulous math solver. Think privately. Provide only the final numeric answer.\n\n"
-                "Solve the problem. Think silently and provide only the final numeric answer with no units.\n\nQuestion:\n" + q + "\n\nOutput format: a single line containing only the final number."
+                "You are a math problem solver. Show your complete reasoning and work.\n\n"
+                "Think through the problem step by step. Show all calculations and explain your reasoning.\n"
+                "Work through the problem completely and provide your final answer.\n\nQuestion:\n" + q + "\n\n"
+                "Please show all your work and reasoning, then state your final answer."
             )
         
-        # First attempt
-        a0, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
+        # First attempt - Get full reasoning trace
+        raw_answer, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
                                                         experiment_id=experiment_id, dataset_name=dataset_name, 
                                                         sample_id=sample_id, turn_number=0)
+        
+        # Save full reasoning trace to file
+        dataset_type = "code" if is_humaneval else "math"
+        reasoning_trace_file = reasoning_extractor.save_reasoning_trace(
+            qid=sample_id, turn=0, reasoning_text=full_response_0,
+            output_dir=output_dir, dataset_type=dataset_type
+        )
+        
+        # Extract final answer from reasoning trace
+        if is_humaneval:
+            extracted_answer, reasoning_summary = reasoning_extractor.extract_code_answer(
+                full_response_0, task.get('entry_point', '')
+            )
+        else:
+            extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+        
+        # Use extracted answer for evaluation, fallback to raw if extraction fails
+        a0 = extracted_answer if extracted_answer is not None else raw_answer
         
         # Score based on task type
         if is_humaneval:
@@ -173,10 +202,15 @@ def run_dataset(
             execution_details = score_result.get('execution_result', {})
             passes.append(bool(score_result.get('passed', False)))
             for _ in range(max(0, k_try - 1)):
-                a_s, _, _ = learner.answer(prompt, history, template=None, 
+                # For additional samples, also get full reasoning and extract
+                raw_sample, _, full_sample = learner.answer(prompt, history, template=None, 
                                           experiment_id=experiment_id, dataset_name=dataset_name, 
                                           sample_id=sample_id, turn_number=0)
-                sr = score_humaneval_candidate(task, a_s)
+                extracted_sample, _ = reasoning_extractor.extract_code_answer(
+                    full_sample, task.get('entry_point', '')
+                )
+                sample_answer = extracted_sample if extracted_sample is not None else raw_sample
+                sr = score_humaneval_candidate(task, sample_answer)
                 passes.append(bool(sr.get('passed', False)))
             acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
         else:
@@ -195,11 +229,15 @@ def run_dataset(
             conf = 0.5
 
         turns = [{
-            "answer": a0, 
-            "response_text": full_response_0,
+            "answer": a0,  # Extracted answer for evaluation
+            "raw_answer": raw_answer,  # Original learner output
+            "response_text": full_response_0,  # Full reasoning trace
+            "reasoning_trace_file": str(reasoning_trace_file),  # Path to saved reasoning trace
+            "reasoning_summary": reasoning_summary,  # Summary of reasoning process
             "self_conf": round(self_conf,2), 
             "teacher_bias": bias,
-            "teacher_conf": round(tconf,2), 
+            "teacher_conf": round(tconf,2),
+            "combined_confidence": round(conf,2),
             "template": None, 
             "accuracy": acc0,
             "execution_details": execution_details if is_humaneval else {}
@@ -235,10 +273,20 @@ def run_dataset(
                 # Preserve the bias used for template selection to align feedback with the chosen template
                 bias_for_template = bias
 
-                # send template to learner
-                a1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
+                # send template to learner - get full reasoning trace
+                raw_answer_1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
                                                                experiment_id=experiment_id, dataset_name=dataset_name, 
                                                                sample_id=sample_id, turn_number=t)
+                
+                # Save reasoning trace for this turn
+                reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
+                    qid=sample_id, turn=t, reasoning_text=full_response_1,
+                    output_dir=output_dir, dataset_type="math"
+                )
+                
+                # Extract answer from reasoning trace
+                extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
 
                 # For GSM8K follow-up turns, use EM
                 acc1 = gsm8k_em(a1, ref)
@@ -257,11 +305,15 @@ def run_dataset(
 
                 # Append turn details with both before/after bias and selected template
                 turns.append({
-                    "answer": a1,
-                    "response_text": full_response_1,
+                    "answer": a1,  # Extracted answer for evaluation
+                    "raw_answer": raw_answer_1,  # Original learner output
+                    "response_text": full_response_1,  # Full reasoning trace
+                    "reasoning_trace_file": str(reasoning_trace_file_1),  # Path to saved reasoning trace
+                    "reasoning_summary": reasoning_summary_1,  # Summary of reasoning process
                     "self_conf": round(self_conf,2),
                     "teacher_bias": bias_after,
                     "teacher_conf": round(tconf,2),
+                    "combined_confidence": round(conf,2),
                     "template": template,
                     "template_selected": template,
                     "evaluator_bias_label_before": bias_for_template,
@@ -315,6 +367,32 @@ def run_dataset(
     out = {"summary": summary, "traces": traces}
     with open(traces_out, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
+    
+    # Generate CSV outputs with reasoning traces
+    experiment_config = {
+        'dataset_name': dataset_name,
+        'model': getattr(learner, 'model', model),
+        'provider': provider,
+        'temperature': float(os.getenv("OPENAI_TEMPERATURE", "0.2")),
+        'max_turns': max_turns,
+        'experiment_id': experiment_id
+    }
+    
+    print("🔧 Generating CSV outputs with reasoning traces...")
+    try:
+        results_csv = csv_formatter.format_experiment_results(traces, experiment_config)
+        summary_csv = csv_formatter.format_summary_results(traces, experiment_config) 
+        turn_analysis_csv = csv_formatter.format_turn_analysis(traces)
+        
+        from src.utils.csv_formatter import create_analysis_dashboard
+        dashboard = create_analysis_dashboard(
+            [results_csv, summary_csv, turn_analysis_csv], 
+            output_dir / "csv_results"
+        )
+        
+        print(f"✅ CSV analysis complete. Dashboard: {dashboard}")
+    except Exception as e:
+        print(f"⚠️ CSV generation failed: {e}")
 
     # New: emit paper-ready run directory with per-turn artifacts and structured traces
     try:
