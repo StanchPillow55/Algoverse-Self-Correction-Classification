@@ -285,6 +285,33 @@ def safe_anthropic_messages_create(client, messages, model="claude-3-haiku-20240
     return call_with_backoff_sync(_make_request, estimate_tokens=tokens)
 
 
+# Convenience function for Replicate API calls with rate limiting
+def safe_replicate_run(model, input_params, **kwargs):
+    """
+    Wrapper for Replicate API calls with automatic rate limiting and logging.
+    Mirrors OpenAI/Anthropic wrappers for consistent behavior.
+    
+    Args:
+        model: Replicate model identifier (e.g., "meta/meta-llama-3-70b")
+        input_params: Dictionary of input parameters for the model
+        **kwargs: Additional arguments for replicate.run
+        
+    Returns:
+        Generator that yields the model output (same as replicate.run)
+    """
+    import replicate
+    
+    # Estimate tokens from prompt (rough approximation)
+    prompt = input_params.get("prompt", "")
+    max_tokens = input_params.get("max_tokens", 256)
+    tokens = estimate_tokens(prompt, model) + max_tokens
+
+    def _make_request():
+        return replicate.run(model, input=input_params, **kwargs)
+
+    return call_with_backoff_sync(_make_request, estimate_tokens=tokens)
+
+
 if __name__ == "__main__":
     # Simple test
     def test_func():

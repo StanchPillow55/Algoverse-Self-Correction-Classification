@@ -187,7 +187,7 @@ class LearnerBot:
                         sample_id: str = "unknown", turn_number: int = 0) -> Tuple[str, float]:
         """Call Replicate API (for Llama models)."""
         try:
-            import replicate
+            from ..utils.rate_limit import safe_replicate_run
             
             # Handle template parameter
             user_prompt = f"{q}\n[Instruction]: {template}" if template else q
@@ -197,9 +197,9 @@ class LearnerBot:
             max_tokens = 1024 if is_code_task else 256
             temperature = float(os.getenv("REPLICATE_TEMPERATURE", "0.0"))
             
-            response = replicate.run(
+            response = safe_replicate_run(
                 self.model,
-                input={
+                input_params={
                     "prompt": user_prompt,
                     "max_tokens": max_tokens,
                     "temperature": temperature
