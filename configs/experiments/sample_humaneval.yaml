@@ -1,0 +1,46 @@
+name: "Sample HumanEval Experiment"
+description: "Demonstration of running self-correction experiments on HumanEval code generation tasks"
+
+# Dataset configuration
+dataset:
+  name: "humaneval"
+  subset: "subset_20"  # Options: "full", "subset_20", "subset_100"
+  split: "test"
+
+# Model configuration
+model:
+  provider: "openai"  # or "anthropic"
+  name: "gpt-4o-mini"
+  temperature: 0.2
+  max_tokens: 1024
+
+# Experiment parameters
+experiment:
+  max_turns: 3
+  num_seeds: 3
+  seeds: [1, 2, 3]
+  
+  # Feature flags to control system components
+  features:
+    enable_confidence: true
+    enable_error_awareness: true
+    enable_multi_turn: false  # HumanEval typically uses single-turn evaluation
+    
+# Evaluation parameters
+evaluation:
+  metric: "pass@1"  # Standard HumanEval metric
+  pass_k: 1
+  timeout: 30  # Code execution timeout in seconds
+  
+# Output configuration
+output:
+  base_dir: "runs/humaneval_sample"
+  save_traces: true
+  save_code_artifacts: true
+  enhanced_csv: true
+
+# System configuration
+system:
+  demo_mode: false  # Set to true for testing without API calls
+  safety_checks: true
+  max_concurrent: 1
