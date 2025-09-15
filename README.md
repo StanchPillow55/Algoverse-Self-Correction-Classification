@@ -12,12 +12,25 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt || pip install -r requirements-dev.txt
 ```
 
-### .env (OpenAI) — optional for real runs
+### .env (API Keys) — required for real runs
 
 Create `.env` (never committed) with:
 
 ```
+# OpenAI API Key
 OPENAI_API_KEY=sk-...    # do not share
+
+# Anthropic API Key
+ANTHROPIC_API_KEY=sk-ant-...    # do not share
+
+# HuggingFace API Key (for Llama models)
+HUGGINGFACE_API_KEY=hf_...    # do not share
+
+# Replicate API Token (optional)
+REPLICATE_API_TOKEN=r8_...    # do not share
+
+# Demo mode for testing without API calls
+DEMO_MODE=0
 ```
 
 ### Datasets
