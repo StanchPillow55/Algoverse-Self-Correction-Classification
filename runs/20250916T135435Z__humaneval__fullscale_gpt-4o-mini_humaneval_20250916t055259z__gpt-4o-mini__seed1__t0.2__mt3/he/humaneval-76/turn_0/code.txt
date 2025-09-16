@@ -1,0 +1,26 @@
+def is_simple_power(x, n):
+    """Check if x is a simple power of n."""
+    
+    # Handle special cases
+    if n == 1:
+        return x == 1  # 1^k = 1 for any k, so only x = 1 is valid
+    if n == 0:
+        return x == 0  # 0^k = 0 for k > 0, so only x = 0 is valid
+    
+    # General case for n > 1
+    power = 1  # Start with n^0
+    k = 0
+    
+    while power < x:
+        k += 1
+        power = n ** k  # Calculate n^k
+        
+    return power == x  # Check if we found a match
+
+# Example test cases
+print(is_simple_power(1, 4))  # True
+print(is_simple_power(2, 2))  # True
+print(is_simple_power(8, 2))  # True
+print(is_simple_power(3, 2))  # False
+print(is_simple_power(3, 1))  # False
+print(is_simple_power(5, 3))  # False

@@ -1,0 +1,28 @@
+def largest_smallest_integers(lst):
+    '''
+    Create a function that returns a tuple (a, b), where 'a' is
+    the largest of negative integers, and 'b' is the smallest
+    of positive integers in a list.
+    If there is no negative or positive integers, return them as None.
+    '''
+    
+    largest_negative = None
+    smallest_positive = None
+    
+    for num in lst:
+        if num < 0:  # Check for negative integers
+            if largest_negative is None or num > largest_negative:
+                largest_negative = num
+        elif num > 0:  # Check for positive integers
+            if smallest_positive is None or num < smallest_positive:
+                smallest_positive = num
+    
+    return (largest_negative, smallest_positive)
+
+# Test cases
+print(largest_smallest_integers([2, 4, 1, 3, 5, 7]))  # Expected: (None, 1)
+print(largest_smallest_integers([]))                   # Expected: (None, None)
+print(largest_smallest_integers([0]))                  # Expected: (None, None)
+print(largest_smallest_integers([-1, -2, -3, 1, 2, 3])) # Expected: (-1, 1)
+print(largest_smallest_integers([-5, -3, -1]))         # Expected: (-1, None)
+print(largest_smallest_integers([5, 3, 1]))            # Expected: (None, 1)

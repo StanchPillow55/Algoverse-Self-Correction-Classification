@@ -1,0 +1,36 @@
+def get_closest_vowel(word):
+    """Find the closest vowel that stands between two consonants from the right side of the word."""
+    
+    # Define vowels
+    vowels = "aeiouAEIOU"
+    
+    # Length of the word
+    n = len(word)
+    
+    # If the word is too short to have a vowel between two consonants
+    if n < 3:
+        return ""
+    
+    # Initialize variables to track consonants
+    consonants_count = 0
+    
+    # Iterate from the end of the word to the beginning
+    for i in range(n - 1, -1, -1):
+        char = word[i]
+        
+        if char in vowels:
+            # If we have found at least two consonants before this vowel
+            if consonants_count >= 2:
+                return char  # Return the vowel found
+        elif char.isalpha():  # Check if it's a letter
+            # It's a consonant
+            consonants_count += 1
+            
+    # If no valid vowel was found, return an empty string
+    return ""
+
+# Example test cases
+print(get_closest_vowel("yogurt"))  # Expected output: "u"
+print(get_closest_vowel("FULL"))    # Expected output: "U"
+print(get_closest_vowel("quick"))   # Expected output: ""
+print(get_closest_vowel("ab"))      # Expected output: ""

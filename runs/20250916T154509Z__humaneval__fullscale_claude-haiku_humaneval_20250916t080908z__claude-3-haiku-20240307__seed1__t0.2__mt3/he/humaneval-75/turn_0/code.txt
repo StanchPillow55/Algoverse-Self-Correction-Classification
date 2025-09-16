@@ -1,0 +1,29 @@
+import math
+
+def is_multiply_prime(a):
+    """
+    Write a function that returns true if the given number is the multiplication of 3 prime numbers
+    and false otherwise.
+    Knowing that (a) is less then 100.
+    Example:
+    is_multiply_prime(30) == True
+    30 = 2 * 3 * 5
+    """
+    # Check if the given number is less than 100
+    if a < 100:
+        # Initialize a list to store the prime factors
+        prime_factors = []
+        # Iterate through all the numbers from 2 to the square root of a (inclusive)
+        for i in range(2, int(math.sqrt(a)) + 1):
+            # Check if the current number is a prime factor of a
+            if a % i == 0:
+                # If it is, check if it is a prime number
+                if all(i % j != 0 for j in range(2, int(math.sqrt(i)) + 1)):
+                    prime_factors.append(i)
+                    # If we have found three prime factors, check if their multiplication is equal to a
+                    if len(prime_factors) == 3 and prime_factors[0] * prime_factors[1] * prime_factors[2] == a:
+                        return True
+        # If we couldn't find three prime factors, return False
+        return False
+    else:
+        return False

@@ -1,0 +1,20 @@
+def max_fill(grid, capacity):
+    total_water = 0
+    
+    # Count the total number of water units (1s) in the grid
+    for row in grid:
+        total_water += sum(row)  # Each row is a list of 0s and 1s, sum gives the count of 1s
+    
+    # Calculate the number of times we need to lower the buckets
+    if total_water == 0:
+        return 0  # No water to extract
+    
+    # Using the formula to calculate the number of lowerings
+    lowerings = (total_water + capacity - 1) // capacity  # This is equivalent to math.ceil(total_water / capacity)
+    
+    return lowerings
+
+# Example usage:
+print(max_fill([[0,0,1,0], [0,1,0,0], [1,1,1,1]], 1))  # Output: 6
+print(max_fill([[0,0,1,1], [0,0,0,0], [1,1,1,1], [0,1,1,1]], 2))  # Output: 5
+print(max_fill([[0,0,0], [0,0,0]], 5))  # Output: 0

@@ -1,0 +1,18 @@
+def compare(game, guess):
+    """
+    Compares the actual scores of a series of matches with the guesses made by a person.
+
+    Args:
+        game (list): An array of integers representing the actual scores of the matches.
+        guess (list): An array of integers representing the guesses made by the person.
+
+    Returns:
+        list: An array of integers, where each element represents the absolute difference between the guess and the actual score, or 0 if the guess was correct.
+    """
+    result = []
+    for i in range(len(game)):
+        if game[i] == guess[i]:
+            result.append(0)
+        else:
+            result.append(abs(game[i] - guess[i]))
+    return result

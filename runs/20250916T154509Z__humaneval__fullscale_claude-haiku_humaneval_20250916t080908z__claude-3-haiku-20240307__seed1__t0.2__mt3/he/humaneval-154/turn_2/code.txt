@@ -1,0 +1,20 @@
+def cycpattern_check(a, b):
+    """
+    Checks if the second word or any of its rotations is a substring in the first word.
+
+    Args:
+        a (str): The first word.
+        b (str): The second word.
+
+    Returns:
+        bool: True if the second word or any of its rotations is a substring in the first word, False otherwise.
+    """
+    # Generate all possible rotations of the second word
+    rotations = [b[i:] + b[:i] for i in range(len(b))]
+
+    # Check if any of the rotated versions of the second word is a substring of the first word
+    for rotation in rotations:
+        if rotation in a:
+            return True
+
+    return False

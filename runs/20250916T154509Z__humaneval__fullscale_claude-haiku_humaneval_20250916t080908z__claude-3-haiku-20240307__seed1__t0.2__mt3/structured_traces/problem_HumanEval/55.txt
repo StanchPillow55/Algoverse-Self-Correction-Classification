@@ -1,0 +1,46 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem is to write a function `fib(n)` that returns the n-th Fibonacci number. The Fibonacci sequence is a series of numbers where each number is the sum of the two preceding ones, starting from 0 and 1. The first few Fibonacci numbers are: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, and so on.
+
+2. **Approach**: To solve this problem, we can use a recursive approach. The Fibonacci sequence can be defined recursively as follows:
+
+   - `fib(0) = 0`
+   - `fib(1) = 1`
+   - `fib(n) = fib(n-1) + fib(n-2)` for `n >= 2`
+
+   This means that the n-th Fibonacci number can be calculated by adding the (n-1)-th and (n-2)-th Fibonacci numbers.
+
+3. **Implementation**: Here's the Python function that implements the Fibonacci sequence using the recursive approach:
+
+```python
+def fib(n: int) -> int:
+    """Return n-th Fibonacci number.
+    >>> fib(10)
+    55
+    >>> fib(1)
+    1
+    >>> fib(8)
+    21
+    """
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fib(n-1) + fib(n-2)
+```
+
+Let's go through the implementation step by step:
+
+- The function takes an integer `n` as input, which represents the position of the Fibonacci number we want to calculate.
+- The function uses a conditional statement to handle the base cases:
+  - If `n` is 0, the function returns 0, as the 0-th Fibonacci number is 0.
+  - If `n` is 1, the function returns 1, as the 1-st Fibonacci number is 1.
+- For all other cases (`n >= 2`), the function recursively calls itself with `n-1` and `n-2` as arguments, and returns the sum of the results.
+- The recursive calls continue until the base cases are reached, at which point the function starts returning the results back up the call stack.
+
+This recursive implementation is straightforward and easy to understand, but it can be inefficient for large values of `n` due to the repeated calculations. To improve the efficiency, you can use memoization or dynamic programming techniques.
+PASS: All tests passed

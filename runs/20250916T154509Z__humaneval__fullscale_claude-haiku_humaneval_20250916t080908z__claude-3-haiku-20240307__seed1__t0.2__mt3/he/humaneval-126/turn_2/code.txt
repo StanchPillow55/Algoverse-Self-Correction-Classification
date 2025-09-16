@@ -1,0 +1,31 @@
+def is_sorted(lst):
+    """
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    """
+    # Check if the list has only one element
+    if len(lst) <= 1:
+        return True
+
+    # Keep track of the count of each number in the list
+    num_count = {}
+
+    # Iterate through the list, comparing each element with the next
+    for i in range(len(lst) - 1):
+        # If the current element is greater than the next, the list is not sorted
+        if lst[i] > lst[i + 1]:
+            return False
+
+        # Update the count of the current number
+        num_count[lst[i]] = num_count.get(lst[i], 0) + 1
+
+        # If the count of any number exceeds 1, the list has more than one duplicate
+        if num_count[lst[i]] > 1:
+            return False
+
+    # Update the count of the last element
+    num_count[lst[-1]] = num_count.get(lst[-1], 0) + 1
+
+    # If the loop completes without returning False, the list is sorted
+    return True

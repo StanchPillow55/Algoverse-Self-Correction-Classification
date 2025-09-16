@@ -1,0 +1,36 @@
+from typing import List
+
+def separate_paren_groups(paren_string: str) -> List[str]:
+    """Separate groups of nested parentheses from a string."""
+    # Step 1: Remove spaces from the input string
+    paren_string = paren_string.replace(" ", "")
+    
+    # Step 2: Initialize variables
+    groups = []
+    current_group = ""
+    balance = 0
+    
+    # Step 3: Iterate through the characters in the string
+    for char in paren_string:
+        if char == '(':
+            # Start a new group
+            if balance == 0 and current_group:
+                # If we were already in a group, save it before starting a new one
+                groups.append(current_group)
+                current_group = ""
+            current_group += char
+            balance += 1
+        elif char == ')':
+            current_group += char
+            balance -= 1
+            
+            # Step 4: Check if we have a complete group
+            if balance == 0:
+                groups.append(current_group)
+                current_group = ""
+    
+    # Return the list of groups
+    return groups
+
+# Example usage
+print(separate_paren_groups('( ) (( )) (( )( ))'))  # Output: ['()', '(())', '(()())']

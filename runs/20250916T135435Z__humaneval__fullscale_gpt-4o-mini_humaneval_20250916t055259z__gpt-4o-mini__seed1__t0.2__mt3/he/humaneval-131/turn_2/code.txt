@@ -1,0 +1,23 @@
+def digits(n):
+    """Given a positive integer n, return the product of the odd digits.
+    Return 0 if all digits are even.
+    For example:
+    digits(1)  == 1
+    digits(4)  == 0
+    digits(235) == 15
+    """
+    product = 1
+    has_odd_digit = False
+    
+    # Convert the number to string to iterate through each digit
+    for digit in str(n):
+        digit_value = int(digit)  # Convert the character back to an integer
+        if digit_value % 2 == 1:  # Check if the digit is odd
+            product *= digit_value  # Multiply the product by the odd digit
+            has_odd_digit = True  # Mark that we found at least one odd digit
+    
+    # If no odd digits were found, return 0
+    if not has_odd_digit:
+        return 0
+    
+    return product

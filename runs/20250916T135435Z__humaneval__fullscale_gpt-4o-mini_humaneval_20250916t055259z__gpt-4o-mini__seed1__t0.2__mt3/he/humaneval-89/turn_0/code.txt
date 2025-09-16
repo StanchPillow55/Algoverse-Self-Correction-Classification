@@ -1,0 +1,17 @@
+def encrypt(s):
+    """Encrypts a string by rotating each letter down the alphabet by 4 positions."""
+    encrypted_string = []
+    
+    for char in s:
+        if 'a' <= char <= 'z':  # Check if the character is a lowercase letter
+            # Calculate the new character after shifting by 4
+            new_char = chr((ord(char) - ord('a') + 4) % 26 + ord('a'))
+            encrypted_string.append(new_char)
+    
+    return ''.join(encrypted_string)
+
+# Test cases
+print(encrypt('hi'))          # Expected output: 'lm'
+print(encrypt('asdfghjkl'))   # Expected output: 'ewhjklnop'
+print(encrypt('gf'))          # Expected output: 'kj'
+print(encrypt('et'))          # Expected output: 'ix'

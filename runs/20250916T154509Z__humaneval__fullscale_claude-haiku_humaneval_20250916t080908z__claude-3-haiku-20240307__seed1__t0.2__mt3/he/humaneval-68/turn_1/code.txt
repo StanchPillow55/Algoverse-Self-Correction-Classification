@@ -1,0 +1,17 @@
+def pluck(arr):
+    """
+    Given an array representing a branch of a tree that has non-negative integer nodes,
+    return the node with the smallest even value and its index in a list.
+    If multiple nodes with the same smallest even value are found, return the one with the smallest index.
+    If there are no even values or the input array is empty, return an empty list.
+    """
+    if not arr:
+        return []
+
+    even_values = [value for value in arr if value % 2 == 0]
+    if not even_values:
+        return []
+
+    smallest_even = min(even_values)
+    smallest_index = next(i for i, value in enumerate(arr) if value == smallest_even)
+    return [smallest_even, smallest_index]

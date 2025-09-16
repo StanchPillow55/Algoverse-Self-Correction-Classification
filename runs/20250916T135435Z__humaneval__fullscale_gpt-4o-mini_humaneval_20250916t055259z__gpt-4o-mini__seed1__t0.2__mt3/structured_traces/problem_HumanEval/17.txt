@@ -1,0 +1,82 @@
+turn 1
+To solve the problem of parsing a string representing musical notes in a special ASCII format, we need to follow a systematic approach. Let's break down the steps required to implement the `parse_music` function.
+
+### Step-by-Step Reasoning
+
+1. **Understanding the Input Format**: 
+   - The input is a string where musical notes are represented by specific characters:
+     - `'o'` represents a whole note, which lasts 4 beats.
+     - `'o|'` represents a half note, which lasts 2 beats.
+     - `'.|'` represents a quarter note, which lasts 1 beat.
+   - Notes are separated by spaces in the input string.
+
+2. **Output Requirements**:
+   - We need to return a list of integers where each integer corresponds to the number of beats for each note parsed from the input string.
+
+3. **Parsing the Input**:
+   - We can split the input string by spaces to get individual note representations.
+   - For each note, we will determine its corresponding beat value based on the defined legend.
+
+4. **Implementation Steps**:
+   - Split the input string into a list of notes.
+   - Initialize an empty list to store the beat values.
+   - Iterate through the list of notes:
+     - Check each note and append the corresponding beat value to the list based on the defined rules.
+   - Finally, return the list of beat values.
+
+### Implementation
+
+Now, let's implement the function based on the above reasoning:
+
+```python
+from typing import List
+
+def parse_music(music_string: str) -> List[int]:
+    """ Input to this function is a string representing musical notes in a special ASCII format.
+    Your task is to parse this string and return list of integers corresponding to how many beats does each
+    note last.
+
+    Here is a legend:
+    'o' - whole note, lasts four beats
+    'o|' - half note, lasts two beats
+    '.|' - quarter note, lasts one beat
+
+    >>> parse_music('o o| .| o| o| .| .| .| .| o o')
+    [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4]
+    """
+    
+    # Split the input string into individual notes
+    notes = music_string.split()
+    
+    # Initialize an empty list to hold the beat values
+    beats = []
+    
+    # Define a mapping of note representations to their beat values
+    note_to_beats = {
+        'o': 4,   # whole note
+        'o|': 2,  # half note
+        '.|': 1   # quarter note
+    }
+    
+    # Iterate through each note and determine its beat value
+    for note in notes:
+        if note in note_to_beats:
+            beats.append(note_to_beats[note])
+        else:
+            raise ValueError(f"Unknown note representation: {note}")
+    
+    return beats
+```
+
+### Explanation of the Code:
+- We start by importing the `List` type from the `typing` module for type hinting.
+- The function `parse_music` takes a string `music_string` as input.
+- We split the input string into a list of notes using the `split()` method.
+- We initialize an empty list `beats` to store the beat values.
+- We define a dictionary `note_to_beats` that maps each note representation to its corresponding beat value.
+- We iterate through each note in the `notes` list, checking if it exists in the `note_to_beats` dictionary. If it does, we append the corresponding beat value to the `beats` list.
+- If an unknown note representation is encountered, we raise a `ValueError` to handle unexpected input gracefully.
+- Finally, we return the list of beat values.
+
+This implementation effectively parses the musical notes and returns the desired output as specified in the problem statement.
+PASS: All tests passed

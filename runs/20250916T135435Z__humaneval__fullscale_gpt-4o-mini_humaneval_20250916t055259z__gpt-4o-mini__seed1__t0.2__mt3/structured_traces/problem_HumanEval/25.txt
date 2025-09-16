@@ -1,0 +1,65 @@
+turn 1
+To solve the problem of factorizing an integer into its prime factors, we need to follow a systematic approach. Here’s how we can break down the problem step by step:
+
+### Step 1: Understanding Prime Factorization
+Prime factorization involves breaking down a composite number into a product of prime numbers. For example:
+- The prime factorization of 8 is \(2 \times 2 \times 2\), which gives us the list \([2, 2, 2]\).
+- The prime factorization of 25 is \(5 \times 5\), resulting in \([5, 5]\).
+- The prime factorization of 70 is \(2 \times 5 \times 7\), leading to \([2, 5, 7]\).
+
+### Step 2: Approach to Factorization
+1. **Initialize an empty list** to store the prime factors.
+2. **Start with the smallest prime number, which is 2**, and check if it divides the number \(n\). If it does, we keep dividing \(n\) by 2 until it no longer can be divided by 2, adding 2 to our list each time.
+3. **Move to the next odd numbers** (3, 5, 7, ...) and repeat the process. We only need to check up to the square root of \(n\) because if \(n\) has a factor larger than its square root, the corresponding co-factor must be smaller than the square root.
+4. If after checking all possible factors up to the square root, \(n\) is still greater than 1, then \(n\) itself is a prime number and should be added to the list.
+5. Finally, return the list of prime factors.
+
+### Step 3: Implementation
+Now, let's implement the `factorize` function based on the outlined approach.
+
+```python
+from typing import List
+
+def factorize(n: int) -> List[int]:
+    """ Return list of prime factors of given integer in the order from smallest to largest.
+    Each of the factors should be listed number of times corresponding to how many times it appears in factorization.
+    """
+    factors = []
+    
+    # Check for number of 2s that divide n
+    while n % 2 == 0:
+        factors.append(2)
+        n //= 2
+    
+    # n must be odd at this point, so we can skip even numbers
+    for i in range(3, int(n**0.5) + 1, 2):
+        while n % i == 0:
+            factors.append(i)
+            n //= i
+    
+    # This condition is to check if n is a prime number greater than 2
+    if n > 2:
+        factors.append(n)
+    
+    return factors
+```
+
+### Explanation of the Code:
+- We start by initializing an empty list `factors` to store the prime factors.
+- We first handle the factor 2 separately to allow us to skip even numbers later.
+- We then use a loop to check for odd factors starting from 3 up to the square root of \(n\).
+- For each factor, we check if it divides \(n\) and keep dividing \(n\) by that factor until it no longer can.
+- Finally, if \(n\) is still greater than 2, it means \(n\) itself is a prime factor and we add it to the list.
+- The function returns the list of prime factors in ascending order.
+
+### Testing the Function
+We can test the function using the provided examples:
+
+```python
+print(factorize(8))   # Output: [2, 2, 2]
+print(factorize(25))  # Output: [5, 5]
+print(factorize(70))  # Output: [2, 5, 7]
+```
+
+This implementation is efficient and correctly handles the factorization of integers into their prime components.
+PASS: All tests passed

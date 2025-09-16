@@ -1,0 +1,32 @@
+def is_nested(string):
+    '''
+    Create a function that takes a string as input which contains only square brackets.
+    The function should return True if and only if there is a valid subsequence of brackets 
+    where at least one bracket in the subsequence is nested.
+    '''
+    balance = 0
+    has_nested = False
+    
+    for char in string:
+        if char == '[':
+            balance += 1
+            # Check if we have seen at least one opening bracket before this one
+            if balance > 1:
+                has_nested = True
+        elif char == ']':
+            balance -= 1
+            
+            # If balance goes negative, we have an unmatched closing bracket
+            if balance < 0:
+                return False
+    
+    # At the end, balance should be zero for valid brackets
+    return balance == 0 and has_nested
+
+# Test cases
+print(is_nested('[[]]'))  # True
+print(is_nested('[]]]]]]][[[[[]'))  # False
+print(is_nested('[][]'))  # False
+print(is_nested('[]'))  # False
+print(is_nested('[[][]]'))  # True
+print(is_nested('[[]][['))  # True

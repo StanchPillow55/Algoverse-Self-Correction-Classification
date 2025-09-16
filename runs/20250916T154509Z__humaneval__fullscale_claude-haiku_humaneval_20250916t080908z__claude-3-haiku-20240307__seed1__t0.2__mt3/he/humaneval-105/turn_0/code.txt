@@ -1,0 +1,15 @@
+def by_length(arr):
+    # Filter the input array to only include the integers between 1 and 9 (inclusive)
+    valid_numbers = [num for num in arr if 1 <= num <= 9]
+
+    # Sort the filtered array in ascending order
+    valid_numbers.sort()
+
+    # Reverse the sorted array
+    valid_numbers.reverse()
+
+    # Replace each digit with its corresponding name
+    name_list = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]
+    result = [name_list[num - 1] for num in valid_numbers]
+
+    return result

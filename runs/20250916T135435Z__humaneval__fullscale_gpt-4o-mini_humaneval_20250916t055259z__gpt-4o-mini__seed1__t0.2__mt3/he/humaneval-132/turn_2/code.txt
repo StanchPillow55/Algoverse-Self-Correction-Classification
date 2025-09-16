@@ -1,0 +1,29 @@
+def is_nested(string):
+    open_count = 0  # To count the number of open brackets
+    nested = False   # To track if we have found nested brackets
+
+    for char in string:
+        if char == '[':
+            open_count += 1
+            # If we have more than one open bracket, we have nesting
+            if open_count > 1:
+                nested = True
+        elif char == ']':
+            if open_count == 0:
+                # More closing brackets than opening brackets
+                return False
+            open_count -= 1
+
+    # If we finish processing and there are still open brackets, it's invalid
+    if open_count != 0:
+        return False
+
+    return nested
+
+# Test cases
+print(is_nested('[[]]'))  # ➞ True
+print(is_nested('[]]]]]]][[[[[]'))  # ➞ False
+print(is_nested('[][]'))  # ➞ False
+print(is_nested('[]'))  # ➞ False
+print(is_nested('[[][]]'))  # ➞ True
+print(is_nested('[[]][['))  # ➞ True

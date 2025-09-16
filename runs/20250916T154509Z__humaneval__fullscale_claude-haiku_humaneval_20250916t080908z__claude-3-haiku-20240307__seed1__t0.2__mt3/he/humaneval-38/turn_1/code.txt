@@ -1,0 +1,12 @@
+def decode_cyclic(s: str):
+    """
+    takes as input string encoded with encode_cyclic function. Returns decoded string.
+    """
+    # Split the input string into groups of three characters
+    groups = [s[(3 * i):min((3 * i + 3), len(s))] for i in range((len(s) + 2) // 3)]
+
+    # Reverse the cycling operation for each group
+    groups = [group[-1] + group[:-1] if len(group) == 3 else group for group in groups]
+
+    # Concatenate the groups back into a single string
+    return "".join(groups)

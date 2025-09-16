@@ -1,0 +1,23 @@
+def is_bored(S):
+    """
+    You'll be given a string of words, and your task is to count the number
+    of boredoms. A boredom is a sentence that starts with the word "I".
+    Sentences are delimited by '.', '?' or '!'.
+   
+    For example:
+    >>> is_bored("Hello world")
+    0
+    >>> is_bored("The sky is blue. The sun is shining. I love this weather")
+    1
+    """
+    # Edge case: If the input string is empty or contains only whitespace, return 0
+    if not S.strip():
+        return 0
+
+    # Split the input string into individual sentences
+    sentences = [sentence.strip() for sentence in re.split(r'[.?!]', S) if sentence.strip()]
+
+    # Count the number of sentences that start with "I" (case-insensitive)
+    boredom_count = sum(1 for sentence in sentences if sentence.lower().startswith("i"))
+
+    return boredom_count

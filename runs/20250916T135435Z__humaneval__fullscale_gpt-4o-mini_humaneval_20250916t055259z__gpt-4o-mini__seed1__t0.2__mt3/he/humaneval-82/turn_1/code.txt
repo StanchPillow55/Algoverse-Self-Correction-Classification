@@ -1,0 +1,19 @@
+def is_prime(n):
+    """Helper function to check if a number is prime."""
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def prime_length(string):
+    """Returns True if the length of the string is a prime number, False otherwise."""
+    length = len(string)
+    return is_prime(length)
+
+# Example test cases
+print(prime_length('Hello'))    # True (length 5)
+print(prime_length('abcdcba'))  # True (length 7)
+print(prime_length('kittens'))   # True (length 7)
+print(prime_length('orange'))    # False (length 6)

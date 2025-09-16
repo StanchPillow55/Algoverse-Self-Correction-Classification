@@ -1,0 +1,35 @@
+from typing import List
+
+def has_close_elements(numbers: List[float], threshold: float) -> bool:
+    """
+    Check if in given list of numbers, are any two numbers closer to each other than
+    given threshold.
+
+    Args:
+        numbers (List[float]): A list of floating-point numbers.
+        threshold (float): The maximum allowed difference between any two numbers.
+
+    Returns:
+        bool: True if there are any two numbers in the list that are closer than the
+        given threshold, False otherwise.
+    """
+    # Edge case: If the list is empty, return False
+    if not numbers:
+        return False
+
+    # Edge case: If the threshold is less than or equal to 0, return True
+    if threshold <= 0:
+        return True
+
+    # Iterate through the list and compare each number with every other number
+    for i in range(len(numbers)):
+        for j in range(i + 1, len(numbers)):
+            # Calculate the absolute difference between the two numbers
+            diff = abs(numbers[i] - numbers[j])
+
+            # If the difference is less than the threshold, return True
+            if diff < threshold:
+                return True
+
+    # If no pair of numbers is found to be closer than the threshold, return False
+    return False

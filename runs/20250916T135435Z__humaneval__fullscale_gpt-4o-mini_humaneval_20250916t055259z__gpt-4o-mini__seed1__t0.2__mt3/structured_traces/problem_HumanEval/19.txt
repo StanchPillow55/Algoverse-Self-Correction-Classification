@@ -1,0 +1,78 @@
+turn 1
+To solve the problem of sorting a space-delimited string of numerals represented as words (from "zero" to "nine"), we can break down the solution into several clear steps:
+
+### Step-by-Step Reasoning
+
+1. **Understanding the Input and Output**:
+   - The input is a string containing words that represent numbers from zero to nine, separated by spaces.
+   - The output should be a string of these words sorted in ascending order based on their numerical values.
+
+2. **Mapping Words to Numbers**:
+   - We need a way to convert the words into their corresponding numerical values for sorting. This can be achieved using a dictionary that maps each word to its respective integer value.
+
+3. **Splitting the Input String**:
+   - We will split the input string into a list of words using the `split()` method. This will give us a list of the number words that we need to sort.
+
+4. **Sorting the List**:
+   - We can sort the list of words using the `sorted()` function. To ensure that the sorting is based on the numerical values, we will use the dictionary we created to get the corresponding integer for each word.
+
+5. **Joining the Sorted List**:
+   - After sorting, we will join the sorted list back into a single string with spaces separating the words.
+
+6. **Returning the Result**:
+   - Finally, we will return the sorted string.
+
+### Implementation
+
+Now that we have a clear plan, let's implement the function:
+
+```python
+from typing import List
+
+def sort_numbers(numbers: str) -> str:
+    """ Input is a space-delimited string of numberals from 'zero' to 'nine'.
+    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.
+    Return the string with numbers sorted from smallest to largest
+    >>> sort_numbers('three one five')
+    'one three five'
+    """
+    
+    # Step 1: Create a mapping from words to their corresponding integer values
+    word_to_number = {
+        'zero': 0,
+        'one': 1,
+        'two': 2,
+        'three': 3,
+        'four': 4,
+        'five': 5,
+        'six': 6,
+        'seven': 7,
+        'eight': 8,
+        'nine': 9
+    }
+    
+    # Step 2: Split the input string into a list of words
+    number_words = numbers.split()
+    
+    # Step 3: Sort the list of words based on their numerical values
+    sorted_words = sorted(number_words, key=lambda word: word_to_number[word])
+    
+    # Step 4: Join the sorted list back into a single string
+    sorted_string = ' '.join(sorted_words)
+    
+    # Step 5: Return the result
+    return sorted_string
+
+# Example usage
+print(sort_numbers('three one five'))  # Output: 'one three five'
+```
+
+### Explanation of the Code
+
+- We start by defining a dictionary `word_to_number` that maps each numeral word to its corresponding integer value.
+- We then split the input string into a list of words using `split()`.
+- The `sorted()` function is used to sort the list of words. The `key` argument is a lambda function that retrieves the numerical value of each word from the dictionary for sorting purposes.
+- Finally, we join the sorted list back into a string using `' '.join()` and return the result.
+
+This implementation is efficient and straightforward, adhering to the requirements of the problem.
+PASS: All tests passed

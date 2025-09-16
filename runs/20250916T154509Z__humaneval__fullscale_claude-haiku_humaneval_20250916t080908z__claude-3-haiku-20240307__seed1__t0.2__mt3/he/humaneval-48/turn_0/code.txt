@@ -1,0 +1,42 @@
+def is_palindrome(text: str) -> bool:
+    """
+    Checks if given string is a palindrome.
+    
+    Args:
+        text (str): The input string to be checked.
+    
+    Returns:
+        bool: True if the input string is a palindrome, False otherwise.
+    
+    >>> is_palindrome('')
+    True
+    >>> is_palindrome('aba')
+    True
+    >>> is_palindrome('aaaaa')
+    True
+    >>> is_palindrome('zbcd')
+    False
+    """
+    # Check if the input string is empty
+    if not text:
+        return True
+    
+    # Convert the input string to lowercase
+    text = text.lower()
+    
+    # Initialize two pointers, one at the beginning and one at the end of the string
+    left = 0
+    right = len(text) - 1
+    
+    # Iterate through the string, comparing the characters at the two pointers
+    while left < right:
+        # If the characters at the two pointers do not match, the string is not a palindrome
+        if text[left] != text[right]:
+            return False
+        
+        # Move the pointers inward
+        left += 1
+        right -= 1
+    
+    # If the loop completes without returning False, the string is a palindrome
+    return True

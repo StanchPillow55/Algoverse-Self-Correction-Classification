@@ -1,0 +1,16 @@
+def is_palindrome(string: str) -> bool:
+    """Test if given string is a palindrome."""
+    return string == string[::-1]
+
+def make_palindrome(string: str) -> str:
+    """Find the shortest palindrome that begins with a supplied string."""
+    if not string:
+        return ""
+
+    for i in range(len(string), -1, -1):
+        prefix = string[:i]
+        suffix = string[i:]
+        if is_palindrome(suffix):
+            return string + prefix[::-1]
+
+    return string[::-1] + string

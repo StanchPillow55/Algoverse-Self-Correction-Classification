@@ -1,0 +1,52 @@
+turn 1
+To solve the problem of counting distinct characters in a string regardless of case, we can break down the solution into a series of logical steps:
+
+### Step 1: Understand the Problem
+We need to count how many unique characters are present in the input string, treating uppercase and lowercase letters as the same. For example, the string "xyzXYZ" should be counted as having 3 distinct characters: 'x', 'y', and 'z'.
+
+### Step 2: Normalize the Case
+To ensure that we treat characters case-insensitively, we can convert the entire string to either lowercase or uppercase. This way, 'A' and 'a' will be considered the same character.
+
+### Step 3: Identify Distinct Characters
+To find distinct characters, we can utilize a data structure that inherently manages uniqueness. A set in Python is perfect for this purpose because it automatically handles duplicates.
+
+### Step 4: Count the Distinct Characters
+Once we have a set of characters from the normalized string, we can simply return the size of the set, which will give us the count of distinct characters.
+
+### Step 5: Implement the Function
+Now that we have a clear plan, we can implement the function `count_distinct_characters`.
+
+Here’s the complete function definition:
+
+```python
+def count_distinct_characters(string: str) -> int:
+    """ Given a string, find out how many distinct characters (regardless of case) does it consist of
+    >>> count_distinct_characters('xyzXYZ')
+    3
+    >>> count_distinct_characters('Jerry')
+    4
+    """
+    # Normalize the string to lowercase
+    normalized_string = string.lower()
+    
+    # Create a set of characters from the normalized string
+    distinct_characters = set(normalized_string)
+    
+    # Return the number of distinct characters
+    return len(distinct_characters)
+
+# Example usage
+print(count_distinct_characters('xyzXYZ'))  # Output: 3
+print(count_distinct_characters('Jerry'))    # Output: 4
+```
+
+### Explanation of the Code:
+1. **Normalization**: We convert the input string to lowercase using `string.lower()`.
+2. **Set Creation**: We create a set from the normalized string, which automatically filters out duplicate characters.
+3. **Count Distinct Characters**: We use `len()` to get the number of unique characters in the set and return this value.
+
+### Testing the Function
+The provided docstring includes examples that can be used to verify the correctness of the function. We can run these examples to ensure the implementation behaves as expected. 
+
+This approach is efficient and straightforward, leveraging Python's built-in capabilities to handle strings and sets effectively.
+PASS: All tests passed

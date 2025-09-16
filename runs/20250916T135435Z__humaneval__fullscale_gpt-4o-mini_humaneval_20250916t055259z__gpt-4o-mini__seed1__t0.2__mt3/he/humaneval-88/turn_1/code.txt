@@ -1,0 +1,38 @@
+def sort_array(array):
+    """
+    Given an array of non-negative integers, return a copy of the given array after sorting,
+    you will sort the given array in ascending order if the sum( first index value, last index value) is odd,
+    or sort it in descending order if the sum( first index value, last index value) is even.
+
+    Note:
+    * don't change the given array.
+    """
+    # Step 1: Handle the empty array case
+    if not array:
+        return []
+    
+    # Step 2: Handle the single element case
+    if len(array) == 1:
+        return array[:]
+    
+    # Step 3: Calculate the sum of the first and last elements
+    first_element = array[0]
+    last_element = array[-1]
+    total_sum = first_element + last_element
+    
+    # Step 4: Sort based on the sum's parity
+    if total_sum % 2 == 0:
+        # Even sum: sort in descending order
+        sorted_array = sorted(array, reverse=True)
+    else:
+        # Odd sum: sort in ascending order
+        sorted_array = sorted(array)
+    
+    # Step 5: Return the sorted array
+    return sorted_array
+
+# Example test cases
+print(sort_array([]))  # Output: []
+print(sort_array([5]))  # Output: [5]
+print(sort_array([2, 4, 3, 0, 1, 5]))  # Output: [0, 1, 2, 3, 4, 5]
+print(sort_array([2, 4, 3, 0, 1, 5, 6]))  # Output: [6, 5, 4, 3, 2, 1, 0]

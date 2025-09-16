@@ -1,0 +1,19 @@
+def words_string(s):
+    """
+    Splits the input string into words separated by commas or spaces and returns a list of words.
+    
+    Args:
+    s (str): The input string containing words separated by commas or spaces.
+    
+    Returns:
+    list: A list of words extracted from the input string.
+    """
+    # Replace commas with spaces to normalize the delimiters
+    normalized_string = s.replace(',', ' ')
+    
+    # Split the normalized string by whitespace and return the list of words
+    return normalized_string.split()
+
+# Example usage:
+print(words_string("Hi, my name is John"))  # Output: ["Hi", "my", "name", "is", "John"]
+print(words_string("One, two, three, four, five, six"))  # Output: ["One", "two", "three", "four", "five", "six"]

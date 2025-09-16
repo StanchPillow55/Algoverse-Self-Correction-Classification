@@ -1,0 +1,21 @@
+def simplify(x, n):
+    """
+    Simplifies the expression x * n and returns True if the result is a whole number, False otherwise.
+
+    Args:
+        x (str): A string representation of a fraction in the format "<numerator>/<denominator>".
+        n (str): A string representation of a fraction in the format "<numerator>/<denominator>".
+
+    Returns:
+        bool: True if the expression x * n evaluates to a whole number, False otherwise.
+    """
+    # Parse the input strings to extract the numerator and denominator of each fraction
+    x_num, x_den = map(int, x.split('/'))
+    n_num, n_den = map(int, n.split('/'))
+
+    # Multiply the numerators and denominators to get the numerator and denominator of the resulting fraction
+    result_num = x_num * n_num
+    result_den = x_den * n_den
+
+    # Check if the resulting denominator is equal to 1, indicating a whole number
+    return result_den == 1

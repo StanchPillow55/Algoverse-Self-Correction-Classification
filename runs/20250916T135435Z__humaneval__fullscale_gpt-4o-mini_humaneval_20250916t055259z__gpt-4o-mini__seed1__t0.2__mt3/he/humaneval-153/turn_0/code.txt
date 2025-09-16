@@ -1,0 +1,25 @@
+def Strongest_Extension(class_name, extensions):
+    """Finds the strongest extension for a given class name based on the strength calculation."""
+    
+    max_strength = float('-inf')  # Start with the lowest possible strength
+    strongest_extension = None  # To store the strongest extension found
+    
+    for extension in extensions:
+        # Calculate CAP and SM
+        CAP = sum(1 for char in extension if char.isupper())
+        SM = sum(1 for char in extension if char.islower())
+        
+        # Calculate strength
+        strength = CAP - SM
+        
+        # Check if this is the strongest extension found so far
+        if strength > max_strength:
+            max_strength = strength
+            strongest_extension = extension
+            
+    # Return the formatted result
+    return f"{class_name}.{strongest_extension}"
+
+# Example usage
+print(Strongest_Extension('Slices', ['SErviNGSliCes', 'Cheese', 'StuFfed']))  # Output: 'Slices.SErviNGSliCes'
+print(Strongest_Extension('my_class', ['AA', 'Be', 'CC']))  # Output: 'my_class.AA'

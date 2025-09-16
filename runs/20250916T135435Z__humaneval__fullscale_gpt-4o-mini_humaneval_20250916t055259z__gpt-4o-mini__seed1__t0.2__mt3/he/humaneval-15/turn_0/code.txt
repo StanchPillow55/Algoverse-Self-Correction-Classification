@@ -1,0 +1,20 @@
+def string_sequence(n: int) -> str:
+    """ Return a string containing space-delimited numbers starting from 0 up to n inclusive.
+    >>> string_sequence(0)
+    '0'
+    >>> string_sequence(5)
+    '0 1 2 3 4 5'
+    """
+    if n < 0:
+        return ""  # Handle negative input by returning an empty string
+    
+    # Generate the sequence of numbers from 0 to n
+    numbers = range(n + 1)
+    
+    # Convert each number to a string and join them with a space
+    return ' '.join(str(num) for num in numbers)
+
+# Example usage
+print(string_sequence(5))  # Output: '0 1 2 3 4 5'
+print(string_sequence(0))  # Output: '0'
+print(string_sequence(-1)) # Output: ''

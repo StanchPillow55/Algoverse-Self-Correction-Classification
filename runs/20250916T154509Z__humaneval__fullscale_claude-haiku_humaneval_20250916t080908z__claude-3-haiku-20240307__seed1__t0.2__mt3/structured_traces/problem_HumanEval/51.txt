@@ -1,0 +1,63 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem is to write a function called `remove_vowels` that takes a string as input and returns a new string with all the vowels (both uppercase and lowercase) removed.
+
+2. **Identifying the Inputs and Outputs**: The function takes a string as input and returns a string as output. The input string can be empty, contain only vowels, or contain a mix of vowels and non-vowels.
+
+3. **Identifying the Vowels**: The vowels in the English language are 'a', 'e', 'i', 'o', and 'u'. We need to remove these characters from the input string.
+
+4. **Approach**: One way to solve this problem is to iterate through the input string and check if each character is a vowel. If it's not a vowel, we can add it to a new string. This new string will be the result of the `remove_vowels` function.
+
+5. **Handling Edge Cases**: We need to handle the following edge cases:
+   - If the input string is empty, the function should return an empty string.
+   - If the input string contains only vowels, the function should return an empty string.
+   - If the input string contains a mix of vowels and non-vowels, the function should return a string with only the non-vowels.
+
+Implementation:
+
+Here's the complete function definition:
+
+```python
+def remove_vowels(text):
+    """
+    remove_vowels is a function that takes string and returns string without vowels.
+    >>> remove_vowels('')
+    ''
+    >>> remove_vowels("abcdef\nghijklm")
+    'bcdf\nghjklm'
+    >>> remove_vowels('abcdef')
+    'bcdf'
+    >>> remove_vowels('aaaaa')
+    ''
+    >>> remove_vowels('aaBAA')
+    'B'
+    >>> remove_vowels('zbcd')
+    'zbcd'
+    """
+    vowels = 'aeiouAEIOU'
+    result = ''
+    for char in text:
+        if char not in vowels:
+            result += char
+    return result
+```
+
+Let's go through the implementation step by step:
+
+1. We define a string `vowels` that contains all the vowels (both uppercase and lowercase).
+2. We initialize an empty string `result` to store the characters that are not vowels.
+3. We iterate through each character in the input string `text`.
+4. For each character, we check if it is not in the `vowels` string. If it's not a vowel, we add it to the `result` string.
+5. Finally, we return the `result` string, which contains the input string without any vowels.
+
+This implementation handles all the edge cases mentioned earlier:
+
+- If the input string is empty, the function will return an empty string.
+- If the input string contains only vowels, the function will return an empty string.
+- If the input string contains a mix of vowels and non-vowels, the function will return a string with only the non-vowels.
+
+The doctest examples provided in the problem statement are all passing, which confirms that the `remove_vowels` function is working as expected.
+PASS: All tests passed

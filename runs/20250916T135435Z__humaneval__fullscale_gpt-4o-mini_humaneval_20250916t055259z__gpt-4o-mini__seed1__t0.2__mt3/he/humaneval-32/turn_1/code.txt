@@ -1,0 +1,35 @@
+import math
+
+def poly(xs: list, x: float):
+    """Evaluates polynomial with coefficients xs at point x."""
+    return sum(coeff * math.pow(x, i) for i, coeff in enumerate(xs))
+
+def find_zero(xs: list):
+    """Find x such that poly(x) = 0."""
+    a, b = -10, 10  # Initial interval
+    fa, fb = poly(xs, a), poly(xs, b)
+
+    # Ensure that there is a sign change
+    if fa * fb > 0:
+        raise ValueError("The function must have different signs at the endpoints a and b.")
+
+    # Bisection method
+    tolerance = 1e-7  # Define a tolerance for convergence
+    while (b - a) / 2 > tolerance:
+        midpoint = (a + b) / 2
+        fmid = poly(xs, midpoint)
+
+        if fmid == 0:  # Found exact root
+            return midpoint
+        elif fa * fmid < 0:  # Root is in the left half
+            b = midpoint
+            fb = fmid
+        else:  # Root is in the right half
+            a = midpoint
+            fa = fmid
+
+    return (a + b) / 2  # Return the midpoint as the root
+
+# Example usage:
+# print(round(find_zero([1, 2]), 2))  # Should return -0.5
+# print(round(find_zero([-6, 11, -6, 1]), 2))  # Should return 1.0

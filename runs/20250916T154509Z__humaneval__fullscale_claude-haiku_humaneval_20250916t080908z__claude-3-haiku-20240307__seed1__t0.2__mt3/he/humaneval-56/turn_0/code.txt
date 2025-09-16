@@ -1,0 +1,26 @@
+def correct_bracketing(brackets: str):
+    """
+    Checks if every opening bracket in the input string has a corresponding closing bracket.
+
+    Args:
+        brackets (str): A string of "<" and ">" characters.
+
+    Returns:
+        bool: True if every opening bracket has a corresponding closing bracket, False otherwise.
+    """
+    stack = []
+
+    # Iterate through the input string
+    for bracket in brackets:
+        if bracket == "<":
+            # Push the opening bracket onto the stack
+            stack.append(bracket)
+        elif bracket == ">":
+            if not stack:
+                # If the stack is empty, there's no corresponding opening bracket
+                return False
+            # Pop the opening bracket from the stack
+            stack.pop()
+
+    # If the stack is empty, all opening brackets have a corresponding closing bracket
+    return len(stack) == 0

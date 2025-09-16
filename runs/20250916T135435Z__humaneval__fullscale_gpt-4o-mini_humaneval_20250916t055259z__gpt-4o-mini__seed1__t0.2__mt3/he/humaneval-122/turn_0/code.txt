@@ -1,0 +1,14 @@
+def add_elements(arr, k):
+    """
+    Given a non-empty array of integers arr and an integer k, return
+    the sum of the elements with at most two digits from the first k elements of arr.
+    """
+    total_sum = 0  # Initialize the sum to zero
+    
+    # Iterate through the first k elements of arr
+    for i in range(k):
+        # Check if the current element has at most two digits
+        if -99 <= arr[i] <= 99:
+            total_sum += arr[i]  # Add to the sum if condition is met
+    
+    return total_sum  # Return the final sum

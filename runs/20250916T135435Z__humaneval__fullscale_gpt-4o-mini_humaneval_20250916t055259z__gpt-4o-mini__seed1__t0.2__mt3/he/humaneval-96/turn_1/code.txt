@@ -1,0 +1,25 @@
+def count_up_to(n):
+    """Return an array of the first n integers that are prime numbers and less than n."""
+    if n < 2:
+        return []  # There are no prime numbers less than 2
+
+    primes = []
+    
+    for num in range(2, n):  # Start from 2 and go up to n-1
+        is_prime = True  # Assume num is prime until proven otherwise
+        for i in range(2, int(num**0.5) + 1):  # Check divisibility up to the square root of num
+            if num % i == 0:  # If num is divisible by i, it's not prime
+                is_prime = False
+                break
+        if is_prime:
+            primes.append(num)  # Add prime number to the list
+
+    return primes
+
+# Testing the function with provided examples
+print(count_up_to(5))   # Output: [2, 3]
+print(count_up_to(11))  # Output: [2, 3, 5, 7]
+print(count_up_to(0))   # Output: []
+print(count_up_to(20))  # Output: [2, 3, 5, 7, 11, 13, 17, 19]
+print(count_up_to(1))   # Output: []
+print(count_up_to(18))  # Output: [2, 3, 5, 7, 11, 13, 17]

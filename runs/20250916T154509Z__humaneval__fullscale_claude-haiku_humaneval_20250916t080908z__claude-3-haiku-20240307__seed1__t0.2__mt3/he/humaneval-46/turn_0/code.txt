@@ -1,0 +1,22 @@
+def fib4(n: int) -> int:
+    """
+    Compute the n-th element of the Fib4 number sequence.
+
+    Args:
+        n (int): The index of the Fib4 number to compute.
+
+    Returns:
+        int: The n-th Fib4 number.
+    """
+    if n < 0:
+        raise ValueError("n must be a non-negative integer")
+    if n < 4:
+        return [0, 0, 2, 0][n]
+
+    fib4_sequence = [0, 0, 2, 0]
+    for _ in range(4, n + 1):
+        next_fib4 = sum(fib4_sequence)
+        fib4_sequence.append(next_fib4)
+        fib4_sequence.pop(0)
+
+    return fib4_sequence[-1]

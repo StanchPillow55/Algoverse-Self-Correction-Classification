@@ -1,0 +1,14 @@
+def compare(game, guess):
+    """Compares the actual scores of matches with the guessed scores and returns the absolute differences."""
+    # Initialize an empty list to hold the results
+    results = []
+    
+    # Iterate through both lists simultaneously using the range of their length
+    for i in range(len(game)):
+        # Calculate the absolute difference
+        difference = abs(game[i] - guess[i])
+        # Append the difference to the results list
+        results.append(difference)
+    
+    # Return the final results list
+    return results

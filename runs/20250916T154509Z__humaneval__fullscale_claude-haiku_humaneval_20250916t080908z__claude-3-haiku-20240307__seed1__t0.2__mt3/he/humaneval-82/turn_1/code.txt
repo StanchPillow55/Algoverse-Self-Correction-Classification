@@ -1,0 +1,29 @@
+def is_prime(n):
+    """
+    Helper function to check if a number is prime.
+    
+    Args:
+        n (int): The number to be checked.
+    
+    Returns:
+        bool: True if the number is prime, False otherwise.
+    """
+    if n <= 1:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def prime_length(string):
+    """
+    Checks if the length of the input string is a prime number.
+    
+    Args:
+        string (str): The input string.
+    
+    Returns:
+        bool: True if the length of the string is a prime number, False otherwise.
+    """
+    length = len(string)
+    return is_prime(length)

@@ -374,7 +374,7 @@ class ExperimentalResultsAnalyzer:
             'gpt-4': 'GPT-4',
             'claude-haiku': 'Claude-3-Haiku',
             'claude-3-haiku-20240307': 'Claude-3-Haiku',
-            'claude-3-sonnet-20240229': 'Claude-3-Sonnet',
+            'claude-3-5-sonnet-20241022': 'Claude-3-Sonnet',
             'claude-3-5-sonnet-20241022': 'Claude-3.5-Sonnet',
             'claude-3-opus-20240229': 'Claude-3-Opus',
             'meta-llama-2-70b-chat': 'Llama-2-70B',

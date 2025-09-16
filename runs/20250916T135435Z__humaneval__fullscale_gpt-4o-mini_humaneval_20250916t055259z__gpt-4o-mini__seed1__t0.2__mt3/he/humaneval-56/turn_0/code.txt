@@ -1,0 +1,25 @@
+def correct_bracketing(brackets: str) -> bool:
+    """ 
+    brackets is a string of "<" and ">".
+    return True if every opening bracket has a corresponding closing bracket.
+    """
+    balance = 0  # Initialize a counter for the balance of brackets
+    
+    for char in brackets:
+        if char == '<':
+            balance += 1  # Increment for an opening bracket
+        elif char == '>':
+            balance -= 1  # Decrement for a closing bracket
+        
+        # If balance goes negative, we have more closing brackets than opening
+        if balance < 0:
+            return False
+    
+    # At the end, balance should be zero for a valid sequence
+    return balance == 0
+
+# Test cases
+print(correct_bracketing("<"))        # Expected: False
+print(correct_bracketing("<>"))       # Expected: True
+print(correct_bracketing("<<><>>"))   # Expected: True
+print(correct_bracketing("><<>"))     # Expected: False

@@ -1,0 +1,59 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem requires us to write a function `factorize` that takes an integer `n` as input and returns a list of prime factors of `n` in the order from smallest to largest. Each factor should be listed the number of times it appears in the factorization, and the product of all the factors should be equal to the input number `n`.
+
+2. **Approach**: To solve this problem, we can use the following steps:
+   a. Initialize an empty list to store the prime factors.
+   b. Start with the smallest prime number, which is 2, and check if it divides `n` without a remainder.
+   c. If 2 divides `n`, add 2 to the list and divide `n` by 2 until it is no longer divisible by 2.
+   d. Move on to the next prime number (3, 5, 7, etc.) and repeat the process until `n` becomes 1.
+   e. Return the list of prime factors.
+
+3. **Implementation**:
+
+```python
+from typing import List
+
+def factorize(n: int) -> List[int]:
+    """
+    Return list of prime factors of given integer in the order from smallest to largest.
+    Each of the factors should be listed number of times corresponding to how many times it appears in factorization.
+    Input number should be equal to the product of all factors.
+
+    >>> factorize(8)
+    [2, 2, 2]
+    >>> factorize(25)
+    [5, 5]
+    >>> factorize(70)
+    [2, 5, 7]
+    """
+    factors = []
+    i = 2  # Start with the smallest prime number
+
+    while i * i <= n:
+        if n % i == 0:
+            factors.append(i)
+            n //= i  # Divide n by the current factor
+        else:
+            i += 1  # Move to the next prime number
+
+    if n > 1:
+        factors.append(n)  # Add the remaining factor (which is a prime number)
+
+    return factors
+```
+
+Explanation of the implementation:
+
+1. We start by initializing an empty list `factors` to store the prime factors.
+2. We start with the smallest prime number, which is 2, and check if it divides `n` without a remainder.
+3. If 2 divides `n`, we add 2 to the `factors` list and divide `n` by 2 until it is no longer divisible by 2.
+4. We then move on to the next prime number (3, 5, 7, etc.) and repeat the process until `n` becomes 1.
+5. If `n` is greater than 1 at the end of the loop, it means that `n` is a prime number, so we add it to the `factors` list.
+6. Finally, we return the `factors` list.
+
+The time complexity of this solution is O(√n), as we iterate through the prime numbers up to the square root of `n`. The space complexity is O(1), as the size of the `factors` list is bounded by the number of prime factors of `n`.
+PASS: All tests passed

@@ -1,0 +1,91 @@
+turn 1
+To solve the problem of computing the n-th element of the Fib4 sequence, we need to understand the sequence's definition and how to implement it efficiently without recursion.
+
+### Step-by-Step Reasoning
+
+1. **Understanding the Sequence**:
+   - The Fib4 sequence is defined as:
+     - fib4(0) = 0
+     - fib4(1) = 0
+     - fib4(2) = 2
+     - fib4(3) = 0
+     - For n >= 4: fib4(n) = fib4(n-1) + fib4(n-2) + fib4(n-3) + fib4(n-4)
+   - This means that each term after the first four is the sum of the previous four terms.
+
+2. **Base Cases**:
+   - We have four base cases that we need to handle explicitly:
+     - fib4(0) = 0
+     - fib4(1) = 0
+     - fib4(2) = 2
+     - fib4(3) = 0
+
+3. **Iterative Approach**:
+   - Since we are instructed not to use recursion, we will use an iterative approach to compute the sequence.
+   - We can maintain a list or an array to store the computed values of the sequence up to n.
+   - For each n from 4 to the desired n, we will compute fib4(n) using the previously computed values.
+
+4. **Space Optimization**:
+   - Instead of storing all computed values, we can optimize space by only keeping the last four computed values, as they are the only ones needed to compute the next value.
+
+5. **Implementation**:
+   - We will define the function `fib4(n)` that implements the above logic.
+
+### Implementation
+
+Here is the complete function definition based on the reasoning above:
+
+```python
+def fib4(n: int) -> int:
+    """The Fib4 number sequence is a sequence similar to the Fibonacci sequence that's defined as follows:
+    fib4(0) -> 0
+    fib4(1) -> 0
+    fib4(2) -> 2
+    fib4(3) -> 0
+    fib4(n) -> fib4(n-1) + fib4(n-2) + fib4(n-3) + fib4(n-4).
+    Please write a function to efficiently compute the n-th element of the fib4 number sequence.  Do not use recursion.
+    >>> fib4(5)
+    4
+    >>> fib4(6)
+    8
+    >>> fib4(7)
+    14
+    """
+    
+    # Base cases
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 0
+    elif n == 2:
+        return 2
+    elif n == 3:
+        return 0
+    
+    # Initialize the first four values
+    fib_values = [0, 0, 2, 0]
+    
+    # Compute values from 4 to n
+    for i in range(4, n + 1):
+        next_value = fib_values[0] + fib_values[1] + fib_values[2] + fib_values[3]
+        # Update the list to keep only the last four values
+        fib_values[0] = fib_values[1]
+        fib_values[1] = fib_values[2]
+        fib_values[2] = fib_values[3]
+        fib_values[3] = next_value
+    
+    return fib_values[3]
+
+# Example usage
+print(fib4(5))  # Output: 4
+print(fib4(6))  # Output: 8
+print(fib4(7))  # Output: 14
+```
+
+### Explanation of the Code:
+- The function starts by checking for the base cases and returning the corresponding values.
+- For values of n greater than 3, it initializes a list `fib_values` to store the last four computed values of the sequence.
+- It then iteratively computes the next value in the sequence by summing the last four values and updates the list accordingly.
+- Finally, it returns the last computed value, which corresponds to fib4(n). 
+
+This approach is efficient in both time and space, as it runs in O(n) time and uses O(1) space.
+PASS: All tests passed

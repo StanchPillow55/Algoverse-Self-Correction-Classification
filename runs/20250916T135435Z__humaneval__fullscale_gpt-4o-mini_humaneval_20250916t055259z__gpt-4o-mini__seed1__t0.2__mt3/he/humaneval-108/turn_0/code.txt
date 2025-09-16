@@ -1,0 +1,42 @@
+def count_nums(arr):
+    """
+    Write a function count_nums which takes an array of integers and returns
+    the number of elements which has a sum of digits > 0.
+    If a number is negative, then its first signed digit will be negative:
+    e.g. -123 has signed digits -1, 2, and 3.
+    >>> count_nums([]) == 0
+    >>> count_nums([-1, 11, -11]) == 1
+    >>> count_nums([1, 1, 2]) == 3
+    """
+    
+    def sum_of_digits(n):
+        # Convert the number to string to iterate over digits
+        str_n = str(n)
+        digit_sum = 0
+        
+        # Iterate over each character in the string representation
+        for i, char in enumerate(str_n):
+            if char == '-':
+                # If it's a negative sign, we skip it
+                continue
+            # Convert character to integer
+            digit = int(char)
+            # If it's the first character and the number is negative, make it negative
+            if i == 1 and str_n[0] == '-':
+                digit_sum -= digit  # First digit is negative
+            else:
+                digit_sum += digit
+        
+        return digit_sum
+    
+    count = 0
+    for number in arr:
+        if sum_of_digits(number) > 0:
+            count += 1
+            
+    return count
+
+# Testing the function with provided examples
+print(count_nums([]))  # Expected output: 0
+print(count_nums([-1, 11, -11]))  # Expected output: 1
+print(count_nums([1, 1, 2]))  # Expected output: 3

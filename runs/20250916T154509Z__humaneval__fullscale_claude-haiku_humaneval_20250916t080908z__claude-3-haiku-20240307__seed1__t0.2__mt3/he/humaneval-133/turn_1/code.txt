@@ -1,0 +1,12 @@
+import math
+
+def sum_squares(lst):
+    """
+    Returns the sum of squared numbers in the given list, rounding each element to the upper integer (ceiling) first.
+    """
+    total_sum = 0
+    for num in lst:
+        rounded_num = math.ceil(num)
+        squared_num = rounded_num ** 2
+        total_sum += squared_num
+    return total_sum

@@ -1,0 +1,30 @@
+from typing import List, Any
+
+def filter_integers(values: List[Any]) -> List[int]:
+    """
+    Filter given list of any python values only for integers.
+
+    Args:
+        values (List[Any]): A list of any Python values.
+
+    Returns:
+        List[int]: A list of only the integer values from the input list.
+
+    Examples:
+        >>> filter_integers(['a', 3.14, 5])
+        [5]
+        >>> filter_integers([1, 2, 3, 'abc', {}, []])
+        [1, 2, 3]
+    """
+    # Initialize an empty list to store the integer values
+    integer_values = []
+
+    # Iterate through the input list
+    for value in values:
+        # Check if the current value is an instance of the int type
+        if isinstance(value, int):
+            # If it is, add it to the integer_values list
+            integer_values.append(value)
+
+    # Return the list of integer values
+    return integer_values

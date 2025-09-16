@@ -1,0 +1,33 @@
+def strange_sort_list(lst):
+    '''
+    Given list of integers, return list in strange order.
+    Strange sorting, is when you start with the minimum value,
+    then maximum of the remaining integers, then minimum and so on.
+    '''
+    # Handle the edge case of an empty list
+    if not lst:
+        return []
+    
+    # Sort the list
+    sorted_lst = sorted(lst)
+    
+    result = []
+    left = 0
+    right = len(sorted_lst) - 1
+    
+    # Alternate between the smallest and largest remaining elements
+    while left <= right:
+        if left == right:  # When both pointers meet, add the last element
+            result.append(sorted_lst[left])
+        else:
+            result.append(sorted_lst[left])  # Add the minimum
+            result.append(sorted_lst[right])  # Add the maximum
+        left += 1
+        right -= 1
+    
+    return result
+
+# Example test cases
+print(strange_sort_list([1, 2, 3, 4]))  # Output: [1, 4, 2, 3]
+print(strange_sort_list([5, 5, 5, 5]))  # Output: [5, 5, 5, 5]
+print(strange_sort_list([]))             # Output: []

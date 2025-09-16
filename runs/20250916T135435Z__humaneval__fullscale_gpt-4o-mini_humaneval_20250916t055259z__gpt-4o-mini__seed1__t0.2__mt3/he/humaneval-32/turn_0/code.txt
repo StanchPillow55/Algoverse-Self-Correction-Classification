@@ -1,0 +1,39 @@
+import math
+
+def poly(xs: list, x: float):
+    """Evaluates polynomial with coefficients xs at point x."""
+    return sum(coeff * math.pow(x, i) for i, coeff in enumerate(xs))
+
+def poly_derivative(xs: list, x: float):
+    """Evaluates the derivative of the polynomial at point x."""
+    return sum(i * coeff * math.pow(x, i - 1) for i, coeff in enumerate(xs) if i > 0)
+
+def find_zero(xs: list):
+    """Find x such that poly(x) = 0 using the Newton-Raphson method."""
+    # Initial guess
+    x = 0.0
+    tolerance = 1e-7
+    max_iterations = 1000
+    
+    for _ in range(max_iterations):
+        f_x = poly(xs, x)
+        f_prime_x = poly_derivative(xs, x)
+        
+        if f_prime_x == 0:  # Avoid division by zero
+            raise ValueError("Derivative is zero. No solution found.")
+        
+        # Newton-Raphson formula
+        x_new = x - f_x / f_prime_x
+        
+        # Check for convergence
+        if abs(x_new - x) < tolerance:
+            return x_new
+        
+        x = x_new
+    
+    raise ValueError("Maximum iterations reached. No solution found.")
+
+# Example usage
+if __name__ == "__main__":
+    print(round(find_zero([1, 2]), 2))  # Should return -0.5
+    print(round(find_zero([-6, 11, -6, 1]), 2))  # Should return 1.0

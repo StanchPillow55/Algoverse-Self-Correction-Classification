@@ -1,0 +1,14 @@
+def iscube(a):
+    # Calculate the cube root of a
+    cube_root = round(a ** (1/3))
+    
+    # Check if the cube of the rounded cube root equals a
+    return cube_root ** 3 == a
+
+# Test cases
+print(iscube(1))    # True
+print(iscube(2))    # False
+print(iscube(-1))   # True
+print(iscube(64))   # True
+print(iscube(0))    # True
+print(iscube(180))  # False

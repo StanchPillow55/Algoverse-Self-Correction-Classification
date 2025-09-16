@@ -1,0 +1,23 @@
+def next_smallest(lst):
+    """
+    Returns the 2nd smallest unique element from the list of integers.
+    Returns None if there is no such element.
+    """
+    # Step 1: Remove duplicates by converting the list to a set
+    unique_elements = set(lst)
+    
+    # Step 2: Convert the set back to a sorted list
+    sorted_unique = sorted(unique_elements)
+    
+    # Step 3: Check if there are at least two unique elements
+    if len(sorted_unique) < 2:
+        return None
+    
+    # Step 4: Return the second smallest element
+    return sorted_unique[1]
+
+# Test cases
+print(next_smallest([1, 2, 3, 4, 5]))  # Expected output: 2
+print(next_smallest([5, 1, 4, 3, 2]))  # Expected output: 2
+print(next_smallest([]))                # Expected output: None
+print(next_smallest([1, 1]))            # Expected output: None

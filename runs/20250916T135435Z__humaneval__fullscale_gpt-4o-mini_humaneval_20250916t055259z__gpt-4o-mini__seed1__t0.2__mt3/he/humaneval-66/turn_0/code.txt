@@ -1,0 +1,20 @@
+def digitSum(s):
+    """Task
+    Write a function that takes a string as input and returns the sum of the upper characters only'
+    ASCII codes.
+    """
+    total_sum = 0  # Initialize the sum to 0
+    
+    for char in s:  # Iterate through each character in the string
+        if char.isupper():  # Check if the character is uppercase
+            total_sum += ord(char)  # Add the ASCII value of the uppercase character to the sum
+    
+    return total_sum  # Return the final sum
+
+# Test cases
+print(digitSum(""))          # Expected output: 0
+print(digitSum("abAB"))     # Expected output: 131 (65 + 66)
+print(digitSum("abcCd"))    # Expected output: 67 (67)
+print(digitSum("helloE"))   # Expected output: 69 (69)
+print(digitSum("woArBld"))  # Expected output: 131 (65 + 66)
+print(digitSum("aAaaaXa"))  # Expected output: 153 (65 + 88)

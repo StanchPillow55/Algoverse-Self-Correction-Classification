@@ -1,0 +1,24 @@
+def order_by_points(nums):
+    """
+    Sorts the given list of integers in ascending order according to the sum of their digits.
+    If there are several items with similar sum of their digits, order them based on their index in the original list.
+    
+    Args:
+    nums (list of int): The list of integers to sort.
+    
+    Returns:
+    list of int: The sorted list of integers.
+    """
+    
+    def sum_of_digits(n):
+        """Helper function to calculate the sum of digits of an integer."""
+        return sum(int(digit) for digit in str(abs(n)))  # Use abs to ignore negative sign
+
+    # Create a sorted list using the sum of digits as the key
+    sorted_nums = sorted(nums, key=lambda x: (sum_of_digits(x), nums.index(x)))
+    
+    return sorted_nums
+
+# Example usage:
+print(order_by_points([1, 11, -1, -11, -12]))  # Output: [-1, -11, 1, -12, 11]
+print(order_by_points([]))  # Output: []

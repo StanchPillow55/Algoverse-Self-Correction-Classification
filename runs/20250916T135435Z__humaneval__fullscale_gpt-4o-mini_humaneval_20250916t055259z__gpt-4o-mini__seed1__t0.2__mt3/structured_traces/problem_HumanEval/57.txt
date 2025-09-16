@@ -1,0 +1,70 @@
+turn 1
+To determine if a list of numbers is monotonically increasing or decreasing, we need to define what these terms mean:
+
+1. **Monotonically Increasing**: A list is considered monotonically increasing if each element is greater than or equal to the previous element. For example, the list `[1, 2, 2, 3]` is monotonically increasing.
+
+2. **Monotonically Decreasing**: A list is considered monotonically decreasing if each element is less than or equal to the previous element. For example, the list `[3, 2, 2, 1]` is monotonically decreasing.
+
+Given these definitions, our approach to solving the problem can be broken down into the following steps:
+
+### Steps to Solve the Problem:
+
+1. **Check for Empty List**: If the list is empty, we can return `True` since there are no elements to contradict monotonicity.
+
+2. **Initialize Flags**: We will use two boolean flags, `is_increasing` and `is_decreasing`, both initialized to `True`. As we iterate through the list, we will update these flags based on the comparisons of adjacent elements.
+
+3. **Iterate Through the List**: We will loop through the list and compare each element with the next one:
+   - If we find an element that is greater than the next one, we set `is_increasing` to `False`.
+   - If we find an element that is less than the next one, we set `is_decreasing` to `False`.
+
+4. **Determine Result**: After iterating through the list, if either `is_increasing` or `is_decreasing` is still `True`, we return `True`. Otherwise, we return `False`.
+
+### Implementation:
+
+Now, let's implement the `monotonic` function based on the reasoning above.
+
+```python
+def monotonic(l: list):
+    """Return True if list elements are monotonically increasing or decreasing.
+    
+    >>> monotonic([1, 2, 4, 20])
+    True
+    >>> monotonic([1, 20, 4, 10])
+    False
+    >>> monotonic([4, 1, 0, -10])
+    True
+    """
+    
+    # Step 1: Check for empty list
+    if not l:
+        return True
+    
+    # Step 2: Initialize flags
+    is_increasing = True
+    is_decreasing = True
+    
+    # Step 3: Iterate through the list
+    for i in range(len(l) - 1):
+        if l[i] < l[i + 1]:
+            is_decreasing = False
+        elif l[i] > l[i + 1]:
+            is_increasing = False
+    
+    # Step 4: Determine result
+    return is_increasing or is_decreasing
+
+# Example usage
+print(monotonic([1, 2, 4, 20]))  # True
+print(monotonic([1, 20, 4, 10]))  # False
+print(monotonic([4, 1, 0, -10]))  # True
+```
+
+### Explanation of the Implementation:
+
+- We start by checking if the list is empty. If it is, we return `True`.
+- We initialize two flags to track whether the list is increasing or decreasing.
+- We loop through the list, comparing each element with the next one. Depending on the comparison, we update our flags.
+- Finally, we return `True` if either flag is still `True`, indicating that the list is either monotonically increasing or decreasing.
+
+This implementation is efficient, with a time complexity of O(n), where n is the length of the list, since we only need to make a single pass through the list.
+PASS: All tests passed

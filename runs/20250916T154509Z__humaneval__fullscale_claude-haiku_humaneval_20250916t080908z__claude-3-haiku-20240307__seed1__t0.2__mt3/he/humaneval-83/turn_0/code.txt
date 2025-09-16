@@ -1,0 +1,16 @@
+def starts_one_ends(n):
+    """
+    Given a positive integer n, return the count of the numbers of n-digit
+    positive integers that start or end with 1.
+    """
+    count = 0
+    if n == 1:
+        # For 1-digit positive integers, the numbers that start or end with 1 are 1 and 10.
+        return 2
+    else:
+        # Iterate through all the possible n-digit positive integers.
+        for num in range(10**(n-1), 10**n):
+            # Check if the first or last digit is 1.
+            if str(num)[0] == '1' or str(num)[-1] == '1':
+                count += 1
+        return count

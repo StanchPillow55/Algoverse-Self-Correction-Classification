@@ -1,0 +1,59 @@
+To determine the total cost of John's research, we will break down the problem step by step.
+
+1. **Initial Funding**: John receives $100,000 for the first 5 months. This means that for these 5 months, the funding is fixed at $100,000.
+
+2. **Total Duration of Research**: The problem states that the research takes 10 times longer than the initial 5 months. Therefore, the total duration of the research is:
+   \[
+   \text{Total Duration} = 10 \times 5 = 50 \text{ months}
+   \]
+
+3. **Months Beyond Initial Funding**: Since the initial funding covers the first 5 months, we need to calculate the funding for the remaining months:
+   \[
+   \text{Remaining Months} = 50 - 5 = 45 \text{ months}
+   \]
+
+4. **Funding for Remaining Months**: The problem states that every month after the first 5 months requires 50% more funding than the previous month. We need to determine how much funding is needed for each of these 45 months.
+
+   - Let's denote the funding for the 6th month as \( x \). Since the funding increases by 50% each month, we can express the funding for the subsequent months as follows:
+     - 6th month: \( x \)
+     - 7th month: \( x + 0.5x = 1.5x \)
+     - 8th month: \( 1.5x + 0.5(1.5x) = 1.5x + 0.75x = 2.25x \)
+     - 9th month: \( 2.25x + 0.5(2.25x) = 2.25x + 1.125x = 3.375x \)
+     - Continuing this pattern, we can see that the funding for the \( n \)-th month after the 5th month can be expressed as:
+       \[
+       \text{Funding for month } n = x \cdot (1.5)^{(n-6)}
+       \]
+
+5. **Total Funding for Remaining Months**: We need to sum the funding for all 45 months from the 6th to the 50th month. This is a geometric series where:
+   - The first term \( a = x \)
+   - The common ratio \( r = 1.5 \)
+   - The number of terms \( n = 45 \)
+
+   The sum \( S_n \) of a geometric series can be calculated using the formula:
+   \[
+   S_n = a \frac{1 - r^n}{1 - r}
+   \]
+   Substituting the values:
+   \[
+   S_{45} = x \frac{1 - (1.5)^{45}}{1 - 1.5} = x \frac{1 - (1.5)^{45}}{-0.5} = -2x (1 - (1.5)^{45})
+   \]
+
+6. **Total Cost of Research**: The total cost of the research is the sum of the initial funding and the funding for the remaining months:
+   \[
+   \text{Total Cost} = 100,000 + S_{45}
+   \]
+   Substituting \( S_{45} \):
+   \[
+   \text{Total Cost} = 100,000 - 2x (1 - (1.5)^{45})
+   \]
+
+7. **Determining \( x \)**: We need to determine the value of \( x \). Since the problem does not provide a specific value for the funding in the 6th month, we cannot calculate a numerical answer without additional information. However, we can express the total cost in terms of \( x \).
+
+8. **Final Expression**: The total cost of John's research can be expressed as:
+   \[
+   \text{Total Cost} = 100,000 - 2x (1 - (1.5)^{45})
+   \]
+
+Since we do not have a specific value for \( x \), we cannot provide a numerical answer. However, if we assume \( x \) is the funding for the 6th month, we can calculate the total cost based on that assumption.
+
+**Final Answer**: The total cost of John's research is \( 100,000 - 2x (1 - (1.5)^{45}) \), where \( x \) is the funding for the 6th month. Without the value of \( x \), we cannot provide a specific numerical answer.

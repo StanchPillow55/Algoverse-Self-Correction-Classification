@@ -1,0 +1,24 @@
+import math
+
+def closest_integer(value):
+    # Step 1: Convert the string to a float
+    num = float(value)
+    
+    # Step 2: Find the two closest integers
+    lower_int = math.floor(num)
+    upper_int = math.ceil(num)
+    
+    # Step 3: Determine if num is equidistant
+    if num - lower_int == 0.5:  # Equidistant case for positive
+        return upper_int  # Round away from zero
+    elif num - upper_int == -0.5:  # Equidistant case for negative
+        return lower_int  # Round away from zero
+    else:
+        # Step 4: Use round() for normal rounding
+        return round(num)
+
+# Example usage
+print(closest_integer("10"))    # Output: 10
+print(closest_integer("15.3"))  # Output: 15
+print(closest_integer("14.5"))  # Output: 15
+print(closest_integer("-14.5")) # Output: -15

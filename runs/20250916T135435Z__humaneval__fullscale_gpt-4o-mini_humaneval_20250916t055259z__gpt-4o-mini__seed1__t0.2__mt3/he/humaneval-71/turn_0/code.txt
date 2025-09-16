@@ -1,0 +1,19 @@
+import math
+
+def triangle_area(a, b, c):
+    # Step 1: Validate the triangle
+    if (a + b <= c) or (a + c <= b) or (b + c <= a):
+        return -1
+    
+    # Step 2: Calculate the semi-perimeter
+    s = (a + b + c) / 2
+    
+    # Step 3: Calculate the area using Heron's formula
+    area = math.sqrt(s * (s - a) * (s - b) * (s - c))
+    
+    # Step 4: Return the area rounded to 2 decimal points
+    return round(area, 2)
+
+# Example test cases
+print(triangle_area(3, 4, 5))  # Expected output: 6.00
+print(triangle_area(1, 2, 10))  # Expected output: -1

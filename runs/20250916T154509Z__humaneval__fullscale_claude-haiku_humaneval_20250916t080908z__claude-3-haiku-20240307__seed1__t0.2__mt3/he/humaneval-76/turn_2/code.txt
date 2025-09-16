@@ -1,0 +1,20 @@
+def is_simple_power(x, n):
+    """
+    Returns True if a number x is a simple power of n, and False otherwise.
+    """
+    # Check if n is equal to 1, in which case x cannot be a simple power of n
+    if n == 1:
+        return False
+
+    # Initialize the exponent variable
+    int = 0
+
+    # Repeatedly divide x by n and increment the exponent until x becomes 1
+    while x > 1:
+        if x % n != 0:
+            return False
+        x //= n
+        int += 1
+
+    # If x becomes 1, it means it is a simple power of n
+    return True

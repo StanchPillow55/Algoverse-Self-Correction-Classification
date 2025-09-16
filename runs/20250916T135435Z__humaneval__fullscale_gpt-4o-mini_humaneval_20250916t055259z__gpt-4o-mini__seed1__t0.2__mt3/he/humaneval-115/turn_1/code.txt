@@ -1,0 +1,21 @@
+def max_fill(grid, capacity):
+    import math
+    
+    total_lowers = 0
+    
+    # Iterate through each row in the grid
+    for row in grid:
+        # Count the number of 1's in the current row (units of water)
+        water_units = sum(row)
+        
+        # If there are water units, calculate how many lowers are needed
+        if water_units > 0:
+            lowers_needed = math.ceil(water_units / capacity)
+            total_lowers += lowers_needed
+            
+    return total_lowers
+
+# Example usage:
+print(max_fill([[0,0,1,0], [0,1,0,0], [1,1,1,1]], 1))  # Output: 6
+print(max_fill([[0,0,1,1], [0,0,0,0], [1,1,1,1], [0,1,1,1]], 2))  # Output: 5
+print(max_fill([[0,0,0], [0,0,0]], 5))  # Output: 0

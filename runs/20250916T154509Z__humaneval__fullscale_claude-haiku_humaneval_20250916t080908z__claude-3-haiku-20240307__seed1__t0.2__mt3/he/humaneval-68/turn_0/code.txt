@@ -1,0 +1,26 @@
+def pluck(arr):
+    """
+    Given an array representing a branch of a tree that has non-negative integer nodes,
+    return the node with the smallest even value, or an empty list if there are no even values or the input array is empty.
+
+    Args:
+        arr (list): An array of non-negative integers representing the nodes of a tree branch.
+
+    Returns:
+        list: A list containing the smallest even value and its index, or an empty list if there are no even values or the input array is empty.
+    """
+    if not arr:
+        return []
+
+    smallest_even = float('inf')
+    smallest_even_index = None
+
+    for i, node in enumerate(arr):
+        if node % 2 == 0 and node < smallest_even:
+            smallest_even = node
+            smallest_even_index = i
+
+    if smallest_even_index is None:
+        return []
+    else:
+        return [smallest_even, smallest_even_index]

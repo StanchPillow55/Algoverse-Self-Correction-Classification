@@ -1,0 +1,10 @@
+def will_it_fly(q, w):
+    # Check if the list is a palindromic list
+    if q == q[::-1]:
+        # Calculate the sum of the elements in the list
+        total_weight = sum(q)
+        # Check if the total weight is less than or equal to the maximum possible weight
+        if total_weight <= w:
+            return True
+    # If either condition is not met, return False
+    return False

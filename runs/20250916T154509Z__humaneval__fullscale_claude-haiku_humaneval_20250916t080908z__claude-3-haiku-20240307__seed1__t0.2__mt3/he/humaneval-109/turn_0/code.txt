@@ -1,0 +1,29 @@
+def move_one_ball(arr):
+    """
+    Determines if it is possible to sort an array in non-decreasing order by performing right shift operations.
+    
+    Args:
+        arr (list): An array of integers.
+    
+    Returns:
+        bool: True if it is possible to sort the array, False otherwise.
+    """
+    # Check if the array is empty
+    if not arr:
+        return True
+    
+    # Check if the array is already sorted
+    if all(arr[i] <= arr[i+1] for i in range(len(arr)-1)):
+        return True
+    
+    # Iterate through the array and check if the current element is the smallest in the remaining unsorted part
+    for i in range(len(arr)):
+        if all(arr[i] <= arr[j] for j in range(i, len(arr))):
+            # Perform a right shift operation
+            arr = [arr[-1]] + arr[:-1]
+            # Check if the array is now sorted
+            if all(arr[i] <= arr[i+1] for i in range(len(arr)-1)):
+                return True
+    
+    # If we couldn't sort the array, return False
+    return False

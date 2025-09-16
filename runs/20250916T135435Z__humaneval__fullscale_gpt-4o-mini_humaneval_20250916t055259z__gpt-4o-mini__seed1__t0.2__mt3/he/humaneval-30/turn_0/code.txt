@@ -1,0 +1,19 @@
+def get_positive(l: list):
+    """Return only positive numbers in the list.
+    >>> get_positive([-1, 2, -4, 5, 6])
+    [2, 5, 6]
+    >>> get_positive([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10])
+    [5, 3, 2, 3, 9, 123, 1]
+    """
+    # Initialize an empty list to hold positive numbers
+    positive_numbers = []
+    
+    # Iterate through each number in the input list
+    for number in l:
+        # Check if the number is positive
+        if number > 0:
+            # If it is positive, add it to the positive_numbers list
+            positive_numbers.append(number)
+    
+    # Return the list of positive numbers
+    return positive_numbers

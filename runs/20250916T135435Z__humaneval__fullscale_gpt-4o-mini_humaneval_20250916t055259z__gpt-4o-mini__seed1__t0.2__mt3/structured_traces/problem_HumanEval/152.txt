@@ -1,0 +1,53 @@
+turn 1
+To solve the problem of comparing the actual scores of matches with the guesses made by a person, we need to follow a systematic approach. Here’s how I would think through the problem step by step:
+
+### Step 1: Understand the Inputs and Outputs
+- **Inputs**: 
+  - Two lists: `game` (actual scores) and `guess` (predicted scores).
+  - Both lists are of equal length.
+  
+- **Outputs**: 
+  - A list of integers where each integer represents the absolute difference between the corresponding elements in `game` and `guess`. If the guess is correct (i.e., the same as the actual score), the difference should be `0`.
+
+### Step 2: Define the Logic
+1. Initialize an empty list to store the results.
+2. Iterate through the indices of the lists using a loop.
+3. For each index, calculate the absolute difference between the actual score (`game[i]`) and the guessed score (`guess[i]`).
+4. Append the calculated difference to the results list.
+5. After processing all matches, return the results list.
+
+### Step 3: Implementation
+Now that we have a clear understanding of the problem and the steps needed to solve it, we can implement the function.
+
+```python
+def compare(game, guess):
+    """Compares the actual scores of matches with the guessed scores and returns the absolute differences."""
+    # Initialize an empty list to hold the results
+    results = []
+    
+    # Iterate through both lists simultaneously using the range of their length
+    for i in range(len(game)):
+        # Calculate the absolute difference
+        difference = abs(game[i] - guess[i])
+        # Append the difference to the results list
+        results.append(difference)
+    
+    # Return the final results list
+    return results
+```
+
+### Step 4: Testing the Function
+To ensure that our function works correctly, we can test it with the provided examples as well as some additional test cases.
+
+```python
+# Test cases
+print(compare([1, 2, 3, 4, 5, 1], [1, 2, 3, 4, 2, -2]))  # Expected: [0, 0, 0, 0, 3, 3]
+print(compare([0, 5, 0, 0, 0, 4], [4, 1, 1, 0, 0, -2]))  # Expected: [4, 4, 1, 0, 0, 6]
+print(compare([10, 20, 30], [10, 20, 30]))                # Expected: [0, 0, 0]
+print(compare([1, 2, 3], [3, 2, 1]))                      # Expected: [2, 0, 2]
+print(compare([5, 5, 5], [5, 5, 5]))                      # Expected: [0, 0, 0]
+```
+
+### Conclusion
+The function `compare` effectively calculates the absolute differences between the actual scores and the guessed scores, returning the expected results. The implementation is straightforward and efficient, iterating through the lists only once.
+PASS: All tests passed

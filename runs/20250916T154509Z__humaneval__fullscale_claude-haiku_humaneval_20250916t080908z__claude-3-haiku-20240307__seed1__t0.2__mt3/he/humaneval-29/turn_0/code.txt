@@ -1,0 +1,33 @@
+from typing import List
+
+def filter_by_prefix(strings: List[str], prefix: str) -> List[str]:
+    """
+    Filter an input list of strings only for ones that start with a given prefix.
+    
+    Args:
+        strings (List[str]): The input list of strings.
+        prefix (str): The prefix to filter the strings by.
+    
+    Returns:
+        List[str]: A new list containing only the strings from the input list that start with the given prefix.
+    """
+    # Edge case: If the input list is empty, return an empty list
+    if not strings:
+        return []
+    
+    # Edge case: If the prefix is an empty string, return the original list
+    if not prefix:
+        return strings
+    
+    # Initialize an empty list to store the filtered strings
+    filtered_strings = []
+    
+    # Iterate through the input list of strings
+    for string in strings:
+        # Check if the current string starts with the given prefix
+        if string.startswith(prefix):
+            # If it does, add it to the filtered list
+            filtered_strings.append(string)
+    
+    # Return the filtered list
+    return filtered_strings

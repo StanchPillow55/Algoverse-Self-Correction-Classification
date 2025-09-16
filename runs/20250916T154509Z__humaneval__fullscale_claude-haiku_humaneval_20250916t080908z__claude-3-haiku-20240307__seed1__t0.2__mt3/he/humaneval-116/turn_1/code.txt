@@ -1,0 +1,21 @@
+def sort_array(arr):
+    """
+    Sorts an array of non-negative integers according to the number of ones in their binary representation.
+    If two numbers have the same number of ones, they are sorted based on their decimal value.
+
+    Args:
+        arr (list): An array of non-negative integers.
+
+    Returns:
+        list: The sorted array.
+    """
+    # Convert each number to its binary representation and count the number of ones
+    binary_counts = [(bin(num).count('1'), num) for num in arr]
+
+    # Sort the array based on the number of ones and the decimal value
+    sorted_binary_counts = sorted(binary_counts)
+
+    # Extract the sorted numbers from the sorted binary counts
+    sorted_arr = [num for _, num in sorted_binary_counts]
+
+    return sorted_arr

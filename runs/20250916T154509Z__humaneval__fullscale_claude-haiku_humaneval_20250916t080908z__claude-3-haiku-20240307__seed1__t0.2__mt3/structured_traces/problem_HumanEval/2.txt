@@ -1,0 +1,55 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem statement asks us to write a function `truncate_number` that takes a positive floating-point number as input and returns the decimal part of the number.
+
+2. **Approach**: To solve this problem, we can use the following approach:
+   - Separate the integer part and the decimal part of the input number.
+   - Return the decimal part of the number.
+
+3. **Implementing the Solution**:
+
+   a. **Separating the Integer and Decimal Parts**:
+      - We can use the built-in `int()` function to get the integer part of the number.
+      - To get the decimal part, we can subtract the integer part from the original number.
+
+   b. **Returning the Decimal Part**:
+      - Since the problem statement specifies that the function should return the decimal part, we can simply return the result of the subtraction.
+
+Here's the complete function definition:
+
+```python
+def truncate_number(number: float) -> float:
+    """
+    Given a positive floating point number, it can be decomposed into
+    and integer part (largest integer smaller than given number) and decimals
+    (leftover part always smaller than 1).
+
+    Return the decimal part of the number.
+    >>> truncate_number(3.5)
+    0.5
+    """
+    integer_part = int(number)
+    decimal_part = number - integer_part
+    return decimal_part
+```
+
+Let's break down the implementation:
+
+1. The function takes a `float` as input and returns a `float` as output.
+2. Inside the function, we use the `int()` function to get the integer part of the input number. This gives us the largest integer that is smaller than the input number.
+3. We then subtract the integer part from the original number to get the decimal part.
+4. Finally, we return the decimal part.
+
+Here are some test cases to verify the correctness of the function:
+
+```python
+print(truncate_number(3.5))  # Output: 0.5
+print(truncate_number(7.9))  # Output: 0.9
+print(truncate_number(2.0))  # Output: 0.0
+```
+
+The function correctly handles the given examples and returns the decimal part of the input number.
+PASS: All tests passed

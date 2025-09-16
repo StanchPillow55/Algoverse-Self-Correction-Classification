@@ -1,0 +1,67 @@
+turn 1
+To solve the problem of finding the maximum depth of nested parentheses for each group in a given string, we can break down the task into several steps:
+
+1. **Input Parsing**: We need to split the input string into separate groups of parentheses. Each group is separated by spaces.
+
+2. **Depth Calculation**: For each group, we need to calculate the maximum depth of nested parentheses. This can be done by iterating through each character in the group:
+   - Increment a counter when we encounter an opening parenthesis `(`.
+   - Decrement the counter when we encounter a closing parenthesis `)`.
+   - Keep track of the maximum value of this counter during the iteration, which will represent the maximum depth of nesting.
+
+3. **Output**: We will collect the maximum depths for each group and return them as a list of integers.
+
+### Implementation Steps:
+- Use the `split()` method to divide the input string into groups.
+- For each group, initialize a depth counter and a variable to track the maximum depth.
+- Loop through each character in the group to update the depth counter and the maximum depth.
+- Append the maximum depth of each group to a result list.
+- Finally, return the result list.
+
+### Edge Cases:
+- We should consider cases with empty groups or groups with no parentheses, which should return a depth of 0.
+
+Now, let's implement the function based on this reasoning:
+
+```python
+from typing import List
+
+def parse_nested_parens(paren_string: str) -> List[int]:
+    """ Input to this function is a string represented multiple groups for nested parentheses separated by spaces.
+    For each of the group, output the deepest level of nesting of parentheses.
+    E.g. (()()) has maximum two levels of nesting while ((())) has three.
+
+    >>> parse_nested_parens('(()()) ((())) () ((())()())')
+    [2, 3, 1, 3]
+    """
+    # Split the input string into groups based on spaces
+    groups = paren_string.split()
+    result = []
+    
+    for group in groups:
+        max_depth = 0
+        current_depth = 0
+        
+        for char in group:
+            if char == '(':
+                current_depth += 1
+                max_depth = max(max_depth, current_depth)
+            elif char == ')':
+                current_depth -= 1
+        
+        # Append the maximum depth found for this group
+        result.append(max_depth)
+    
+    return result
+```
+
+### Explanation of the Code:
+- We use `split()` to break the input string into groups.
+- For each group, we initialize `max_depth` to keep track of the maximum depth encountered and `current_depth` to track the current level of nesting.
+- We iterate through each character in the group:
+  - If we encounter `(`, we increase the `current_depth` and check if it exceeds `max_depth`.
+  - If we encounter `)`, we decrease the `current_depth`.
+- After processing each group, we append the `max_depth` to the result list.
+- Finally, we return the list of maximum depths for each group.
+
+This implementation efficiently calculates the maximum depth of nested parentheses for each group in the input string.
+PASS: All tests passed

@@ -1,0 +1,23 @@
+def exchange(lst1, lst2):
+    """Determines if we can exchange elements between lst1 and lst2 to make all elements of lst1 even."""
+    
+    # Check for odd numbers in lst1
+    has_odd_in_lst1 = any(x % 2 != 0 for x in lst1)
+    
+    # Check for even numbers in lst2
+    has_even_in_lst2 = any(x % 2 == 0 for x in lst2)
+    
+    # If lst1 has odd numbers and lst2 has even numbers, we can perform the exchange
+    if has_odd_in_lst1 and has_even_in_lst2:
+        return "YES"
+    
+    # If lst1 has no odd numbers, it's already valid
+    if not has_odd_in_lst1:
+        return "YES"
+    
+    # If lst1 has odd numbers but lst2 has no even numbers, we cannot perform the exchange
+    return "NO"
+
+# Example test cases
+print(exchange([1, 2, 3, 4], [1, 2, 3, 4]))  # Expected: "YES"
+print(exchange([1, 2, 3, 4], [1, 5, 3, 4]))  # Expected: "NO"

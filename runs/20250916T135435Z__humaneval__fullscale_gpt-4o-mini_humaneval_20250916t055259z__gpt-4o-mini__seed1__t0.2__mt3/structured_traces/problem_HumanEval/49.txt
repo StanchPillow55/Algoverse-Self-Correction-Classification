@@ -1,0 +1,75 @@
+turn 1
+To solve the problem of calculating \(2^n \mod p\), we need to consider a few important aspects:
+
+1. **Understanding the Problem**: We need to compute \(2^n\) and then take the result modulo \(p\). The modulo operation ensures that we do not deal with excessively large numbers, which can be a problem for large \(n\).
+
+2. **Properties of Modulo**: The modulo operation has properties that can help simplify calculations. Specifically, we can use the property:
+   \[
+   (a \cdot b) \mod p = [(a \mod p) \cdot (b \mod p)] \mod p
+   \]
+   This means we can reduce intermediate results modulo \(p\) to keep our numbers manageable.
+
+3. **Efficient Computation**: Directly calculating \(2^n\) for large \(n\) can lead to very large numbers. Instead, we can use **exponentiation by squaring**, which is an efficient algorithm to compute powers. This method reduces the time complexity to \(O(\log n)\).
+
+4. **Special Cases**: We should also consider special cases:
+   - If \(n = 0\), then \(2^0 = 1\) for any \(p\).
+   - If \(p = 1\), then \(x \mod 1 = 0\) for any \(x\), so we should return 0 in this case.
+
+5. **Implementation Steps**:
+   - Handle the special cases.
+   - Use the method of exponentiation by squaring to compute \(2^n \mod p\).
+
+Now, let's implement the function based on this reasoning.
+
+```python
+def modp(n: int, p: int) -> int:
+    """Return 2^n modulo p (be aware of numerics).
+    
+    >>> modp(3, 5)
+    3
+    >>> modp(1101, 101)
+    2
+    >>> modp(0, 101)
+    1
+    >>> modp(3, 11)
+    8
+    >>> modp(100, 101)
+    1
+    """
+    # Handle special case where p is 1
+    if p == 1:
+        return 0
+    
+    # Handle the case where n is 0
+    if n == 0:
+        return 1
+    
+    result = 1
+    base = 2 % p  # Start with 2 mod p
+    
+    while n > 0:
+        # If n is odd, multiply the current result by the base
+        if n % 2 == 1:
+            result = (result * base) % p
+        
+        # Square the base
+        base = (base * base) % p
+        
+        # Divide n by 2
+        n //= 2
+    
+    return result
+```
+
+### Explanation of the Implementation:
+- We first check if \(p\) is 1, in which case we return 0.
+- If \(n\) is 0, we return 1 since \(2^0 = 1\).
+- We initialize `result` to 1 and `base` to \(2 \mod p\).
+- We then enter a loop that continues until \(n\) is greater than 0:
+  - If \(n\) is odd, we multiply the current `result` by `base` and take modulo \(p\).
+  - We square the `base` and take modulo \(p\).
+  - We halve \(n\) (using integer division).
+- Finally, we return the computed `result`.
+
+This implementation efficiently computes \(2^n \mod p\) even for large values of \(n\) and \(p\).
+PASS: All tests passed

@@ -1,0 +1,14 @@
+def is_equal_to_sum_even(n):
+    """Evaluate whether the given number n can be written as the sum of exactly 4 positive even numbers"""
+    # Check if n is divisible by 4
+    if n % 4 != 0:
+        return False
+
+    # Try to find 4 even numbers that add up to n
+    even_num = 2
+    while even_num <= n // 4:
+        if (n - 4 * even_num) >= 0 and (n - 4 * even_num) % 4 == 0:
+            return True
+        even_num += 2
+
+    return False

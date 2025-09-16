@@ -1,0 +1,21 @@
+from typing import List
+
+def filter_by_substring(strings: List[str], substring: str) -> List[str]:
+    """
+    Filter an input list of strings only for ones that contain the given substring.
+
+    Args:
+        strings (List[str]): The input list of strings to be filtered.
+        substring (str): The substring to be used for filtering.
+
+    Returns:
+        List[str]: A new list containing only the strings from the input list that contain the given substring.
+    """
+    # Handle the edge case of an empty input list
+    if not strings:
+        return []
+
+    # Use a list comprehension to filter the input list based on the given substring
+    filtered_strings = [s for s in strings if substring in s]
+
+    return filtered_strings

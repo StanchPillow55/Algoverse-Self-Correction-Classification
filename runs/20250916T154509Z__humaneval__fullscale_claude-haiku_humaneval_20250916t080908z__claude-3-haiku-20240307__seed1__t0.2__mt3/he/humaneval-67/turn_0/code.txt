@@ -1,0 +1,20 @@
+def fruit_distribution(s, n):
+    """
+    Calculates the number of mango fruits in a basket of fruits.
+
+    Args:
+        s (str): A string representing the number of apples and oranges in the basket.
+        n (int): The total number of fruits in the basket.
+
+    Returns:
+        int: The number of mango fruits in the basket.
+    """
+    # Step 1: Split the input string into its individual components
+    parts = s.split()
+    apples = int(parts[0])
+    oranges = int(parts[-1])
+
+    # Step 2: Calculate the number of mango fruits
+    mangoes = n - apples - oranges
+
+    return mangoes

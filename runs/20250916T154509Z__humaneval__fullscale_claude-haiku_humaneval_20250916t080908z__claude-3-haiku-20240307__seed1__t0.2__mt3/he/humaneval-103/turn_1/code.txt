@@ -1,0 +1,21 @@
+def rounded_avg(n, m):
+    """
+    Computes the average of the integers from n through m (including n and m),
+    rounds the answer to the nearest integer, and converts the result to binary.
+    If n is greater than m, returns -1.
+    """
+    # Step 1: Check if n is greater than m
+    if n > m:
+        return -1
+
+    # Step 2: Calculate the sum of the integers from n through m
+    total = sum(range(n, m + 1))
+
+    # Step 3: Divide the sum by the number of integers to get the average
+    avg = total / (m - n + 1)
+
+    # Step 4: Round the average to the nearest integer
+    rounded_avg = round(avg)
+
+    # Step 5: Convert the rounded average to binary and return it as a string
+    return bin(rounded_avg)

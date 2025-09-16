@@ -1,0 +1,19 @@
+def move_one_ball(arr):
+    """Determine if the array can be sorted by right shifts."""
+    if not arr:  # If the array is empty, return True
+        return True
+    
+    n = len(arr)
+    count_drop = 0
+    
+    for i in range(n):
+        # Check if the current element is greater than the next element
+        if arr[i] > arr[(i + 1) % n]:  # Use modulo to wrap around
+            count_drop += 1
+            
+    # We can have at most one drop to be able to sort the array by shifts
+    return count_drop <= 1
+
+# Example test cases
+print(move_one_ball([3, 4, 5, 1, 2]))  # True
+print(move_one_ball([3, 5, 4, 1, 2]))  # False

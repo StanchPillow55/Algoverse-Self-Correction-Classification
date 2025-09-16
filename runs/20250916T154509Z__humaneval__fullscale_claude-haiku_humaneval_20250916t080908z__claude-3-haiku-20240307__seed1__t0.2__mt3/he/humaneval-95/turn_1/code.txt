@@ -1,0 +1,34 @@
+def check_dict_case(dict):
+    """
+    Given a dictionary, return True if all keys are strings in lower 
+    case or all keys are strings in upper case, else return False.
+    The function should return False is the given dictionary is empty.
+    """
+    # Check if the dictionary is empty
+    if not dict:
+        return False
+
+    # Initialize the flag to None
+    flag = None
+
+    # Iterate through the keys of the dictionary
+    for key in dict:
+        # Check if the key is a string
+        if not isinstance(key, str):
+            return False
+
+        # Check the case of the key
+        if flag is None:
+            if key.islower():
+                flag = "lower"
+            elif key.isupper():
+                flag = "upper"
+            else:
+                return False
+        elif flag == "lower" and not key.islower():
+            return False
+        elif flag == "upper" and not key.isupper():
+            return False
+
+    # If we made it through the loop, all keys are in the same case
+    return True
