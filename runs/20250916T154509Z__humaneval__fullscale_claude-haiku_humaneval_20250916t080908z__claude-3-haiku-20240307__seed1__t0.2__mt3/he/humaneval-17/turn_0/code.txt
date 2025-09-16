@@ -1,0 +1,40 @@
+from typing import List
+
+def parse_music(music_string: str) -> List[int]:
+    """
+    Input to this function is a string representing musical notes in a special ASCII format.
+    Your task is to parse this string and return a list of integers corresponding to how many beats
+    each note lasts.
+
+    Here is a legend:
+    'o' - whole note, lasts four beats
+    'o|' - half note, lasts two beats
+    '.|' - quarter note, lasts one beat
+
+    >>> parse_music('o o| .| o| o| .| .| .| .| o o')
+    [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4]
+    """
+    beats = []  # Initialize an empty list to store the beat durations
+
+    # Iterate through the input string
+    i = 0
+    while i < len(music_string):
+        # Skip any whitespace characters
+        while i < len(music_string) and music_string[i] == ' ':
+            i += 1
+
+        # Check the current character and append the corresponding beat duration to the list
+        if i < len(music_string) and music_string[i] == 'o':
+            beats.append(4)  # Whole note lasts 4 beats
+            i += 1
+        elif i + 1 < len(music_string) and music_string[i:i+2] == 'o|':
+            beats.append(2)  # Half note lasts 2 beats
+            i += 2
+        elif i + 1 < len(music_string) and music_string[i:i+2] == '.|':
+            beats.append(1)  # Quarter note lasts 1 beat
+            i += 2
+        else:
+            # If the current character doesn't match any of the expected note types, raise an error
+            raise ValueError(f"Invalid note format at index {i}: {music_string[i:]}")
+
+    return beats

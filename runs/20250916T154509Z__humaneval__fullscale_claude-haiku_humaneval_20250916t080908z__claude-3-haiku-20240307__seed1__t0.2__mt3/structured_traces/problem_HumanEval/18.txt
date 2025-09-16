@@ -1,0 +1,63 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem is to write a function `how_many_times` that takes two arguments: a `string` and a `substring`, and returns the number of times the `substring` appears in the `string`, including overlapping cases.
+
+2. **Approach**: To solve this problem, we can use a simple iterative approach. We'll start by checking the first character of the `string` to see if it matches the first character of the `substring`. If it does, we'll check the next characters to see if they match the `substring`. If they do, we'll increment the count. We'll then move on to the next character in the `string` and repeat the process until we've checked the entire `string`.
+
+3. **Edge Cases**: We need to consider the following edge cases:
+   - If the `string` is empty, the function should return 0.
+   - If the `substring` is empty, the function should return the length of the `string` plus 1 (since an empty substring can be found at every position).
+
+4. **Implementation**:
+
+```python
+def how_many_times(string: str, substring: str) -> int:
+    """
+    Find how many times a given substring can be found in the original string.
+    Count overlaping cases.
+
+    Args:
+        string (str): The input string.
+        substring (str): The substring to search for.
+
+    Returns:
+        int: The number of times the substring appears in the string, including overlapping cases.
+    """
+    if not string:
+        return 0
+    if not substring:
+        return len(string) + 1
+
+    count = 0
+    i = 0
+    while i < len(string):
+        if string[i] == substring[0]:
+            j = 0
+            while j < len(substring) and i + j < len(string) and string[i + j] == substring[j]:
+                j += 1
+            if j == len(substring):
+                count += 1
+            i += 1
+        else:
+            i += 1
+
+    return count
+```
+
+Let's go through the implementation step by step:
+
+1. We start by checking if the `string` is empty. If it is, we return 0 because an empty string cannot contain any substrings.
+2. Next, we check if the `substring` is empty. If it is, we return the length of the `string` plus 1, because an empty substring can be found at every position in the `string`.
+3. We initialize a `count` variable to keep track of the number of times the `substring` appears in the `string`.
+4. We use a `while` loop to iterate through the `string`. In each iteration, we check if the current character in the `string` matches the first character of the `substring`.
+5. If the characters match, we start a nested `while` loop to check if the remaining characters in the `string` match the `substring`. We use the `j` variable to keep track of the index within the `substring`.
+6. If the entire `substring` is found, we increment the `count` variable.
+7. We then move on to the next character in the `string` by incrementing the `i` variable.
+8. If the current character in the `string` does not match the first character of the `substring`, we simply move on to the next character in the `string` by incrementing the `i` variable.
+9. Finally, we return the `count` variable, which represents the number of times the `substring` appears in the `string`, including overlapping cases.
+
+This solution has a time complexity of O(n * m), where n is the length of the `string` and m is the length of the `substring`. This is because we need to check each character in the `string` and, for each character, we may need to check up to the length of the `substring`.
+PASS: All tests passed

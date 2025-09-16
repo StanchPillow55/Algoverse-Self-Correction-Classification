@@ -1,0 +1,36 @@
+def tri(n):
+    """Generate the first n + 1 numbers of the Tribonacci sequence."""
+    # Initialize the list to hold the sequence values
+    sequence = []
+    
+    # Compute the values for each index from 0 to n
+    for i in range(n + 1):
+        if i == 0:
+            # Base case for tri(0)
+            sequence.append(1)  # Assuming tri(0) = 1 based on the example output
+        elif i == 1:
+            sequence.append(3)  # Base case for tri(1)
+        elif i % 2 == 0:
+            # Even case
+            sequence.append(1 + i / 2)
+        else:
+            # Odd case
+            # We need to calculate tri(i) using tri(i-1), tri(i-2), and tri(i+1)
+            # However, we don't have tri(i+1) yet, so we will calculate it later
+            # For now, we can use a placeholder
+            # We will compute tri(i) after we have computed tri(i+1)
+            # This requires a different approach, we will calculate it in reverse
+            # or store the values and compute them later.
+            # For now, let's just append a placeholder
+            sequence.append(0)  # Placeholder for odd index
+            
+    # Now we need to fill in the odd indices
+    for i in range(1, n + 1, 2):
+        # Calculate tri(i) using the previously computed values
+        tri_i = sequence[i - 1] + sequence[i - 2] + (sequence[i + 1] if i + 1 <= n else 0)
+        sequence[i] = tri_i
+    
+    return sequence
+
+# Example usage
+print(tri(3))  # Output should be [1, 3, 2, 8]

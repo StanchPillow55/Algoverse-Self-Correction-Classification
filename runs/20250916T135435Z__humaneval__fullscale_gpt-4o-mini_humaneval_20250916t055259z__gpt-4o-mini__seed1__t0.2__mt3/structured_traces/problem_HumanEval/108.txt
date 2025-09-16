@@ -1,0 +1,78 @@
+turn 1
+To solve the problem of counting the number of integers in an array whose sum of digits is greater than zero, we need to break down the task into manageable steps. Here's my thought process:
+
+### Step 1: Understanding the Problem
+We need to define a function `count_nums(arr)` that:
+- Takes a list of integers as input.
+- For each integer in the list, calculates the sum of its digits.
+- Counts how many of these integers have a sum of digits greater than zero.
+
+### Step 2: Handling Negative Numbers
+The problem specifies that if a number is negative, its first signed digit should be treated as negative. For example, for `-123`, the digits are `-1`, `2`, and `3`. Thus, the sum of digits for `-123` would be `-1 + 2 + 3 = 4`, which is greater than zero.
+
+### Step 3: Calculating the Sum of Digits
+To calculate the sum of digits:
+- Convert the integer to a string to easily iterate over each character.
+- If the number is negative, we need to handle the first character separately to ensure it is treated as a negative digit.
+- Convert each character back to an integer and compute the sum.
+
+### Step 4: Counting Valid Numbers
+We will iterate through the list of integers, compute the sum of digits for each, and maintain a count of how many of these sums are greater than zero.
+
+### Step 5: Implementation
+Now, let's implement the function based on the above reasoning.
+
+```python
+def count_nums(arr):
+    """
+    Write a function count_nums which takes an array of integers and returns
+    the number of elements which has a sum of digits > 0.
+    If a number is negative, then its first signed digit will be negative:
+    e.g. -123 has signed digits -1, 2, and 3.
+    >>> count_nums([]) == 0
+    >>> count_nums([-1, 11, -11]) == 1
+    >>> count_nums([1, 1, 2]) == 3
+    """
+    
+    def sum_of_digits(n):
+        # Convert the number to string to iterate over digits
+        str_n = str(n)
+        digit_sum = 0
+        
+        # Iterate over each character in the string representation
+        for i, char in enumerate(str_n):
+            if char == '-':
+                # If it's a negative sign, we skip it
+                continue
+            # Convert character to integer
+            digit = int(char)
+            # If it's the first character and the number is negative, make it negative
+            if i == 1 and str_n[0] == '-':
+                digit_sum -= digit  # First digit is negative
+            else:
+                digit_sum += digit
+        
+        return digit_sum
+    
+    count = 0
+    for number in arr:
+        if sum_of_digits(number) > 0:
+            count += 1
+            
+    return count
+
+# Testing the function with provided examples
+print(count_nums([]))  # Expected output: 0
+print(count_nums([-1, 11, -11]))  # Expected output: 1
+print(count_nums([1, 1, 2]))  # Expected output: 3
+```
+
+### Explanation of the Implementation
+1. **Function Definition**: We define `count_nums(arr)` which takes a list of integers.
+2. **Inner Function**: `sum_of_digits(n)` computes the sum of digits for a given integer `n`.
+3. **Digit Processing**: We handle negative signs appropriately and compute the sum of digits.
+4. **Counting**: We iterate through the input list, use the `sum_of_digits` function, and count how many sums are greater than zero.
+5. **Return Value**: Finally, we return the count.
+
+This implementation should correctly count the numbers with a sum of digits greater than zero, adhering to the problem's requirements.
+PASS: All tests passed

@@ -1,0 +1,19 @@
+def eat(number, need, remaining):
+    # Determine how many carrots the rabbit can eat
+    if remaining >= need:
+        carrots_eaten = need
+    else:
+        carrots_eaten = remaining
+    
+    # Calculate total eaten and remaining carrots
+    total_eaten = number + carrots_eaten
+    remaining_after_meal = remaining - carrots_eaten
+    
+    # Return the result as a list
+    return [total_eaten, remaining_after_meal]
+
+# Example test cases
+print(eat(5, 6, 10))  # Expected output: [11, 4]
+print(eat(4, 8, 9))   # Expected output: [12, 1]
+print(eat(1, 10, 10))  # Expected output: [11, 0]
+print(eat(2, 11, 5))   # Expected output: [7, 0]

@@ -1,0 +1,17 @@
+def is_palindrome(text: str) -> bool:
+    """
+    Checks if given string is a palindrome.
+    
+    A string is considered a palindrome if it reads the same forwards and backwards.
+    
+    >>> is_palindrome('')
+    True
+    >>> is_palindrome('aba')
+    True
+    >>> is_palindrome('aaaaa')
+    True
+    >>> is_palindrome('zbcd')
+    False
+    """
+    # Reverse the string and compare it with the original
+    return text == text[::-1]

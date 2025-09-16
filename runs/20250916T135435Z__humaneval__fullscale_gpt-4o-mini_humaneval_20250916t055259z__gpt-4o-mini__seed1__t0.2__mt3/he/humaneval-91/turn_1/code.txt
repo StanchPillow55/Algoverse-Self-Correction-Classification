@@ -1,0 +1,35 @@
+import re
+
+def is_bored(S):
+    """
+    Count the number of sentences that start with the word "I".
+    
+    A sentence is defined as a sequence of characters ending with '.', '?', or '!'.
+    
+    Args:
+    S (str): The input string containing sentences.
+    
+    Returns:
+    int: The count of sentences that start with "I".
+    """
+    # Step 1: Split the string into sentences using regex
+    sentences = re.split(r'[.!?]', S)
+    
+    # Step 2: Initialize a counter for boredoms
+    boredom_count = 0
+    
+    # Step 3: Iterate through each sentence
+    for sentence in sentences:
+        # Step 4: Strip leading/trailing whitespace
+        trimmed_sentence = sentence.strip()
+        
+        # Step 5: Check if the trimmed sentence starts with "I"
+        if trimmed_sentence.startswith("I"):
+            boredom_count += 1
+    
+    # Step 6: Return the total count of boredoms
+    return boredom_count
+
+# Example usage:
+print(is_bored("Hello world"))  # Output: 0
+print(is_bored("The sky is blue. The sun is shining. I love this weather"))  # Output: 1

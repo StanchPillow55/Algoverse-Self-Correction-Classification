@@ -1,0 +1,52 @@
+turn 1
+To solve the problem of finding the greatest common divisor (GCD) of two integers, we can use the well-known Euclidean algorithm. The Euclidean algorithm is efficient and works based on the principle that the GCD of two numbers also divides their difference. 
+
+### Step-by-Step Reasoning:
+
+1. **Understanding GCD**: The GCD of two integers is the largest integer that divides both numbers without leaving a remainder. For example, the GCD of 25 and 15 is 5, as 5 is the largest number that divides both.
+
+2. **Euclidean Algorithm**: The algorithm works as follows:
+   - If `b` is 0, then the GCD is `a`. This is because any number is divisible by itself.
+   - Otherwise, we replace `a` with `b` and `b` with `a % b` (the remainder of `a` divided by `b`), and repeat the process until `b` becomes 0.
+
+3. **Implementation Steps**:
+   - Create a function `greatest_common_divisor` that takes two integers `a` and `b`.
+   - Use a loop or recursion to apply the Euclidean algorithm until `b` becomes 0.
+   - Return `a` as the GCD once `b` is 0.
+
+4. **Edge Cases**: We should consider:
+   - When one of the numbers is 0. The GCD of any number and 0 is the number itself.
+   - Negative numbers. The GCD should be defined as a non-negative integer, so we can take the absolute values of `a` and `b`.
+
+### Implementation:
+
+Now, let's implement the function based on the above reasoning:
+
+```python
+def greatest_common_divisor(a: int, b: int) -> int:
+    """ Return a greatest common divisor of two integers a and b
+    >>> greatest_common_divisor(3, 5)
+    1
+    >>> greatest_common_divisor(25, 15)
+    5
+    """
+    # Use absolute values to handle negative inputs
+    a, b = abs(a), abs(b)
+    
+    while b != 0:
+        a, b = b, a % b  # Update a and b according to the Euclidean algorithm
+    
+    return a  # When b is 0, a is the GCD
+
+# Example usage:
+print(greatest_common_divisor(3, 5))  # Output: 1
+print(greatest_common_divisor(25, 15))  # Output: 5
+```
+
+### Explanation of the Code:
+- We first take the absolute values of `a` and `b` to ensure that we are working with non-negative integers.
+- We then enter a loop that continues until `b` becomes 0. Inside the loop, we update `a` to be `b` and `b` to be the remainder of `a` divided by `b`.
+- Once `b` is 0, we return `a`, which at that point holds the GCD of the original two numbers.
+
+This implementation is efficient and follows the principles of the Euclidean algorithm, ensuring that we can find the GCD in logarithmic time relative to the smaller of the two numbers.
+PASS: All tests passed

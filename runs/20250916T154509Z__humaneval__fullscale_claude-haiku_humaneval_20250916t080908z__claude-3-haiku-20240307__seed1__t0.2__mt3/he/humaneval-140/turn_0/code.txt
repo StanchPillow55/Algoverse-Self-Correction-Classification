@@ -1,0 +1,32 @@
+def fix_spaces(text):
+    """
+    Given a string text, replace all spaces in it with underscores, 
+    and if a string has more than 2 consecutive spaces, 
+    then replace all consecutive spaces with - 
+    
+    fix_spaces("Example") == "Example"
+    fix_spaces("Example 1") == "Example_1"
+    fix_spaces(" Example 2") == "_Example_2"
+    fix_spaces(" Example   3") == "_Example-3"
+    """
+    # Handle the edge case of an empty string
+    if not text:
+        return text
+
+    # Split the input string into a list of words
+    words = text.split()
+
+    # Iterate through the list of words and apply the necessary transformations
+    transformed_words = []
+    for word in words:
+        # If the word has a single space, replace it with an underscore
+        if ' ' in word and len(word.split()) == 2:
+            transformed_words.append(word.replace(' ', '_'))
+        # If the word has more than two consecutive spaces, replace them with a hyphen
+        elif '   ' in word:
+            transformed_words.append(word.replace('   ', '-'))
+        else:
+            transformed_words.append(word)
+
+    # Join the transformed words back into a single string and return the result
+    return ' '.join(transformed_words)

@@ -1,0 +1,29 @@
+import math
+from scipy.optimize import fsolve
+
+def poly(xs: list, x: float):
+    """
+    Evaluates polynomial with coefficients xs at point x.
+    return xs[0] + xs[1] * x + xs[2] * x^2 + .... xs[n] * x^n
+    """
+    return sum(coeff * math.pow(x, i) for i, coeff in enumerate(xs))
+
+def find_zero(xs: list):
+    """ 
+    xs are coefficients of a polynomial.
+    find_zero finds x such that poly(x) = 0.
+    find_zero returns only one zero point, even if there are many.
+    Moreover, find_zero only takes list xs having an even number of coefficients
+    and the largest non-zero coefficient as it guarantees a solution.
+    """
+    # Define a function that we want to find the root of
+    def equation(x):
+        return poly(xs, x)
+    
+    # Use fsolve to find the root, starting from an initial guess of 0
+    root = fsolve(equation, 0)[0]
+    return root
+
+# Example usage:
+print(round(find_zero([1, 2]), 2))  # f(x) = 1 + 2x
+print(round(find_zero([-6, 11, -6, 1]), 2))  # (x - 1)(x - 2)(x - 3)

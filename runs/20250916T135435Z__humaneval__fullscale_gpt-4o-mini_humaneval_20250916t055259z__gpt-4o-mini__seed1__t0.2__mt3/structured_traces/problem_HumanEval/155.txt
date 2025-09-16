@@ -1,0 +1,54 @@
+turn 1
+To solve the problem of counting the even and odd digits in a given integer, we can break down the task into several clear steps:
+
+1. **Input Handling**: The function will accept an integer, which can be positive, negative, or zero. We need to ensure that we handle negative numbers correctly by ignoring the sign.
+
+2. **Digit Extraction**: We will convert the integer to its absolute value and then to a string. This allows us to easily iterate over each digit.
+
+3. **Counting Even and Odd Digits**: We will initialize two counters: one for even digits and one for odd digits. As we iterate through each character in the string representation of the number, we will:
+   - Convert the character back to an integer.
+   - Check if the digit is even or odd using the modulus operator (`%`).
+   - Increment the respective counter based on whether the digit is even or odd.
+
+4. **Return the Result**: Finally, we will return a tuple containing the counts of even and odd digits.
+
+Now, let's implement the function based on this reasoning.
+
+```python
+def even_odd_count(num):
+    """Given an integer, return a tuple that has the number of even and odd digits respectively."""
+    
+    # Step 1: Use absolute value to ignore the sign
+    num_str = str(abs(num))
+    
+    # Step 2: Initialize counters for even and odd digits
+    even_count = 0
+    odd_count = 0
+    
+    # Step 3: Iterate through each character in the string representation of the number
+    for char in num_str:
+        digit = int(char)  # Convert character back to integer
+        
+        # Step 4: Check if the digit is even or odd
+        if digit % 2 == 0:
+            even_count += 1  # Increment even counter
+        else:
+            odd_count += 1   # Increment odd counter
+    
+    # Step 5: Return the counts as a tuple
+    return (even_count, odd_count)
+
+# Example usage:
+print(even_odd_count(-12))  # Output: (1, 1)
+print(even_odd_count(123))   # Output: (1, 2)
+```
+
+### Explanation of the Implementation:
+- We first convert the number to its absolute value to handle negative numbers.
+- We convert the absolute value to a string so we can easily iterate over each digit.
+- We maintain two counters (`even_count` and `odd_count`) initialized to zero.
+- For each character in the string, we convert it back to an integer and check if it is even or odd using the modulus operator.
+- Finally, we return the counts in a tuple format as specified.
+
+This implementation is efficient and straightforward, handling all edge cases such as negative numbers and zero.
+PASS: All tests passed

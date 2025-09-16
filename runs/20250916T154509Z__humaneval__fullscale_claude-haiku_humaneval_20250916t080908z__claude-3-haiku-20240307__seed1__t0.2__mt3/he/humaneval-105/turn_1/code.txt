@@ -1,0 +1,19 @@
+def by_length(arr):
+    # Handle empty input array
+    if not arr:
+        return []
+
+    # Filter out valid numbers (between 1 and 9, inclusive)
+    valid_numbers = [num for num in arr if 1 <= num <= 9]
+
+    # Sort the valid numbers in ascending order
+    valid_numbers.sort()
+
+    # Reverse the sorted array
+    valid_numbers.reverse()
+
+    # Replace each number with its corresponding name
+    name_map = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]
+    result = [name_map[num - 1] for num in valid_numbers]
+
+    return result

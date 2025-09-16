@@ -1,0 +1,15 @@
+def cycpattern_check(a, b):
+    """Check if the second word or any of its rotations is a substring in the first word."""
+    # Create the concatenated string of b with itself
+    b_rotations = b + b
+    
+    # Check if any rotation of b is a substring of a
+    return b in b_rotations and any(rotation in a for rotation in (b_rotations[i:i+len(b)] for i in range(len(b))))
+
+# Test cases
+print(cycpattern_check("abcd", "abd"))  # False
+print(cycpattern_check("hello", "ell"))  # True
+print(cycpattern_check("whassup", "psus"))  # False
+print(cycpattern_check("abab", "baa"))  # True
+print(cycpattern_check("efef", "eeff"))  # False
+print(cycpattern_check("himenss", "simen"))  # True

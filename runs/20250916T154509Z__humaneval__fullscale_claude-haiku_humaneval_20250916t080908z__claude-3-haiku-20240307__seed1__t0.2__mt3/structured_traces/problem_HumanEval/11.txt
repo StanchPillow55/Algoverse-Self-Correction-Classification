@@ -1,0 +1,67 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem requires us to perform a binary XOR operation on two input strings, `a` and `b`, which consist only of '1' and '0' characters. The result should also be returned as a string.
+
+2. **Approach**: To solve this problem, we can follow these steps:
+   - Ensure that the input strings `a` and `b` have the same length.
+   - Iterate through the characters of the input strings.
+   - Perform the XOR operation on the corresponding characters and append the result to a new string.
+   - Return the resulting string.
+
+3. **Handling Edge Cases**: We should consider the following edge cases:
+   - If the input strings have different lengths, we need to handle this case and raise an appropriate error.
+   - If the input strings contain characters other than '0' and '1', we should handle this case and raise an error.
+
+4. **Implementation**: Here's the complete function definition with the reasoning and implementation:
+
+```python
+def string_xor(a: str, b: str) -> str:
+    """
+    Input are two strings a and b consisting only of 1s and 0s.
+    Perform binary XOR on these inputs and return result also as a string.
+
+    Args:
+        a (str): The first input string.
+        b (str): The second input string.
+
+    Returns:
+        str: The result of the binary XOR operation on the input strings.
+
+    Raises:
+        ValueError: If the input strings have different lengths or contain characters other than '0' and '1'.
+
+    Example:
+        >>> string_xor('010', '110')
+        '100'
+    """
+    # Check if the input strings have the same length
+    if len(a) != len(b):
+        raise ValueError("Input strings must have the same length.")
+
+    # Check if the input strings contain only '0' and '1' characters
+    if not all(c in '01' for c in a) or not all(c in '01' for c in b):
+        raise ValueError("Input strings must contain only '0' and '1' characters.")
+
+    # Perform the binary XOR operation
+    result = ''
+    for i in range(len(a)):
+        result += str(int(a[i]) ^ int(b[i]))
+
+    return result
+```
+
+Explanation:
+
+1. The function takes two input strings `a` and `b` and returns the result of the binary XOR operation as a string.
+2. We first check if the input strings have the same length. If not, we raise a `ValueError` with an appropriate error message.
+3. We then check if the input strings contain only '0' and '1' characters. If not, we raise a `ValueError` with an appropriate error message.
+4. If the input strings pass the validation checks, we iterate through the characters of the input strings using a `for` loop.
+5. For each pair of corresponding characters, we perform the XOR operation using the `^` operator and convert the result to a string.
+6. We append the result of the XOR operation to the `result` string.
+7. Finally, we return the `result` string.
+
+This implementation ensures that the function handles the given problem statement correctly and provides appropriate error handling for edge cases.
+PASS: All tests passed

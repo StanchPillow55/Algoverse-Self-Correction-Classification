@@ -1,0 +1,13 @@
+def solution(lst):
+    """Given a non-empty list of integers, return the sum of all of the odd elements that are in even positions."""
+    total_sum = 0  # Initialize the sum to zero
+    
+    # Iterate through the list using index
+    for index in range(len(lst)):
+        # Check if the index is even
+        if index % 2 == 0:
+            # Check if the element at this index is odd
+            if lst[index] % 2 != 0:
+                total_sum += lst[index]  # Add to the sum if it's odd
+    
+    return total_sum  # Return the final sum

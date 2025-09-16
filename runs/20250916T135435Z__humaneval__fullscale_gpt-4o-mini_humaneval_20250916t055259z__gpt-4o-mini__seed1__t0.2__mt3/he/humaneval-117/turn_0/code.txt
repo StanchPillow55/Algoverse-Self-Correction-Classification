@@ -1,0 +1,28 @@
+def select_words(s, n):
+    """Given a string s and a natural number n, return a list of all words from string s 
+    that contain exactly n consonants, in the order they appear in the string s.
+    If the string s is empty, return an empty list."""
+    
+    # Define the set of vowels
+    vowels = set('aeiouAEIOU')
+    
+    # Initialize an empty list to hold the resulting words
+    result = []
+    
+    # Split the string into words
+    words = s.split()
+    
+    # Function to count consonants in a word
+    def count_consonants(word):
+        count = 0
+        for char in word:
+            if char.isalpha() and char not in vowels:  # Check if it's a consonant
+                count += 1
+        return count
+    
+    # Iterate through each word and count consonants
+    for word in words:
+        if count_consonants(word) == n:
+            result.append(word)
+    
+    return result

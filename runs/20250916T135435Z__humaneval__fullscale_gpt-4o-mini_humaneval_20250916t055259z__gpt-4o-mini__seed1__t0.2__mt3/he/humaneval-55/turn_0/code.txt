@@ -1,0 +1,25 @@
+def fib(n: int) -> int:
+    """Return n-th Fibonacci number.
+    >>> fib(10)
+    55
+    >>> fib(1)
+    1
+    >>> fib(8)
+    21
+    """
+    if n == 1 or n == 2:
+        return 1
+    
+    # Initialize the first two Fibonacci numbers
+    a, b = 1, 1
+    
+    # Calculate Fibonacci numbers iteratively
+    for _ in range(3, n + 1):
+        a, b = b, a + b  # Update to the next Fibonacci numbers
+    
+    return b  # b now holds the n-th Fibonacci number
+
+# Testing the function with provided examples
+print(fib(10))  # Output: 55
+print(fib(1))   # Output: 1
+print(fib(8))   # Output: 21

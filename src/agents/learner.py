@@ -29,10 +29,11 @@ class LearnerBot:
             # Map short names to full API model names
             anthropic_mapping = {
                 "claude-haiku": "claude-3-haiku-20240307",
-                "claude-sonnet": "claude-3-sonnet-20240229",
+                "claude-sonnet": "claude-3-5-sonnet-20241022",  # Updated to Claude 3.5
                 "claude-opus": "claude-3-opus-20240229",
                 "claude-3-haiku": "claude-3-haiku-20240307",
-                "claude-3-sonnet": "claude-3-sonnet-20240229",
+                "claude-3-sonnet": "claude-3-5-sonnet-20241022",  # Updated to Claude 3.5
+                "claude-3.5-sonnet": "claude-3-5-sonnet-20241022",  # New mapping for 3.5
                 "claude-3-opus": "claude-3-opus-20240229"
             }
             return anthropic_mapping.get(model, model)

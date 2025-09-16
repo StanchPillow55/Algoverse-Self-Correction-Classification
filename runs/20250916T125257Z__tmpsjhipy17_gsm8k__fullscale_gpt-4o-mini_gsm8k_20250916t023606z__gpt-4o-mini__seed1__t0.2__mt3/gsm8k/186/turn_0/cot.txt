@@ -1,0 +1,84 @@
+To solve the problem, we need to determine how many rats are in each cage given the total distribution of straw among the rodents. Let's break down the information provided step by step.
+
+1. **Understanding the distribution of straw**:
+   - **Rats**: There are 3 cages of rats, and each rat receives 6 pieces of straw.
+   - **Hamsters**: There are 10 cages of hamsters, and each hamster receives 5 pieces of straw.
+   - **Rabbits**: A pen of rabbits receives a total of 20 pieces of straw.
+
+2. **Setting up the equations**:
+   - Let \( r \) be the number of rats in each cage.
+   - The total number of rats is \( 3r \) (since there are 3 cages).
+   - The total straw given to the rats is \( 3r \times 6 = 18r \) pieces of straw.
+   
+   - Let \( h \) be the number of hamsters in each cage.
+   - The total number of hamsters is \( 10h \) (since there are 10 cages).
+   - The total straw given to the hamsters is \( 10h \times 5 = 50h \) pieces of straw.
+
+3. **Total straw distributed**:
+   - The total straw distributed among all rodents is given as 160 pieces.
+   - Therefore, we can set up the following equation:
+   \[
+   18r + 50h + 20 = 160
+   \]
+
+4. **Simplifying the equation**:
+   - First, we can subtract the straw given to the rabbits from both sides:
+   \[
+   18r + 50h = 160 - 20
+   \]
+   \[
+   18r + 50h = 140
+   \]
+
+5. **Finding integer solutions**:
+   - We can rearrange the equation to express \( h \) in terms of \( r \):
+   \[
+   50h = 140 - 18r
+   \]
+   \[
+   h = \frac{140 - 18r}{50}
+   \]
+
+   - For \( h \) to be an integer, \( 140 - 18r \) must be divisible by 50. We can test integer values for \( r \) to find valid solutions.
+
+6. **Testing values for \( r \)**:
+   - **If \( r = 0 \)**:
+     \[
+     h = \frac{140 - 18(0)}{50} = \frac{140}{50} = 2.8 \quad (\text{not an integer})
+     \]
+   - **If \( r = 1 \)**:
+     \[
+     h = \frac{140 - 18(1)}{50} = \frac{140 - 18}{50} = \frac{122}{50} = 2.44 \quad (\text{not an integer})
+     \]
+   - **If \( r = 2 \)**:
+     \[
+     h = \frac{140 - 18(2)}{50} = \frac{140 - 36}{50} = \frac{104}{50} = 2.08 \quad (\text{not an integer})
+     \]
+   - **If \( r = 3 \)**:
+     \[
+     h = \frac{140 - 18(3)}{50} = \frac{140 - 54}{50} = \frac{86}{50} = 1.72 \quad (\text{not an integer})
+     \]
+   - **If \( r = 4 \)**:
+     \[
+     h = \frac{140 - 18(4)}{50} = \frac{140 - 72}{50} = \frac{68}{50} = 1.36 \quad (\text{not an integer})
+     \]
+   - **If \( r = 5 \)**:
+     \[
+     h = \frac{140 - 18(5)}{50} = \frac{140 - 90}{50} = \frac{50}{50} = 1 \quad (\text{integer})
+     \]
+   - **If \( r = 6 \)**:
+     \[
+     h = \frac{140 - 18(6)}{50} = \frac{140 - 108}{50} = \frac{32}{50} = 0.64 \quad (\text{not an integer})
+     \]
+   - **If \( r = 7 \)**:
+     \[
+     h = \frac{140 - 18(7)}{50} = \frac{140 - 126}{50} = \frac{14}{50} = 0.28 \quad (\text{not an integer})
+     \]
+   - **If \( r = 8 \)**:
+     \[
+     h = \frac{140 - 18(8)}{50} = \frac{140 - 144}{50} = \frac{-4}{50} \quad (\text{not an integer})
+     \]
+
+7. **Conclusion**:
+   - The only integer solution found is when \( r = 5 \) and \( h = 1 \).
+   - Therefore, the number of rats in each cage is \( \boxed{5} \).

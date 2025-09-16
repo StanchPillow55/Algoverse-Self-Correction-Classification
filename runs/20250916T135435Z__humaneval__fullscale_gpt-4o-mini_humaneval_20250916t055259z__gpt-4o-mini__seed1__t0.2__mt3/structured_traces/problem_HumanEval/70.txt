@@ -1,0 +1,76 @@
+turn 1
+To solve the problem of sorting a list of integers in a "strange" order, we need to follow a specific pattern: starting with the minimum value, then the maximum of the remaining integers, then the next minimum, and so on. 
+
+### Step-by-Step Reasoning:
+
+1. **Understanding the Input and Output**:
+   - The input is a list of integers, which can include duplicates and can be empty.
+   - The output should be a new list sorted in the specified "strange" order.
+
+2. **Identifying the Pattern**:
+   - The order alternates between the smallest and largest remaining values in the list.
+   - For example, given the list `[1, 2, 3, 4]`, the order would be:
+     - Start with the minimum: `1`
+     - Then the maximum of the remaining: `4`
+     - Next minimum of the remaining: `2`
+     - Next maximum of the remaining: `3`
+   - This results in the output `[1, 4, 2, 3]`.
+
+3. **Approach**:
+   - First, sort the input list. This will allow us to easily access the minimum and maximum values.
+   - Use two pointers or indices: one starting from the beginning of the sorted list (for the minimum) and one from the end (for the maximum).
+   - Alternate between adding the minimum and maximum values to a new result list until all elements have been added.
+
+4. **Implementation**:
+   - We will define a function `strange_sort_list(lst)` that implements the above logic.
+   - We will handle edge cases, such as an empty list, by returning an empty list immediately.
+
+### Implementation:
+
+Here is the complete function definition based on the reasoning above:
+
+```python
+def strange_sort_list(lst):
+    '''
+    Given list of integers, return list in strange order.
+    Strange sorting, is when you start with the minimum value,
+    then maximum of the remaining integers, then minimum and so on.
+    '''
+    # Handle the edge case of an empty list
+    if not lst:
+        return []
+    
+    # Sort the list
+    sorted_lst = sorted(lst)
+    
+    result = []
+    left = 0
+    right = len(sorted_lst) - 1
+    
+    # Alternate between the smallest and largest remaining elements
+    while left <= right:
+        if left == right:  # When both pointers meet, add the last element
+            result.append(sorted_lst[left])
+        else:
+            result.append(sorted_lst[left])  # Add the minimum
+            result.append(sorted_lst[right])  # Add the maximum
+        left += 1
+        right -= 1
+    
+    return result
+
+# Example test cases
+print(strange_sort_list([1, 2, 3, 4]))  # Output: [1, 4, 2, 3]
+print(strange_sort_list([5, 5, 5, 5]))  # Output: [5, 5, 5, 5]
+print(strange_sort_list([]))             # Output: []
+```
+
+### Explanation of the Code:
+- We first check if the input list is empty and return an empty list if it is.
+- We sort the list to facilitate easy access to the minimum and maximum values.
+- We use two pointers (`left` and `right`) to track the current minimum and maximum values.
+- In a loop, we alternate adding the minimum and maximum values to the result list until all elements are processed.
+- Finally, we return the constructed result list. 
+
+This implementation efficiently constructs the desired output while maintaining clarity and correctness.
+PASS: All tests passed

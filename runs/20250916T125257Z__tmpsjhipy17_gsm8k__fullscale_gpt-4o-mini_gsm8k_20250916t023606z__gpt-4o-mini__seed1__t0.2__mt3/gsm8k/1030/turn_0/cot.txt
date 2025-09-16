@@ -1,0 +1,55 @@
+To find the percentage chance that Marcus will actually have to turn in his homework tomorrow, we need to analyze the different scenarios that could occur based on the probabilities given.
+
+1. **Substitute Teacher Scenario**:
+   - There is a 50% chance that a substitute teacher will be present. If a substitute is present, Marcus will not have to turn in his homework.
+   - Therefore, if a substitute teacher is present, the probability that he has to turn in his homework is 0%.
+
+2. **Normal Teacher Scenario**:
+   - If the normal teacher is present (which happens with a 50% probability), we need to consider two sub-scenarios:
+     - **Extension Given**: There is a 40% chance that the teacher will give an extension. If this happens, Marcus will not have to turn in his homework.
+     - **No Extension Given**: If the teacher does not give an extension (which happens with a 60% probability), we then consider whether Marcus can convince the teacher that his dog ate his homework.
+       - **Convincing the Teacher**: There is a 20% chance that Marcus can convince the teacher to give him a personal extension. If he convinces her, he will not have to turn in his homework.
+       - **Not Convincing the Teacher**: If he does not convince her (which happens with an 80% probability), he will have to turn in his homework.
+
+Now, let's calculate the probabilities step by step:
+
+### Step 1: Calculate the probability of having to turn in homework with the normal teacher.
+
+- Probability of having the normal teacher = 50% = 0.5
+- Probability of getting an extension from the normal teacher = 40% = 0.4
+- Probability of not getting an extension = 60% = 0.6
+- Probability of convincing the teacher for a personal extension = 20% = 0.2
+- Probability of not convincing the teacher = 80% = 0.8
+
+Now, if the normal teacher is present:
+- Probability of having to turn in homework if the teacher is present:
+  - This occurs only if he does not get an extension and does not convince the teacher.
+  
+  \[
+  P(\text{Turn in homework | Normal teacher}) = P(\text{No extension}) \times P(\text{Not convincing}) = 0.6 \times 0.8 = 0.48
+  \]
+
+### Step 2: Combine the probabilities.
+
+Now we combine the probabilities of the two main scenarios (substitute teacher and normal teacher):
+
+- Probability of having to turn in homework if the substitute teacher is present = 0% = 0
+- Probability of having to turn in homework if the normal teacher is present = 0.5 (probability of normal teacher) * 0.48 (probability of having to turn in homework with normal teacher)
+
+\[
+P(\text{Turn in homework}) = P(\text{Substitute}) \times 0 + P(\text{Normal}) \times P(\text{Turn in homework | Normal}) 
+\]
+\[
+= 0.5 \times 0 + 0.5 \times 0.48 = 0 + 0.24 = 0.24
+\]
+
+### Step 3: Convert to percentage.
+
+To find the percentage chance that Marcus will actually have to turn in his homework tomorrow, we multiply by 100:
+
+\[
+0.24 \times 100 = 24\%
+\]
+
+### Final Answer:
+The percentage chance that Marcus will actually have to turn in his homework tomorrow is **24%**.

@@ -1,0 +1,34 @@
+def check_if_last_char_is_a_letter(txt):
+    '''
+    Create a function that returns True if the last character
+    of a given string is an alphabetical character and is not
+    a part of a word, and False otherwise.
+    Note: "word" is a group of characters separated by space.
+
+    Examples:
+    check_if_last_char_is_a_letter("apple pie") ➞ False
+    check_if_last_char_is_a_letter("apple pi e") ➞ True
+    check_if_last_char_is_a_letter("apple pi e ") ➞ False
+    check_if_last_char_is_a_letter("") ➞ False 
+    '''
+    
+    # Step 1: Trim the string to remove trailing spaces
+    trimmed_txt = txt.rstrip()
+    
+    # Step 2: Check if the trimmed string is empty
+    if not trimmed_txt:
+        return False
+    
+    # Step 3: Get the last character
+    last_char = trimmed_txt[-1]
+    
+    # Step 4: Check if the last character is an alphabetical character
+    if not last_char.isalpha():
+        return False
+    
+    # Step 5: Check if the last character is preceded by a space or is the first character
+    # We can check if the last character is the first character or if the character before it is a space
+    if len(trimmed_txt) == 1 or trimmed_txt[-2] == ' ':
+        return True
+    
+    return False

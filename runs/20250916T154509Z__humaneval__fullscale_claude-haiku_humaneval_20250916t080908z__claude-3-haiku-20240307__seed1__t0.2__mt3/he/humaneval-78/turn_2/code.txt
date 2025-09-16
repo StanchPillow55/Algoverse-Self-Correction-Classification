@@ -1,0 +1,33 @@
+def is_prime(n):
+    """Helper function to check if a number is prime."""
+    if n < 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def hex_key(num):
+    """
+    Counts the number of hexadecimal digits that are primes.
+    
+    Args:
+        num (str): A hexadecimal number as a string.
+    
+    Returns:
+        int: The number of prime hexadecimal digits.
+    """
+    # Convert the input string to a list of digits
+    digits = [d for d in num if d.isdigit() or d.isalpha()]
+    
+    # Count the number of prime digits
+    prime_count = 0
+    for d in digits:
+        if d.isdigit():
+            if is_prime(int(d)):
+                prime_count += 1
+        elif d.isalpha():
+            if is_prime(ord(d) - ord('A') + 10):
+                prime_count += 1
+    
+    return prime_count

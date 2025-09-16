@@ -1,0 +1,64 @@
+turn 1
+To solve the problem of finding the largest prime factor of a given integer \( n \), we need to follow a systematic approach. Here’s how we can break down the problem:
+
+### Step-by-Step Reasoning
+
+1. **Understanding Prime Factors**: A prime factor of a number \( n \) is a prime number that divides \( n \) without leaving a remainder. For example, the prime factors of 13195 are 5, 7, 13, and 29.
+
+2. **Finding Factors**: To find the prime factors of \( n \), we can start dividing \( n \) by the smallest prime (which is 2) and continue dividing until \( n \) becomes 1. If \( n \) is divisible by a number, we keep dividing \( n \) by that number until it no longer divides evenly.
+
+3. **Iterating Through Possible Factors**: We can iterate through potential factors starting from 2 up to the square root of \( n \). If a factor divides \( n \), we will keep dividing \( n \) by that factor and keep track of the largest factor found.
+
+4. **Handling Remaining \( n \)**: After checking all factors up to the square root of \( n \), if \( n \) is still greater than 1, then \( n \) itself is a prime factor and should be considered.
+
+5. **Implementation**: We will implement this logic in the `largest_prime_factor` function.
+
+### Implementation
+
+Now, let's implement the function based on the reasoning above:
+
+```python
+def largest_prime_factor(n: int) -> int:
+    """Return the largest prime factor of n. Assume n > 1 and is not a prime.
+    >>> largest_prime_factor(13195)
+    29
+    >>> largest_prime_factor(2048)
+    2
+    """
+    # Initialize the largest prime factor
+    largest_factor = None
+    
+    # Check for number of 2s that divide n
+    while n % 2 == 0:
+        largest_factor = 2
+        n //= 2  # Divide n by 2
+    
+    # n must be odd at this point, so we can skip even numbers
+    for i in range(3, int(n**0.5) + 1, 2):
+        while n % i == 0:
+            largest_factor = i
+            n //= i  # Divide n by i
+    
+    # This condition is to check if n is a prime number greater than 2
+    if n > 2:
+        largest_factor = n
+    
+    return largest_factor
+```
+
+### Explanation of the Code
+
+1. **Initialization**: We start by initializing `largest_factor` to `None`.
+
+2. **Handling Factor of 2**: We use a while loop to divide \( n \) by 2 until it is no longer divisible. Each time we do this, we update `largest_factor` to 2.
+
+3. **Checking Odd Factors**: We then iterate through odd numbers starting from 3 up to the square root of \( n \). For each odd number \( i \), we again use a while loop to divide \( n \) by \( i \) until it is no longer divisible, updating `largest_factor` accordingly.
+
+4. **Final Check**: After the loop, if \( n \) is still greater than 2, it means \( n \) itself is a prime number and is the largest prime factor.
+
+5. **Return Value**: Finally, we return the largest prime factor found.
+
+### Conclusion
+
+This implementation efficiently finds the largest prime factor of \( n \) using a combination of trial division and careful tracking of the largest factor encountered. The time complexity is approximately \( O(\sqrt{n}) \), making it suitable for reasonably large values of \( n \).
+PASS: All tests passed

@@ -1,0 +1,29 @@
+def largest_prime_factor(n: int) -> int:
+    """Return the largest prime factor of n. Assume n > 1 and is not a prime."""
+    # Start with the smallest prime number, which is 2
+    prime = 2
+    
+    # Initialize the largest prime factor to 1
+    largest_prime = 1
+    
+    # Iterate until we reach the square root of n
+    while prime * prime <= n:
+        # If n is divisible by the current prime number
+        if n % prime == 0:
+            # Update the largest prime factor
+            largest_prime = prime
+            
+            # Divide n by the current prime number
+            n //= prime
+        else:
+            # Move on to the next prime number
+            if prime == 2:
+                prime = 3
+            else:
+                prime += 2
+    
+    # If n is still greater than 1, it must be the largest prime factor
+    if n > 1:
+        largest_prime = n
+    
+    return largest_prime

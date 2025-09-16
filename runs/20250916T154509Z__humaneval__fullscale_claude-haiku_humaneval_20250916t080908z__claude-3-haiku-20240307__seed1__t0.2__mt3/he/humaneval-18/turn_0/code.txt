@@ -1,0 +1,31 @@
+def how_many_times(string: str, substring: str) -> int:
+    """
+    Find how many times a given substring can be found in the original string.
+    Count overlaping cases.
+
+    Args:
+        string (str): The input string.
+        substring (str): The substring to search for.
+
+    Returns:
+        int: The number of times the substring appears in the string, including overlapping cases.
+    """
+    if not string:
+        return 0
+    if not substring:
+        return len(string) + 1
+
+    count = 0
+    i = 0
+    while i < len(string):
+        if string[i] == substring[0]:
+            j = 0
+            while j < len(substring) and i + j < len(string) and string[i + j] == substring[j]:
+                j += 1
+            if j == len(substring):
+                count += 1
+            i += 1
+        else:
+            i += 1
+
+    return count

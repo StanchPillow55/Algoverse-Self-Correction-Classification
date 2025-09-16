@@ -1,0 +1,23 @@
+from typing import List, Tuple
+
+def find_closest_elements(numbers: List[float]) -> Tuple[float, float]:
+    # Initialize variables to track the minimum difference and the closest pair
+    min_diff = float('inf')
+    closest_pair = (0.0, 0.0)
+    
+    # Iterate through each pair of numbers
+    for i in range(len(numbers)):
+        for j in range(i + 1, len(numbers)):
+            # Calculate the absolute difference
+            diff = abs(numbers[i] - numbers[j])
+            # If this difference is smaller than the current minimum, update
+            if diff < min_diff:
+                min_diff = diff
+                # Store the pair in sorted order
+                closest_pair = (min(numbers[i], numbers[j]), max(numbers[i], numbers[j]))
+    
+    return closest_pair
+
+# Example usage
+print(find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2]))  # Output: (2.0, 2.2)
+print(find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.0]))  # Output: (2.0, 2.0)

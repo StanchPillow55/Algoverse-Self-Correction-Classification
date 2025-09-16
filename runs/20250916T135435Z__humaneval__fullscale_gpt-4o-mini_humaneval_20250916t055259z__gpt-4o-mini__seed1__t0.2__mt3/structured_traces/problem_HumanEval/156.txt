@@ -1,0 +1,83 @@
+turn 1
+To solve the problem of converting a positive integer (within the range of 1 to 1000) into its Roman numeral equivalent in lowercase, we need to follow a systematic approach. Here's how I will break down the problem:
+
+### Step 1: Understand Roman Numerals
+Roman numerals are represented by combinations of letters from the Latin alphabet:
+- I = 1
+- V = 5
+- X = 10
+- L = 50
+- C = 100
+- D = 500
+- M = 1000
+
+Roman numerals are typically written from largest to smallest from left to right. However, there are specific cases where subtraction is used:
+- IV = 4 (5 - 1)
+- IX = 9 (10 - 1)
+- XL = 40 (50 - 10)
+- XC = 90 (100 - 10)
+- CD = 400 (500 - 100)
+- CM = 900 (1000 - 100)
+
+### Step 2: Create a Mapping
+To facilitate the conversion, we can create a mapping of integer values to their corresponding Roman numeral representations. This mapping will include both the standard values and the subtractive combinations.
+
+### Step 3: Implement the Conversion Logic
+We will need to:
+1. Start with the largest Roman numeral value and work our way down.
+2. Subtract the value from the number while appending the corresponding Roman numeral to the result string until the number is reduced to zero.
+
+### Step 4: Return the Result
+Finally, we will return the result in lowercase as specified.
+
+### Implementation
+Now, let's implement the function based on the above reasoning.
+
+```python
+def int_to_mini_roman(number):
+    """
+    Given a positive integer, obtain its roman numeral equivalent as a string,
+    and return it in lowercase.
+    Restrictions: 1 <= num <= 1000
+    """
+    # Mapping of integers to Roman numerals
+    roman_numerals = [
+        (1000, 'm'),
+        (900, 'cm'),
+        (500, 'd'),
+        (400, 'cd'),
+        (100, 'c'),
+        (90, 'xc'),
+        (50, 'l'),
+        (40, 'xl'),
+        (10, 'x'),
+        (9, 'ix'),
+        (5, 'v'),
+        (4, 'iv'),
+        (1, 'i')
+    ]
+    
+    result = []
+    
+    # Convert the integer to Roman numeral
+    for value, numeral in roman_numerals:
+        while number >= value:
+            result.append(numeral)
+            number -= value
+    
+    return ''.join(result)
+
+# Example usage
+print(int_to_mini_roman(19))   # Output: 'xix'
+print(int_to_mini_roman(152))  # Output: 'clii'
+print(int_to_mini_roman(426))  # Output: 'cdxxvi'
+```
+
+### Explanation of the Code
+1. **Mapping**: We define a list of tuples where each tuple contains an integer and its corresponding Roman numeral in lowercase.
+2. **Result List**: We initialize an empty list `result` to store the Roman numeral parts as we build the final string.
+3. **Loop Through Mappings**: For each value in our mapping, we check if the current number is greater than or equal to that value. If it is, we append the corresponding numeral to our result and subtract the value from the number.
+4. **Join and Return**: Finally, we join the list of Roman numeral parts into a single string and return it.
+
+This implementation efficiently converts integers to Roman numerals while adhering to the constraints provided.
+PASS: All tests passed

@@ -1,0 +1,26 @@
+import hashlib
+from typing import Optional
+
+def string_to_md5(text: str) -> Optional[str]:
+    """
+    Given a string 'text', return its md5 hash equivalent string.
+    If 'text' is an empty string or None, return None.
+
+    Args:
+        text (str): The input string to be hashed.
+
+    Returns:
+        Optional[str]: The MD5 hash of the input string as a hexadecimal string, or None if the input is an empty string or None.
+
+    >>> string_to_md5('Hello world') == '3e25960a79dbc69b674cd4ec67a72c62'
+    >>> string_to_md5('') is None
+    >>> string_to_md5(None) is None
+    """
+    if not isinstance(text, str) or not text:
+        return None
+
+    try:
+        md5_hash = hashlib.md5(text.encode())
+        return md5_hash.hexdigest()
+    except (TypeError, UnicodeEncodeError):
+        return None

@@ -31,7 +31,7 @@ class ModelManager:
             },
             "generation": {
                 "openai": "gpt-4",
-                "anthropic": "claude-3-sonnet-20240229"
+                "anthropic": "claude-3-5-sonnet-20241022"
             }
         }
         

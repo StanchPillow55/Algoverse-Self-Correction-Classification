@@ -1,0 +1,66 @@
+turn 1
+To solve the problem of counting how many times a given substring can be found in a string, including overlapping occurrences, we need to carefully consider how to traverse the original string and check for matches with the substring.
+
+### Step-by-Step Reasoning:
+
+1. **Understanding the Problem**:
+   - We need to count occurrences of a substring within a string.
+   - Overlapping occurrences should be counted. For example, in the string "aaa", the substring "a" appears three times (at indices 0, 1, and 2).
+
+2. **Input and Output**:
+   - The function will take two parameters: `string` (the main string) and `substring` (the substring to search for).
+   - The output will be an integer representing the count of occurrences.
+
+3. **Edge Cases**:
+   - If the main string is empty (`''`), the count should be `0` regardless of the substring.
+   - If the substring is empty, we should also return `0` because an empty substring does not count as a valid occurrence.
+   - If the substring is longer than the main string, it cannot possibly occur, so we should return `0`.
+
+4. **Approach**:
+   - We can use a loop to iterate through the main string.
+   - For each position in the main string, we will check if the substring matches starting from that position.
+   - If a match is found, we increment our count and continue checking from the next position (to allow for overlaps).
+   - We will stop checking when the remaining part of the string is shorter than the substring.
+
+5. **Implementation**:
+   - We will implement the function `how_many_times` based on the above logic.
+
+### Implementation:
+
+Here is the complete function definition:
+
+```python
+def how_many_times(string: str, substring: str) -> int:
+    """ Find how many times a given substring can be found in the original string. Count overlapping cases.
+    >>> how_many_times('', 'a')
+    0
+    >>> how_many_times('aaa', 'a')
+    3
+    >>> how_many_times('aaaa', 'aa')
+    3
+    """
+    if not substring or not string:
+        return 0
+    
+    count = 0
+    substring_length = len(substring)
+    string_length = len(string)
+    
+    for i in range(string_length - substring_length + 1):
+        if string[i:i + substring_length] == substring:
+            count += 1
+            
+    return count
+```
+
+### Explanation of the Code:
+- We first check if either the `string` or `substring` is empty. If so, we return `0`.
+- We initialize a `count` variable to keep track of the number of occurrences.
+- We calculate the lengths of the `substring` and `string` for use in our loop.
+- We loop through the `string`, checking each substring of the same length as `substring`.
+- If a match is found, we increment the `count`.
+- Finally, we return the total count.
+
+### Testing:
+The provided docstring includes examples that can be used to test the function. You can run these tests to verify that the function behaves as expected.
+PASS: All tests passed

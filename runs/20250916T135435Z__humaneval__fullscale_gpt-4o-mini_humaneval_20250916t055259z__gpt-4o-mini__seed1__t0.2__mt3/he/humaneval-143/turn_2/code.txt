@@ -1,0 +1,25 @@
+def is_prime(n):
+    """Check if a number is prime."""
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def words_in_sentence(sentence):
+    """
+    Given a sentence, return a string of words whose lengths are prime numbers.
+    """
+    # Split the sentence into words
+    words = sentence.split()
+    
+    # Filter words based on the length being prime
+    prime_length_words = [word for word in words if is_prime(len(word))]
+    
+    # Join the filtered words into a single string
+    return ' '.join(prime_length_words)
+
+# Example usage:
+print(words_in_sentence("This is a test"))  # Output: "is"
+print(words_in_sentence("lets go for swimming"))  # Output: "go for"

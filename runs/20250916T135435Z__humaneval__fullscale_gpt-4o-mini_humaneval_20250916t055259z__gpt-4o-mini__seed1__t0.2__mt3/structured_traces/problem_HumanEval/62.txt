@@ -1,0 +1,64 @@
+turn 1
+To solve the problem of finding the derivative of a polynomial represented by its coefficients, we need to understand how polynomial differentiation works.
+
+### Understanding the Problem
+
+A polynomial can be expressed in the form:
+\[ P(x) = a_0 + a_1 \cdot x + a_2 \cdot x^2 + \ldots + a_n \cdot x^n \]
+where \( a_i \) are the coefficients and \( n \) is the degree of the polynomial.
+
+The derivative of a polynomial is calculated using the power rule:
+- The derivative of \( a_i \cdot x^i \) is \( i \cdot a_i \cdot x^{i-1} \).
+
+### Steps to Derive the Polynomial
+
+1. **Identify the Coefficients**: The input is a list of coefficients where the index represents the power of \( x \).
+2. **Apply the Power Rule**: For each coefficient \( a_i \) at index \( i \):
+   - If \( i = 0 \) (the constant term), its derivative is 0 and should not be included in the result.
+   - For \( i > 0 \), the derivative term will be \( i \cdot a_i \) and will be placed at index \( i-1 \) in the result list.
+3. **Construct the Result**: Collect all the derivative coefficients into a new list.
+
+### Implementation
+
+Now, let's implement the function based on the above reasoning.
+
+```python
+def derivative(xs: list):
+    """ 
+    xs represent coefficients of a polynomial.
+    xs[0] + xs[1] * x + xs[2] * x^2 + ....
+    Return derivative of this polynomial in the same form.
+    
+    >>> derivative([3, 1, 2, 4, 5])
+    [1, 4, 12, 20]
+    >>> derivative([1, 2, 3])
+    [2, 6]
+    """
+    # Initialize an empty list to hold the derivative coefficients
+    derivative_coeffs = []
+    
+    # Iterate over the coefficients with their indices
+    for i in range(1, len(xs)):  # Start from 1 to skip the constant term
+        # Calculate the derivative coefficient
+        derivative_coeff = i * xs[i]
+        # Append the derivative coefficient to the result list
+        derivative_coeffs.append(derivative_coeff)
+    
+    return derivative_coeffs
+```
+
+### Explanation of the Code
+
+1. **Function Definition**: We define the function `derivative` that takes a list of coefficients `xs`.
+2. **Result List**: We initialize an empty list `derivative_coeffs` to store the coefficients of the derivative.
+3. **Loop Through Coefficients**: We loop through the indices starting from 1 (to skip the constant term):
+   - For each index `i`, we calculate the derivative coefficient as `i * xs[i]`.
+   - We append this coefficient to the `derivative_coeffs` list.
+4. **Return the Result**: Finally, we return the list of derivative coefficients.
+
+### Testing
+
+We can test the function using the provided examples to ensure it works correctly. The expected outputs match the calculations we performed based on the polynomial differentiation rules. 
+
+This implementation is efficient and straightforward, adhering to the principles of polynomial differentiation.
+PASS: All tests passed

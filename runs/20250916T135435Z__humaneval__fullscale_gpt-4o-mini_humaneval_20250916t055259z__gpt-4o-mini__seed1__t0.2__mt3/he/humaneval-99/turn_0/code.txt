@@ -1,0 +1,20 @@
+def closest_integer(value):
+    # Convert the string to a float
+    num = float(value)
+    
+    # Use round to get the closest integer
+    rounded = round(num)
+    
+    # Check if the number is equidistant from two integers
+    if num - rounded == 0.5:  # Case for positive equidistant
+        return rounded + 1
+    elif num - rounded == -0.5:  # Case for negative equidistant
+        return rounded - 1
+    
+    return rounded  # Return the rounded value for all other cases
+
+# Example usage:
+print(closest_integer("10"))    # Output: 10
+print(closest_integer("15.3"))  # Output: 15
+print(closest_integer("14.5"))  # Output: 15
+print(closest_integer("-14.5")) # Output: -15

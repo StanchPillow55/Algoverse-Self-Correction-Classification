@@ -1,0 +1,33 @@
+def string_xor(a: str, b: str) -> str:
+    """
+    Input are two strings a and b consisting only of 1s and 0s.
+    Perform binary XOR on these inputs and return result also as a string.
+
+    Args:
+        a (str): The first input string.
+        b (str): The second input string.
+
+    Returns:
+        str: The result of the binary XOR operation on the input strings.
+
+    Raises:
+        ValueError: If the input strings have different lengths or contain characters other than '0' and '1'.
+
+    Example:
+        >>> string_xor('010', '110')
+        '100'
+    """
+    # Check if the input strings have the same length
+    if len(a) != len(b):
+        raise ValueError("Input strings must have the same length.")
+
+    # Check if the input strings contain only '0' and '1' characters
+    if not all(c in '01' for c in a) or not all(c in '01' for c in b):
+        raise ValueError("Input strings must contain only '0' and '1' characters.")
+
+    # Perform the binary XOR operation
+    result = ''
+    for i in range(len(a)):
+        result += str(int(a[i]) ^ int(b[i]))
+
+    return result

@@ -1,0 +1,22 @@
+def decimal_to_binary(decimal):
+    """
+    Converts a decimal number to its binary representation as a string.
+
+    Args:
+        decimal (int): The decimal number to be converted.
+
+    Returns:
+        str: The binary representation of the decimal number, with "db" at the beginning and end.
+    """
+    # Convert the decimal number to binary
+    binary_digits = []
+    while decimal > 0:
+        remainder = decimal % 2
+        binary_digits.append(str(remainder))
+        decimal //= 2
+
+    # Reverse the binary digits to get the correct order
+    binary_representation = "".join(reversed(binary_digits))
+
+    # Add the "db" prefix and suffix
+    return f"db{binary_representation}db"

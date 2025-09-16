@@ -1,0 +1,26 @@
+def Strongest_Extension(class_name, extensions):
+    """
+    Find the strongest extension for the given class name and list of extensions.
+    
+    Args:
+        class_name (str): The name of the class.
+        extensions (list): A list of extension names.
+        
+    Returns:
+        str: The class name and the name of the strongest extension in the format "ClassName.StrongestExtensionName".
+    """
+    strongest_extension = None
+    highest_strength = float('-inf')
+    
+    for extension in extensions:
+        cap = sum(1 for char in extension if char.isupper())
+        sm = sum(1 for char in extension if char.islower())
+        strength = cap - sm
+        
+        if strength > highest_strength:
+            highest_strength = strength
+            strongest_extension = extension
+        elif strength == highest_strength and extensions.index(extension) < extensions.index(strongest_extension):
+            strongest_extension = extension
+    
+    return f"{class_name}.{strongest_extension}"

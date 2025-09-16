@@ -1,0 +1,32 @@
+def get_max_triples(n):
+    # Step 1: Create the array a
+    a = [i * i - i + 1 for i in range(1, n + 1)]
+    
+    # Step 2: Count occurrences of each group based on modulo 3
+    count_0 = count_1 = count_2 = 0
+    
+    for value in a:
+        if value % 3 == 0:
+            count_0 += 1
+        elif value % 3 == 1:
+            count_1 += 1
+        else:
+            count_2 += 1
+    
+    # Step 3: Calculate the number of valid triples
+    def combinations_of_3(count):
+        if count < 3:
+            return 0
+        return count * (count - 1) * (count - 2) // 6
+    
+    total_triples = (
+        combinations_of_3(count_0) +
+        combinations_of_3(count_1) +
+        combinations_of_3(count_2) +
+        (count_0 * count_1 * count_2)
+    )
+    
+    return total_triples
+
+# Example usage
+print(get_max_triples(5))  # Output: 1

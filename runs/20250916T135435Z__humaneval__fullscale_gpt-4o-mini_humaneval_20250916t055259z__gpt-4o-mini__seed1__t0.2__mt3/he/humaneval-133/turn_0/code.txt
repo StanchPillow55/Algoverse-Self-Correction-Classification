@@ -1,0 +1,9 @@
+import math
+
+def sum_squares(lst):
+    """Calculate the sum of squares of the ceiling of each number in the list."""
+    total_sum = 0  # Initialize the total sum to zero
+    for number in lst:
+        rounded_number = math.ceil(number)  # Round the number up to the nearest integer
+        total_sum += rounded_number ** 2  # Add the square of the rounded number to the total sum
+    return total_sum  # Return the final sum of squares

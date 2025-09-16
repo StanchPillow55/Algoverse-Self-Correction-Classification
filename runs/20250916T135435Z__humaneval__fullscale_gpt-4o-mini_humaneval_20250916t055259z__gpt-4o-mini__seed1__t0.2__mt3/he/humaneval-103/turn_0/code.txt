@@ -1,0 +1,26 @@
+def rounded_avg(n, m):
+    """Compute the rounded average of integers from n to m and convert to binary."""
+    # Step 1: Input validation
+    if n > m:
+        return -1
+    
+    # Step 2: Calculate the sum and count of integers from n to m
+    count = m - n + 1
+    total_sum = (count * (n + m)) // 2  # Using integer division for sum
+    
+    # Step 3: Calculate the average
+    average = total_sum / count
+    
+    # Step 4: Round the average
+    rounded_average = round(average)
+    
+    # Step 5: Convert to binary
+    binary_result = bin(rounded_average)
+    
+    return binary_result
+
+# Example test cases
+print(rounded_avg(1, 5))  # Expected output: "0b11"
+print(rounded_avg(7, 5))  # Expected output: -1
+print(rounded_avg(10, 20))  # Expected output: "0b1111"
+print(rounded_avg(20, 33))  # Expected output: "0b11010"

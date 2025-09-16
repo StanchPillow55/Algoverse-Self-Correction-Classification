@@ -1,0 +1,61 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem requires us to find all the occurrences of a given integer `x` in a 2-dimensional list `lst` and return a list of tuples, where each tuple represents the coordinates (row, column) of the occurrence. The coordinates should be sorted first by row in ascending order, and then by column in descending order.
+
+2. **Approach**: To solve this problem, we can follow these steps:
+
+   a. Iterate through each row in the 2-dimensional list `lst`.
+   b. For each row, find the indices of the occurrences of the given integer `x`.
+   c. Create a list of tuples, where each tuple represents the coordinates (row, column) of the occurrence.
+   d. Sort the list of tuples first by row in ascending order, and then by column in descending order.
+   e. Return the sorted list of tuples.
+
+3. **Implementation**:
+
+```python
+def get_row(lst, x):
+    """
+    You are given a 2 dimensional data, as a nested lists,
+    which is similar to matrix, however, unlike matrices,
+    each row may contain a different number of columns.
+    Given lst, and integer x, find integers x in the list,
+    and return list of tuples, [(x1, y1), (x2, y2) ...] such that
+    each tuple is a coordinate - (row, columns), starting with 0.
+    Sort coordinates initially by rows in ascending order.
+    Also, sort coordinates of the row by columns in descending order.
+    
+    Examples:
+    get_row([
+      [1,2,3,4,5,6],
+      [1,2,3,4,1,6],
+      [1,2,3,4,5,1]
+    ], 1) == [(0, 0), (1, 4), (1, 0), (2, 5), (2, 0)]
+    get_row([], 1) == []
+    get_row([[], [1], [1, 2, 3]], 3) == [(2, 2)]
+    """
+    coordinates = []
+    for row_index, row in enumerate(lst):
+        for col_index, value in enumerate(row):
+            if value == x:
+                coordinates.append((row_index, col_index))
+    
+    # Sort the coordinates first by row in ascending order, then by column in descending order
+    coordinates.sort(key=lambda x: (x[0], -x[1]))
+    
+    return coordinates
+```
+
+Let's go through the implementation step by step:
+
+1. We initialize an empty list `coordinates` to store the coordinates of the occurrences of the given integer `x`.
+2. We iterate through each row in the 2-dimensional list `lst` using `enumerate()` to get both the row index and the row itself.
+3. For each row, we iterate through the elements in the row using `enumerate()` to get both the column index and the value.
+4. If the value is equal to the given integer `x`, we append the coordinates (row_index, col_index) to the `coordinates` list.
+5. After iterating through all the rows and columns, we sort the `coordinates` list using the `sort()` method with a custom key function. The key function sorts the coordinates first by row in ascending order, and then by column in descending order.
+6. Finally, we return the sorted `coordinates` list.
+
+The time complexity of this solution is O(n * m * log(n * m)), where n is the number of rows and m is the maximum number of columns in the 2-dimensional list `lst`. The sorting step dominates the time complexity.
+PASS: All tests passed

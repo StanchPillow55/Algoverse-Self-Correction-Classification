@@ -1,0 +1,40 @@
+def is_prime(n):
+    """
+    Checks if a given number is prime.
+    
+    Args:
+        n (int): The number to be checked.
+        
+    Returns:
+        bool: True if the number is prime, False otherwise.
+    """
+    if n < 2:
+        return False
+    if n in (2, 3):
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+def x_or_y(n, x, y):
+    """
+    A simple program which should return the value of x if n is 
+    a prime number and should return the value of y otherwise.
+    
+    Args:
+        n (int): The number to be checked.
+        x (any): The value to be returned if n is a prime number.
+        y (any): The value to be returned if n is not a prime number.
+        
+    Returns:
+        any: The value of x if n is a prime number, the value of y otherwise.
+    """
+    if is_prime(n):
+        return x
+    else:
+        return y

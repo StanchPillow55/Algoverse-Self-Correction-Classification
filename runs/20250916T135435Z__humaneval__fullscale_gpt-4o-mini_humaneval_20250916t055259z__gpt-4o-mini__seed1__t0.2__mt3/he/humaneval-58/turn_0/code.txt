@@ -1,0 +1,19 @@
+def common(l1: list, l2: list):
+    """Return sorted unique common elements for two lists.
+    >>> common([1, 4, 3, 34, 653, 2, 5], [5, 7, 1, 5, 9, 653, 121])
+    [1, 5, 653]
+    >>> common([5, 3, 2, 8], [3, 2])
+    [2, 3]
+    """
+    # Step 1: Convert lists to sets
+    set1 = set(l1)
+    set2 = set(l2)
+    
+    # Step 2: Find common elements using intersection
+    common_elements = set1 & set2  # or set1.intersection(set2)
+    
+    # Step 3: Sort the common elements and convert to a list
+    sorted_common = sorted(common_elements)
+    
+    # Step 4: Return the sorted list of common elements
+    return sorted_common

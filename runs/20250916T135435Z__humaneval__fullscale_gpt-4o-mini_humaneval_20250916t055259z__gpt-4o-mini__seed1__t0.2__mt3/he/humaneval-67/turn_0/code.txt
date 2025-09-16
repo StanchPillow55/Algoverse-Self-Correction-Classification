@@ -1,0 +1,30 @@
+def fruit_distribution(s, n):
+    """
+    Given a string representing the number of apples and oranges, and an integer representing 
+    the total number of fruits in the basket, return the number of mango fruits in the basket.
+    
+    Parameters:
+    s (str): A string that contains the number of apples and oranges.
+    n (int): The total number of fruits in the basket.
+    
+    Returns:
+    int: The number of mango fruits in the basket.
+    """
+    
+    # Split the string to extract the numbers of apples and oranges
+    parts = s.split()
+    
+    # Extract the number of apples and oranges
+    apples = int(parts[0])  # The first part is the number of apples
+    oranges = int(parts[4])  # The fifth part is the number of oranges
+    
+    # Calculate the number of mangoes
+    mangoes = n - (apples + oranges)
+    
+    return mangoes
+
+# Example test cases
+print(fruit_distribution("5 apples and 6 oranges", 19))  # Output: 8
+print(fruit_distribution("0 apples and 1 oranges", 3))   # Output: 2
+print(fruit_distribution("2 apples and 3 oranges", 100)) # Output: 95
+print(fruit_distribution("100 apples and 1 oranges", 120)) # Output: 19

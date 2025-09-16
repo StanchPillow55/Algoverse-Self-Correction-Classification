@@ -1,0 +1,24 @@
+def choose_num(x, y):
+    """This function takes two positive numbers x and y and returns the
+    biggest even integer number that is in the range [x, y] inclusive. If 
+    there's no such number, then the function should return -1.
+
+    For example:
+    choose_num(12, 15) = 14
+    choose_num(13, 12) = -1
+    """
+    # Check if the input numbers are positive
+    if x <= 0 or y <= 0:
+        return -1
+
+    # Determine the range of numbers to consider
+    start = min(x, y)
+    end = max(x, y)
+
+    # Iterate through the range and find the biggest even integer
+    biggest_even = -1
+    for num in range(start, end + 1):
+        if num % 2 == 0:
+            biggest_even = num
+
+    return biggest_even

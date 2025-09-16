@@ -1,0 +1,58 @@
+turn 1
+To solve the problem of multiplying the unit digits of two integers, we can break down the steps as follows:
+
+1. **Understanding Unit Digits**: The unit digit of a number is the last digit of that number. For example, the unit digit of 148 is 8, and the unit digit of 412 is 2.
+
+2. **Extracting Unit Digits**: To extract the unit digit of a number, we can use the modulus operator `%` with 10. This operation gives us the remainder when the number is divided by 10, which is effectively the last digit. For example:
+   - `148 % 10` gives `8`
+   - `412 % 10` gives `2`
+
+3. **Handling Negative Numbers**: The modulus operator in Python returns a non-negative result for negative numbers as well. For example:
+   - `-15 % 10` gives `5`, which is the correct unit digit.
+
+4. **Multiplying the Unit Digits**: Once we have the unit digits of both numbers, we simply multiply them together to get the result.
+
+5. **Returning the Result**: Finally, we return the product of the two unit digits.
+
+Now, let's implement the function based on this reasoning:
+
+```python
+def multiply(a, b):
+    """Complete the function that takes two integers and returns 
+    the product of their unit digits.
+    Assume the input is always valid.
+    Examples:
+    multiply(148, 412) should return 16.
+    multiply(19, 28) should return 72.
+    multiply(2020, 1851) should return 0.
+    multiply(14,-15) should return 20.
+    """
+    # Extract the unit digits
+    unit_digit_a = abs(a) % 10  # Get the unit digit of a
+    unit_digit_b = abs(b) % 10  # Get the unit digit of b
+    
+    # Calculate the product of the unit digits
+    product = unit_digit_a * unit_digit_b
+    
+    return product
+```
+
+### Explanation of the Code:
+- We define the function `multiply` that takes two parameters, `a` and `b`.
+- We use `abs()` to ensure that we are working with the absolute value of the numbers when extracting the unit digits. This ensures that negative numbers are handled correctly.
+- We calculate the unit digits using the modulus operation.
+- We multiply the two unit digits together and store the result in the variable `product`.
+- Finally, we return the `product`.
+
+### Testing the Function:
+We can test the function with the provided examples to ensure it works as expected:
+
+```python
+print(multiply(148, 412))  # Output: 16
+print(multiply(19, 28))    # Output: 72
+print(multiply(2020, 1851)) # Output: 0
+print(multiply(14, -15))   # Output: 20
+```
+
+This implementation should correctly compute the product of the unit digits for any valid integer inputs.
+PASS: All tests passed

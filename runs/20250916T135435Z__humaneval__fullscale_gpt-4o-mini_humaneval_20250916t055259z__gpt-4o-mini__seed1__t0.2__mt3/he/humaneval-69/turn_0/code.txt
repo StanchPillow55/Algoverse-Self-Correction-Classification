@@ -1,0 +1,23 @@
+def search(lst):
+    # Step 1: Count the frequency of each integer in the list
+    frequency = {}
+    for num in lst:
+        if num > 0:  # We only care about positive integers
+            if num in frequency:
+                frequency[num] += 1
+            else:
+                frequency[num] = 1
+    
+    # Step 2: Find the greatest integer that meets the frequency condition
+    max_value = -1  # Start with -1, which is the return value if no valid integer is found
+    for num, freq in frequency.items():
+        if freq >= num:  # Check if the frequency is greater than or equal to the integer itself
+            max_value = max(max_value, num)  # Update max_value if we find a greater valid integer
+    
+    # Step 3: Return the result
+    return max_value
+
+# Example test cases
+print(search([4, 1, 2, 2, 3, 1]))  # Expected output: 2
+print(search([1, 2, 2, 3, 3, 3, 4, 4, 4]))  # Expected output: 3
+print(search([5, 5, 4, 4, 4]))  # Expected output: -1

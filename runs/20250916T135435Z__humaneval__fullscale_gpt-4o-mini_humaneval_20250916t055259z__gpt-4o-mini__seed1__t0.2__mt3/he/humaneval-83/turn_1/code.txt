@@ -1,0 +1,27 @@
+def starts_one_ends(n):
+    """
+    Given a positive integer n, return the count of the numbers of n-digit
+    positive integers that start or end with 1.
+    """
+    if n < 1:
+        return 0  # Since n must be a positive integer
+    
+    # Count of numbers starting with '1'
+    count_starting_with_1 = 10 ** (n - 1)
+    
+    # Count of numbers ending with '1'
+    if n == 1:
+        count_ending_with_1 = 1  # Only the number '1'
+    else:
+        count_ending_with_1 = 9 * (10 ** (n - 2))
+    
+    # Count of numbers starting and ending with '1'
+    if n >= 3:
+        count_both = 10 ** (n - 2)
+    else:
+        count_both = 0  # For n = 1 or n = 2, there are no such numbers
+    
+    # Total count
+    total_count = count_starting_with_1 + count_ending_with_1 - count_both
+    
+    return total_count

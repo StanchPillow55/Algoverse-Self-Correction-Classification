@@ -1,0 +1,39 @@
+def is_prime(num: int) -> bool:
+    """Check if a number is prime."""
+    if num <= 1:
+        return False
+    if num <= 3:
+        return True
+    if num % 2 == 0 or num % 3 == 0:
+        return False
+    i = 5
+    while i * i <= num:
+        if num % i == 0 or num % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+def fibonacci_generator():
+    """Generate Fibonacci numbers indefinitely."""
+    a, b = 0, 1
+    while True:
+        yield b  # We yield b because we want the Fibonacci sequence starting from F(1)
+        a, b = b, a + b
+
+def prime_fib(n: int) -> int:
+    """
+    Returns the n-th Fibonacci number that is also prime.
+    """
+    count = 0
+    for fib in fibonacci_generator():
+        if is_prime(fib):
+            count += 1
+            if count == n:
+                return fib
+
+# Example usage:
+# print(prime_fib(1))  # Should return 2
+# print(prime_fib(2))  # Should return 3
+# print(prime_fib(3))  # Should return 5
+# print(prime_fib(4))  # Should return 13
+# print(prime_fib(5))  # Should return 89

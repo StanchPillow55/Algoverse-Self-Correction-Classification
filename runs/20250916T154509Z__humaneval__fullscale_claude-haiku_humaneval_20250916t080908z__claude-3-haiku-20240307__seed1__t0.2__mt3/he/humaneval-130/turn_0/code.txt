@@ -1,0 +1,31 @@
+def tri(n):
+    """
+    Returns a list of the first n + 1 numbers of the Tribonacci sequence.
+
+    Args:
+        n (int): A non-negative integer.
+
+    Returns:
+        list: A list of the first n + 1 Tribonacci numbers.
+    """
+    def tribonacci(n):
+        """
+        Calculates the nth Tribonacci number.
+
+        Args:
+            n (int): A non-negative integer.
+
+        Returns:
+            int: The nth Tribonacci number.
+        """
+        if n == 1:
+            return 3
+        elif n % 2 == 0:
+            return 1 + n // 2
+        else:
+            return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n + 1)
+
+    result = []
+    for i in range(n + 1):
+        result.append(tribonacci(i))
+    return result

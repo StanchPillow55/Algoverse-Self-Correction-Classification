@@ -1,0 +1,22 @@
+def sum_to_n(n: int) -> int:
+    """sum_to_n is a function that sums numbers from 1 to n.
+    >>> sum_to_n(30)
+    465
+    >>> sum_to_n(100)
+    5050
+    >>> sum_to_n(5)
+    15
+    >>> sum_to_n(10)
+    55
+    >>> sum_to_n(1)
+    1
+    """
+    # Using the formula to calculate the sum of the first n natural numbers
+    return n * (n + 1) // 2  # Using integer division to ensure the result is an integer
+
+# Testing the function with provided examples
+print(sum_to_n(30))  # Expected output: 465
+print(sum_to_n(100)) # Expected output: 5050
+print(sum_to_n(5))   # Expected output: 15
+print(sum_to_n(10))  # Expected output: 55
+print(sum_to_n(1))   # Expected output: 1

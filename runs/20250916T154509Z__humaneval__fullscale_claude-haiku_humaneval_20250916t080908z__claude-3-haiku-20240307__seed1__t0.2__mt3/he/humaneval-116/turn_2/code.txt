@@ -1,0 +1,12 @@
+def sort_array(arr):
+    """
+    Sort an array of non-negative integers according to the number of ones in their binary representation.
+    If two numbers have the same number of ones, sort them based on their decimal value.
+
+    Args:
+        arr (list): An array of non-negative integers.
+
+    Returns:
+        list: The sorted array.
+    """
+    return sorted(arr, key=lambda x: (bin(x).count('1'), x))

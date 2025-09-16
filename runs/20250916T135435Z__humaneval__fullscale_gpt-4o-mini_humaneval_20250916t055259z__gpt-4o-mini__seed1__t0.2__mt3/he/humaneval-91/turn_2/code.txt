@@ -1,0 +1,40 @@
+def is_bored(S):
+    """
+    Count the number of sentences that start with the word "I".
+    
+    Parameters:
+    S (str): A string containing sentences.
+    
+    Returns:
+    int: The number of sentences that start with "I".
+    """
+    # Define the sentence delimiters
+    delimiters = '.!?'
+    
+    # Split the string into sentences using the delimiters
+    sentences = []
+    current_sentence = []
+    
+    for char in S:
+        if char in delimiters:
+            # Join the current sentence and strip whitespace, then add to the list
+            sentences.append(''.join(current_sentence).strip())
+            current_sentence = []  # Reset for the next sentence
+        else:
+            current_sentence.append(char)
+    
+    # Don't forget to add the last sentence if there's no delimiter at the end
+    if current_sentence:
+        sentences.append(''.join(current_sentence).strip())
+    
+    # Count the sentences that start with "I"
+    count = 0
+    for sentence in sentences:
+        if sentence.startswith("I"):
+            count += 1
+            
+    return count
+
+# Example usage
+print(is_bored("Hello world"))  # Output: 0
+print(is_bored("The sky is blue. The sun is shining. I love this weather"))  # Output: 1

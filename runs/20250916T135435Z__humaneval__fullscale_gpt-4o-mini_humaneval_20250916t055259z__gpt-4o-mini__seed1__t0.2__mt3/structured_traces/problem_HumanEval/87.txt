@@ -1,0 +1,72 @@
+turn 1
+To solve the problem of finding the coordinates of a specific integer `x` in a 2D list (or nested list), we need to follow a systematic approach. Here's how we can break down the problem:
+
+### Step-by-Step Reasoning
+
+1. **Understanding the Input and Output**:
+   - We have a 2D list `lst` where each row can have a different number of columns.
+   - We need to find all occurrences of the integer `x` in this list.
+   - For each occurrence, we will return its coordinates as a tuple `(row_index, column_index)`.
+   - The output should be sorted first by the row index in ascending order and then by the column index in descending order.
+
+2. **Iterating Through the List**:
+   - We will loop through each row of the list using an index to keep track of the row number.
+   - For each row, we will loop through its elements to check if they match `x`.
+   - If a match is found, we will store the coordinates in a list.
+
+3. **Sorting the Coordinates**:
+   - After collecting all the coordinates, we will sort them.
+   - The primary sort will be by the row index (ascending), and the secondary sort will be by the column index (descending).
+
+4. **Edge Cases**:
+   - If the input list is empty, we should return an empty list.
+   - If `x` is not found in the list, we should also return an empty list.
+
+### Implementation
+
+Now that we have a clear understanding of the steps involved, we can implement the function `get_row`.
+
+```python
+def get_row(lst, x):
+    """
+    Given a 2D list (nested lists) and an integer x, find all occurrences of x
+    and return a list of tuples representing their coordinates (row, column).
+    The output should be sorted by rows in ascending order and by columns in descending order.
+    """
+    coordinates = []
+    
+    # Iterate through each row with its index
+    for row_index, row in enumerate(lst):
+        # Iterate through each element in the row with its index
+        for col_index, value in enumerate(row):
+            # Check if the current value matches x
+            if value == x:
+                # Append the coordinate (row_index, col_index) to the list
+                coordinates.append((row_index, col_index))
+    
+    # Sort the coordinates: first by row (ascending), then by column (descending)
+    coordinates.sort(key=lambda coord: (coord[0], -coord[1]))
+    
+    return coordinates
+
+# Example usage:
+print(get_row([
+    [1, 2, 3, 4, 5, 6],
+    [1, 2, 3, 4, 1, 6],
+    [1, 2, 3, 4, 5, 1]
+], 1))  # Output: [(0, 0), (1, 4), (1, 0), (2, 5), (2, 0)]
+
+print(get_row([], 1))  # Output: []
+print(get_row([[], [1], [1, 2, 3]], 3))  # Output: [(2, 2)]
+```
+
+### Explanation of the Code:
+- We define the function `get_row` that takes a 2D list `lst` and an integer `x`.
+- We initialize an empty list `coordinates` to store the found coordinates.
+- We use `enumerate` to loop through each row and its index, and then through each element in the row.
+- If an element matches `x`, we append its coordinates to `coordinates`.
+- Finally, we sort the list of coordinates using a lambda function that sorts by the first element (row index) in ascending order and by the second element (column index) in descending order.
+- The sorted list is returned as the output. 
+
+This implementation is efficient and straightforward, adhering to the problem requirements.
+PASS: All tests passed

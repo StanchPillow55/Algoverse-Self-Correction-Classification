@@ -1,0 +1,68 @@
+turn 1
+To solve the problem of flipping the case of characters in a given string, we need to follow a systematic approach. Let's break down the steps involved in this task:
+
+### Step 1: Understanding the Problem
+The goal is to create a function `flip_case` that takes a string as input and returns a new string where:
+- All lowercase letters are converted to uppercase.
+- All uppercase letters are converted to lowercase.
+- Non-alphabetic characters (like numbers, punctuation, etc.) should remain unchanged.
+
+### Step 2: Analyzing the Requirements
+- We need to iterate through each character in the input string.
+- For each character, we need to check if it is lowercase or uppercase.
+- We can use Python's built-in string methods:
+  - `str.islower()` to check if a character is lowercase.
+  - `str.isupper()` to check if a character is uppercase.
+  - `str.upper()` to convert a character to uppercase.
+  - `str.lower()` to convert a character to lowercase.
+
+### Step 3: Plan the Implementation
+1. Initialize an empty list to store the transformed characters.
+2. Loop through each character in the input string:
+   - If the character is lowercase, convert it to uppercase and append it to the list.
+   - If the character is uppercase, convert it to lowercase and append it to the list.
+   - If the character is neither, append it unchanged.
+3. Join the list of characters into a single string.
+4. Return the resulting string.
+
+### Step 4: Implement the Function
+Now, let's implement the function based on the plan.
+
+```python
+def flip_case(string: str) -> str:
+    """ For a given string, flip lowercase characters to uppercase and uppercase to lowercase.
+    >>> flip_case('Hello')
+    'hELLO'
+    """
+    # Initialize an empty list to hold the flipped characters
+    flipped_chars = []
+    
+    # Iterate through each character in the input string
+    for char in string:
+        if char.islower():
+            # If the character is lowercase, convert to uppercase
+            flipped_chars.append(char.upper())
+        elif char.isupper():
+            # If the character is uppercase, convert to lowercase
+            flipped_chars.append(char.lower())
+        else:
+            # If it's neither, keep the character unchanged
+            flipped_chars.append(char)
+    
+    # Join the list of characters into a single string and return it
+    return ''.join(flipped_chars)
+
+# Example usage
+print(flip_case('Hello'))  # Output: 'hELLO'
+```
+
+### Explanation of the Code
+- We define the function `flip_case` that takes a single argument `string`.
+- We create an empty list `flipped_chars` to store the modified characters.
+- We loop through each character in the input string:
+  - We check if the character is lowercase or uppercase and append the appropriate case-flipped version to the list.
+  - If the character is not an alphabetic character, we append it unchanged.
+- Finally, we use `''.join(flipped_chars)` to concatenate the list into a single string and return it.
+
+This implementation is efficient and straightforward, leveraging Python's string methods to handle case conversion. The function is also flexible enough to handle any string input, including those with special characters.
+PASS: All tests passed

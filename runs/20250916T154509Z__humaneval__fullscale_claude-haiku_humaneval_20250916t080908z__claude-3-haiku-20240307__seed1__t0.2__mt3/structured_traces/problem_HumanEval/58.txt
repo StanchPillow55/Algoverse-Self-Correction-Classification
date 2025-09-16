@@ -1,0 +1,48 @@
+turn 1
+Certainly! Let's go through the problem step by step and provide a complete solution.
+
+Reasoning Process:
+
+1. **Understanding the Problem**: The problem requires us to write a function `common` that takes two lists `l1` and `l2` as input and returns a sorted list of unique common elements between the two lists.
+
+2. **Approach**: To solve this problem, we can follow these steps:
+   a. Convert both input lists to sets to remove duplicates.
+   b. Find the intersection of the two sets to get the common elements.
+   c. Convert the intersection set back to a list and sort it.
+
+3. **Explanation**:
+   a. Converting the lists to sets removes duplicates, which is a requirement of the problem.
+   b. Finding the intersection of the two sets gives us the common elements between the two lists.
+   c. Sorting the resulting list ensures that the output is in sorted order, as required by the problem.
+
+4. **Implementation**:
+
+```python
+def common(l1: list, l2: list) -> list:
+    """Return sorted unique common elements for two lists.
+    >>> common([1, 4, 3, 34, 653, 2, 5], [5, 7, 1, 5, 9, 653, 121])
+    [1, 5, 653]
+    >>> common([5, 3, 2, 8], [3, 2])
+    [2, 3]
+    """
+    # Convert the input lists to sets to remove duplicates
+    set1 = set(l1)
+    set2 = set(l2)
+
+    # Find the intersection of the two sets to get the common elements
+    common_elements = set1.intersection(set2)
+
+    # Convert the intersection set back to a list and sort it
+    return sorted(list(common_elements))
+```
+
+Explanation of the implementation:
+
+1. We define the `common` function that takes two lists `l1` and `l2` as input and returns a list of sorted unique common elements.
+2. Inside the function, we convert the input lists `l1` and `l2` to sets `set1` and `set2`, respectively. This removes any duplicates from the lists.
+3. We then use the `intersection` method of the sets to find the common elements between `set1` and `set2`.
+4. Finally, we convert the resulting intersection set back to a list and sort it using the `sorted` function.
+5. The function returns the sorted list of unique common elements.
+
+The provided docstring includes two example usages of the `common` function, which demonstrate the expected behavior of the function.
+PASS: All tests passed

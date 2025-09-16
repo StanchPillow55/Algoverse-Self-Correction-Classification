@@ -1,0 +1,18 @@
+def decode_shift(s: str) -> str:
+    """
+    Takes as input a string encoded with the encode_shift function.
+    Returns the decoded string by shifting every character back by 5 in the alphabet.
+    """
+    decoded_chars = []
+    
+    for ch in s:
+        # Shift back by 5
+        new_char = chr(((ord(ch) - 5 - ord('a')) % 26) + ord('a'))
+        decoded_chars.append(new_char)
+    
+    return "".join(decoded_chars)
+
+# Example usage:
+encoded_string = encode_shift("hello")  # This would encode "hello" to "mjqqt"
+decoded_string = decode_shift(encoded_string)  # This should decode back to "hello"
+print(decoded_string)  # Output should be "hello"

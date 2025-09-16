@@ -1,0 +1,29 @@
+def compare_one(a, b):
+    def normalize(value):
+        """Convert the input to a float for comparison, handling strings."""
+        if isinstance(value, str):
+            # Replace comma with dot for float conversion
+            value = value.replace(',', '.')
+        return float(value)
+
+    # Normalize both inputs
+    try:
+        norm_a = normalize(a)
+        norm_b = normalize(b)
+    except ValueError:
+        # If conversion fails, we can't compare them as numbers
+        return None
+
+    # Compare normalized values
+    if norm_a == norm_b:
+        return None
+    elif norm_a > norm_b:
+        return a
+    else:
+        return b
+
+# Test cases
+print(compare_one(1, 2.5))       # ➞ 2.5
+print(compare_one(1, "2,3"))     # ➞ "2,3"
+print(compare_one("5,1", "6"))   # ➞ "6"
+print(compare_one("1", 1))        # ➞ None

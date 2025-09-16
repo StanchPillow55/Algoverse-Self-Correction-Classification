@@ -1,0 +1,18 @@
+def simplify(x, n):
+    """Check if the product of two fractions x and n is a whole number."""
+    
+    # Split the fractions into numerator and denominator
+    num_x, denom_x = map(int, x.split('/'))
+    num_n, denom_n = map(int, n.split('/'))
+    
+    # Calculate the product's numerator and denominator
+    product_numerator = num_x * num_n
+    product_denominator = denom_x * denom_n
+    
+    # Check if the product is a whole number
+    return product_numerator % product_denominator == 0
+
+# Test cases
+print(simplify("1/5", "5/1"))  # True
+print(simplify("1/6", "2/1"))  # False
+print(simplify("7/10", "10/2"))  # False

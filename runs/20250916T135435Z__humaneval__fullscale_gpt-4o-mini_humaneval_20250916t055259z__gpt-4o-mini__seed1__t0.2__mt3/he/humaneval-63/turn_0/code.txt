@@ -1,0 +1,26 @@
+def fibfib(n: int) -> int:
+    """Compute the n-th element of the FibFib number sequence."""
+    # Handle base cases
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 0
+    elif n == 2:
+        return 1
+    
+    # Initialize the first three FibFib numbers
+    a, b, c = 0, 0, 1  # fibfib(0), fibfib(1), fibfib(2)
+    
+    # Compute fibfib(n) for n >= 3
+    for i in range(3, n + 1):
+        # fibfib(i) = fibfib(i-1) + fibfib(i-2) + fibfib(i-3)
+        next_value = a + b + c
+        # Update the last three values
+        a, b, c = b, c, next_value
+    
+    return c  # c holds fibfib(n)
+
+# Testing the function with provided examples
+print(fibfib(1))  # Expected output: 0
+print(fibfib(5))  # Expected output: 4
+print(fibfib(8))  # Expected output: 24

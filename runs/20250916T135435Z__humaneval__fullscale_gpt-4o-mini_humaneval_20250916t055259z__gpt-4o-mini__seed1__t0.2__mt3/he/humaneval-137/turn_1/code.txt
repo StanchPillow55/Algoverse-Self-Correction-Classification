@@ -1,0 +1,43 @@
+def convert_to_number(value):
+    """Convert a string representation of a number to a float or int."""
+    if isinstance(value, (int, float)):
+        return value
+    
+    if isinstance(value, str):
+        # Replace comma with dot for decimal conversion
+        value = value.replace(',', '.')
+        try:
+            # Try to convert to float first
+            num = float(value)
+            # If it's a whole number, convert to int
+            if num.is_integer():
+                return int(num)
+            return num
+        except ValueError:
+            # If conversion fails, return None
+            return None
+    
+    return None  # If the value is not a valid type
+
+def compare_one(a, b):
+    """Compare two values and return the larger one or None if equal."""
+    # Convert both values to numbers
+    num_a = convert_to_number(a)
+    num_b = convert_to_number(b)
+    
+    # If both are None (invalid input), return None
+    if num_a is None or num_b is None:
+        return None
+    
+    # If they are equal, return None
+    if num_a == num_b:
+        return None
+    
+    # Return the larger value in its original type
+    return a if num_a > num_b else b
+
+# Test cases
+print(compare_one(1, 2.5))        # ➞ 2.5
+print(compare_one(1, "2,3"))      # ➞ "2,3"
+print(compare_one("5,1", "6"))    # ➞ "6"
+print(compare_one("1", 1))         # ➞ None

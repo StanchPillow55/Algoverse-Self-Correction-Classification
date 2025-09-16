@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""
+Fix outdated Claude model identifiers in the codebase.
+
+This script identifies and optionally fixes instances of the outdated
+claude-3-sonnet-20240229 model identifier that causes 404 API errors.
+"""
+
+import os
+import json
+import re
+from pathlib import Path
+from typing import List, Dict, Tuple
+
+# Model identifier mappings
+OLD_TO_NEW_MODELS = {
+    "claude-3-sonnet-20240229": "claude-3-5-sonnet-20241022",
+    # Add other mappings if needed in the future
+}
+
+def find_files_with_old_models(root_dir: str) -> List[Tuple[str, List[str]]]:
+    """Find files containing outdated Claude model identifiers."""
+    found_files = []
+    root_path = Path(root_dir)
+    
+    # File patterns to search
+    patterns = [
+        "**/*.json",      # Config files
+        "**/*.py",        # Python files
+        "**/*.yaml",      # YAML configs
+        "**/*.yml",       # YAML configs
+        "**/*.env*",      # Environment files
+        "**/*.toml",      # TOML configs
+    ]
+    
+    for pattern in patterns:
+        for file_path in root_path.glob(pattern):
+            if file_path.is_file():
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # Check for old model identifiers
+                    found_models = []
+                    for old_model, new_model in OLD_TO_NEW_MODELS.items():
+                        if old_model in content:
+                            # Find line numbers
+                            lines = content.split('\n')
+                            line_nums = [i+1 for i, line in enumerate(lines) if old_model in line]
+                            found_models.append(f"{old_model} -> {new_model} (lines: {line_nums})")
+                    
+                    if found_models:
+                        found_files.append((str(file_path), found_models))
+                        
+                except (UnicodeDecodeError, PermissionError):
+                    # Skip binary files or files we can't read
+                    continue
+    
+    return found_files
+
+def fix_file(file_path: str, dry_run: bool = True) -> bool:
+    """Fix outdated model identifiers in a file."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        original_content = content
+        
+        # Replace old model identifiers
+        for old_model, new_model in OLD_TO_NEW_MODELS.items():
+            content = content.replace(old_model, new_model)
+        
+        if content != original_content:
+            if not dry_run:
+                # Create backup
+                backup_path = f"{file_path}.backup"
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    f.write(original_content)
+                
+                # Write updated content
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                
+                print(f"✅ Fixed: {file_path} (backup: {backup_path})")
+            else:
+                print(f"🔍 Would fix: {file_path}")
+            return True
+        
+        return False
+        
+    except Exception as e:
+        print(f"❌ Error fixing {file_path}: {e}")
+        return False
+
+def main():
+    """Main function."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Fix outdated Claude model identifiers")
+    parser.add_argument("--root-dir", default=".", help="Root directory to search (default: current directory)")
+    parser.add_argument("--fix", action="store_true", help="Actually fix the files (default: dry run)")
+    parser.add_argument("--exclude", nargs="*", default=[".git", "__pycache__", ".venv", "node_modules"], 
+                       help="Directories to exclude")
+    
+    args = parser.parse_args()
+    
+    print("🔍 Searching for outdated Claude model identifiers...")
+    print(f"Root directory: {os.path.abspath(args.root_dir)}")
+    print(f"Mode: {'FIX' if args.fix else 'DRY RUN'}")
+    print("-" * 60)
+    
+    # Find files with old model identifiers
+    found_files = find_files_with_old_models(args.root_dir)
+    
+    if not found_files:
+        print("✅ No files found with outdated Claude model identifiers!")
+        return
+    
+    print(f"Found {len(found_files)} files with outdated model identifiers:\n")
+    
+    # Display findings
+    for file_path, models in found_files:
+        # Skip excluded directories
+        if any(excl in file_path for excl in args.exclude):
+            continue
+            
+        print(f"📄 {file_path}")
+        for model_info in models:
+            print(f"   {model_info}")
+        print()
+    
+    if args.fix:
+        print("\n" + "="*60)
+        print("🔧 FIXING FILES...")
+        print("="*60)
+        
+        fixed_count = 0
+        for file_path, _ in found_files:
+            # Skip excluded directories
+            if any(excl in file_path for excl in args.exclude):
+                continue
+                
+            if fix_file(file_path, dry_run=False):
+                fixed_count += 1
+        
+        print(f"\n✅ Fixed {fixed_count} files!")
+        print("\n💡 Next steps:")
+        print("1. Review the changes in the fixed files")
+        print("2. Re-run any failed Claude Sonnet experiments")
+        print("3. Verify the API calls now succeed")
+        
+    else:
+        print("💡 To actually fix these files, run with --fix flag:")
+        print(f"   python {__file__} --fix")
+
+if __name__ == "__main__":
+    main()

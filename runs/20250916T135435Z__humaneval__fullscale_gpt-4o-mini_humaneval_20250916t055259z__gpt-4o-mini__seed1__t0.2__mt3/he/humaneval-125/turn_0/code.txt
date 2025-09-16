@@ -1,0 +1,24 @@
+def split_words(txt):
+    # Check for whitespace
+    if any(char.isspace() for char in txt):
+        return txt.split()
+    
+    # Check for commas
+    elif ',' in txt:
+        return txt.split(',')
+    
+    # Count lowercase letters in odd positions
+    else:
+        odd_count = 0
+        for char in txt:
+            if char.islower():
+                # Calculate the position in the alphabet (0-based)
+                position = ord(char) - ord('a')
+                if position % 2 == 0:  # Check if the position is odd (0-based)
+                    odd_count += 1
+        return odd_count
+
+# Test cases
+print(split_words("Hello world!"))  # ➞ ["Hello", "world!"]
+print(split_words("Hello,world!"))   # ➞ ["Hello", "world!"]
+print(split_words("abcdef"))          # ➞ 3

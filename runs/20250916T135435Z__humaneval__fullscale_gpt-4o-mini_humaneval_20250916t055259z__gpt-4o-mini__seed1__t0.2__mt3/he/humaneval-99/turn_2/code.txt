@@ -1,0 +1,20 @@
+def closest_integer(value):
+    # Convert the string input to a float
+    num = float(value)
+    
+    # Use the built-in round function to get the nearest integer
+    rounded = round(num)
+    
+    # Check if the number is exactly halfway between two integers
+    if num - rounded == 0.5:  # Positive halfway case
+        return rounded + 1
+    elif num - rounded == -0.5:  # Negative halfway case
+        return rounded - 1
+    else:
+        return rounded
+
+# Testing the function with the provided examples
+print(closest_integer("10"))    # Expected output: 10
+print(closest_integer("15.3"))  # Expected output: 15
+print(closest_integer("14.5"))  # Expected output: 15
+print(closest_integer("-14.5")) # Expected output: -15
