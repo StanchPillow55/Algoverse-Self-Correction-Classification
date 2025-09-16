@@ -25,7 +25,7 @@ from src.utils.csv_output_formatter import CSVOutputFormatter
 
 # Reasoning extraction and CSV formatting
 from src.eval.reasoning_extractor import ReasoningExtractor
-from src.utils.csv_formatter import ReasoningCSVFormatter
+from src.eval.csv_formatter import ReasoningCSVFormatter
 
 mismatch_log = 'outputs/mismatches.log'
 
@@ -384,7 +384,7 @@ def run_dataset(
         summary_csv = csv_formatter.format_summary_results(traces, experiment_config) 
         turn_analysis_csv = csv_formatter.format_turn_analysis(traces)
         
-        from src.utils.csv_formatter import create_analysis_dashboard
+        from src.eval.csv_formatter import create_analysis_dashboard
         dashboard = create_analysis_dashboard(
             [results_csv, summary_csv, turn_analysis_csv], 
             output_dir / "csv_results"
@@ -488,6 +488,36 @@ def run_dataset(
         }
         writer.write_metrics(run_dir, metrics)
         writer.write_traces(run_dir, {'meta': asdict(meta), 'items': items})
+        
+        # NEW: Generate structured traces in desired format
+        try:
+            print("🔧 Generating structured trace outputs...")
+            
+            # Generate individual problem trace files
+            structured_files = []
+            for trace in traces:
+                problem_file = writer.write_structured_problem_trace(
+                    run_dir, trace['qid'], trace['turns']
+                )
+                structured_files.append(str(problem_file))
+                
+            # Generate flat JSON results with automatic dataset type detection
+            flat_json_file = writer.write_flat_json_results(run_dir, traces, "unknown")
+            
+            print(f"✅ Structured traces generated:")
+            print(f"  - Problem trace files: {len(structured_files)} files")
+            print(f"  - Flat JSON results: {flat_json_file}")
+            
+            # Add structured trace info to output
+            out['structured_traces'] = {
+                'problem_files': structured_files,
+                'flat_json': str(flat_json_file),
+                'format': 'desired_paper_format'
+            }
+            
+        except Exception as e:
+            print(f"⚠️ Structured trace generation failed: {e}")
+            # Don't fail the run if structured traces fail
     except Exception as _e:
         # Do not fail the run if writer errors; proceed silently (logged to stdout)
         print(f"WARN: tracing writer failed: {_e}")
