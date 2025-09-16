@@ -1,0 +1,116 @@
+{
+  "summary": {
+    "total_experiments": 24,
+    "models_tested": [
+      "llama-3-70b",
+      "gpt-4",
+      "gpt-4o",
+      "gpt-4o-mini",
+      "claude-haiku",
+      "claude-sonnet"
+    ],
+    "datasets_tested": [
+      "gsm8k",
+      "superglue",
+      "toolqa",
+      "mathbench"
+    ],
+    "accuracy_range": {
+      "min": 0.012,
+      "max": 1.0,
+      "mean": 0.6445416666666667
+    }
+  },
+  "model_performance": {
+    "llama-3-70b": {
+      "average_accuracy": 0.22125,
+      "accuracy_std": 0.29073398494156133,
+      "best_dataset": "mathbench",
+      "worst_dataset": "superglue",
+      "total_cost": 1.05,
+      "cost_efficiency": 0.9529761904761905
+    },
+    "gpt-4": {
+      "average_accuracy": 0.82075,
+      "accuracy_std": 0.229028928303828,
+      "best_dataset": "mathbench",
+      "worst_dataset": "gsm8k",
+      "total_cost": 45.0,
+      "cost_efficiency": 0.08445833333333333
+    },
+    "gpt-4o": {
+      "average_accuracy": 0.8722500000000001,
+      "accuracy_std": 0.21693374564599205,
+      "best_dataset": "superglue",
+      "worst_dataset": "gsm8k",
+      "total_cost": 3.75,
+      "cost_efficiency": 1.0718333333333334
+    },
+    "gpt-4o-mini": {
+      "average_accuracy": 0.5932499999999999,
+      "accuracy_std": 0.3624319476352308,
+      "best_dataset": "mathbench",
+      "worst_dataset": "superglue",
+      "total_cost": 0.22499999999999998,
+      "cost_efficiency": 12.286111111111111
+    },
+    "claude-haiku": {
+      "average_accuracy": 0.46475,
+      "accuracy_std": 0.3281294206051427,
+      "best_dataset": "toolqa",
+      "worst_dataset": "mathbench",
+      "total_cost": 0.375,
+      "cost_efficiency": 5.678333333333334
+    },
+    "claude-sonnet": {
+      "average_accuracy": 0.895,
+      "accuracy_std": 0.16007081766101733,
+      "best_dataset": "superglue",
+      "worst_dataset": "gsm8k",
+      "total_cost": 4.5,
+      "cost_efficiency": 0.9025
+    }
+  },
+  "dataset_analysis": {
+    "gsm8k": {
+      "average_accuracy": 0.41616666666666663,
+      "accuracy_std": 0.18062161184826878,
+      "best_model": "claude-sonnet",
+      "worst_model": "llama-3-70b",
+      "difficulty_rank": 2.3353333333333337
+    },
+    "superglue": {
+      "average_accuracy": 0.5813333333333334,
+      "accuracy_std": 0.42436902180374414,
+      "best_model": "claude-sonnet",
+      "worst_model": "llama-3-70b",
+      "difficulty_rank": 1.6746666666666665
+    },
+    "toolqa": {
+      "average_accuracy": 0.7953333333333333,
+      "accuracy_std": 0.3659479015743452,
+      "best_model": "claude-sonnet",
+      "worst_model": "llama-3-70b",
+      "difficulty_rank": 0.8186666666666667
+    },
+    "mathbench": {
+      "average_accuracy": 0.7853333333333333,
+      "accuracy_std": 0.3032138958996877,
+      "best_model": "gpt-4",
+      "worst_model": "claude-haiku",
+      "difficulty_rank": 0.8586666666666667
+    }
+  },
+  "cost_analysis": {
+    "total_cost": 54.9,
+    "most_cost_efficient": "gpt-4o-mini",
+    "most_expensive": "gpt-4",
+    "cost_per_accuracy": 3.549033550972913
+  },
+  "insights": [
+    "Best overall performance: claude-sonnet on superglue (1.000)",
+    "Most cost-efficient: gpt-4o-mini on mathbench ($0.04 for 0.972 accuracy)",
+    "Most challenging dataset: claude-sonnet",
+    "Total experimental cost: $54.90"
+  ]
+}
