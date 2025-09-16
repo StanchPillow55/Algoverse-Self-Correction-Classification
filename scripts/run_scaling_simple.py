@@ -26,29 +26,29 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         "gpt-4": "openai",
         "claude-haiku": "anthropic",
         "claude-sonnet": "anthropic",
-        "claude-opus": "anthropic",
-        "llama-70b": "replicate"
-    }
-    
-    # Map display names to actual API model names
-    api_model_mapping = {
-        "gpt-4o-mini": "gpt-4o-mini",
-        "gpt-4o": "gpt-4o", 
-        "gpt-4": "gpt-4",
-        "claude-haiku": "claude-3-haiku-20240307",
-        # Update Sonnet to current ID; keep an explicit 3.5 alias
-        "claude-sonnet": "claude-3-5-sonnet-20241022",
-        "claude-sonnet-3.5": "claude-3-5-sonnet-20241022",
-        "claude-opus": "claude-3-opus-20240229",
-        "llama-70b": "meta/meta-llama-3-70b"
+        "claude-opus": "anthropic"
     }
     
     provider = model_mapping.get(model_name, "openai")
-    api_model_name = api_model_mapping.get(model_name, model_name)
     
     # Set environment variables for the model
     os.environ["PROVIDER"] = provider
     os.environ["DEMO_MODE"] = "0"  # Use real API
+    
+    if provider == "openai":
+        if "mini" in model_name:
+            os.environ["OPENAI_MODEL"] = "gpt-4o-mini"
+        elif "gpt-4o" in model_name:
+            os.environ["OPENAI_MODEL"] = "gpt-4o"
+        else:
+            os.environ["OPENAI_MODEL"] = "gpt-4"
+    elif provider == "anthropic":
+        if "haiku" in model_name:
+            os.environ["ANTHROPIC_MODEL"] = "claude-3-haiku-20240307"
+        elif "sonnet" in model_name:
+            os.environ["ANTHROPIC_MODEL"] = "claude-3-sonnet-20240229"
+        elif "opus" in model_name:
+            os.environ["ANTHROPIC_MODEL"] = "claude-3-opus-20240229"
     
     # Create output file
     output_file = output_dir / f"{model_name}_scaling_result.json"
@@ -60,7 +60,7 @@ def run_model_experiment(model_name, dataset_path, output_dir, max_turns=3):
         --out {output_file} \
         --max-turns {max_turns} \
         --provider {provider} \
-        --model {api_model_name}
+        --model {model_name}
     """
     
     print(f"Running: {model_name} on {dataset_path}")
@@ -107,10 +107,7 @@ def main():
         print("🚀 Phase 2: Medium Scale")
     else:
         # Phase 3: Full scale
-        if args.models == ["gpt-4o-mini", "claude-haiku", "gpt-4o"]:  # Default models
-            models = ["gpt-4o-mini", "claude-haiku", "gpt-4o", "claude-sonnet", "llama-70b", "gpt-4"]
-        else:
-            models = args.models
+        models = args.models
         print("🚀 Phase 3: Full Scale")
     
     print(f"Models: {', '.join(models)}")
