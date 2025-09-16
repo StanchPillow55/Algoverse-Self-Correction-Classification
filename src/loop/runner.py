@@ -219,7 +219,12 @@ def run_dataset(
         
         # Only run bias detection and confidence if enabled
         if enable_error_awareness:
-            bias, tconf = detect_bias(q, a0, ref, history)
+            bias, tconf = detect_bias(
+                q, a0, ref, history, 
+                reasoning_text=full_response_0,
+                execution_result=execution_details,
+                is_code_task=is_humaneval
+            )
         else:
             bias, tconf = "None", 0.5
         
@@ -255,14 +260,14 @@ def run_dataset(
                       task_type='humaneval' if is_humaneval else 'standard',
                       execution_details=execution_details if is_humaneval else None)
 
-        # Multi-turn loop only if enabled (GSM8K only)
-        if enable_multi_turn and not is_humaneval:
+        # Multi-turn loop for all datasets when enabled
+        if enable_multi_turn:
             acc_prev = acc0
             t = 1
             while t < max_turns and acc_prev == 0:
                 # Determine whether to reprompt
                 if enable_error_awareness:
-                    reprompt, template = select_template(bias, conf, bool(acc_prev), len(history))
+                    reprompt, template = select_template(bias, conf, bool(acc_prev), len(history), is_code_task=is_humaneval)
                 else:
                     # If error awareness is disabled, use a generic retry template
                     reprompt, template = True, "try_again_concise"
@@ -279,22 +284,38 @@ def run_dataset(
                                                                sample_id=sample_id, turn_number=t)
                 
                 # Save reasoning trace for this turn
+                dataset_type_turn = "code" if is_humaneval else "math"
                 reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
                     qid=sample_id, turn=t, reasoning_text=full_response_1,
-                    output_dir=output_dir, dataset_type="math"
+                    output_dir=output_dir, dataset_type=dataset_type_turn
                 )
                 
                 # Extract answer from reasoning trace
-                extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                if is_humaneval:
+                    extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_code_answer(
+                        full_response_1, task.get('entry_point', '')
+                    )
+                else:
+                    extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
                 a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
 
-                # For GSM8K follow-up turns, use EM
-                acc1 = gsm8k_em(a1, ref)
-                execution_details = {}
+                # Score based on task type
+                if is_humaneval:
+                    score_result_1 = score_humaneval_candidate(task, a1)
+                    execution_details = score_result_1.get('execution_result', {})
+                    acc1 = int(score_result_1.get('passed', False))
+                else:
+                    acc1 = gsm8k_em(a1, ref)
+                    execution_details = {}
 
                 # Only run bias detection and confidence if enabled (after the new response)
                 if enable_error_awareness:
-                    bias_after, tconf = detect_bias(q, a1, ref, history + turns)
+                    bias_after, tconf = detect_bias(
+                        q, a1, ref, history + turns,
+                        reasoning_text=full_response_1,
+                        execution_result=execution_details,
+                        is_code_task=is_humaneval
+                    )
                 else:
                     bias_after, tconf = "None", 0.5
 
