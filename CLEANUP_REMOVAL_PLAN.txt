@@ -1,0 +1,70 @@
+# REPOSITORY CLEANUP REMOVAL PLAN
+
+## PHASE 1: Remove Duplicate/Legacy Code
+- ./legacy/ (entire directory - legacy implementations)
+- ./Algoverse-Self-Correction-Classification/ (duplicate nested repository)
+- ./old-experiments/ (old experiment artifacts)
+- ./temp_eval/ (temporary evaluation files)
+
+## PHASE 2: Remove Redundant Scripts  
+- ./scripts/analyze_outputs.py (duplicate of main analyzer)
+- ./scripts/analyze_results_simple.py (redundant)
+- ./scripts/analyze_scaling_simple.py (redundant)
+- ./scripts/run_scaling_simple.py (redundant)
+- ./scripts/run_phase1_simple.py (redundant)
+- ./scripts/test_scaling_setup.py (dev test file)
+- ./scripts/test_scaling_setup_fixed.py (dev test file)
+- ./scripts/smoke_test_claude.py (dev test file)
+- ./scripts/test_cost_tracking.py (dev test file)
+- ./scripts/test_model_config.py (dev test file)
+- ./scripts/test_reasoning_traces.py (dev test file)
+
+## PHASE 3: Remove Analysis/Development Scripts (keep main analyzer)
+- ./detailed_csv_parsing_analysis.py (development script)
+- ./extract_reasoning_traces.py (superseded by main pipeline)
+- ./run_analysis_good_runs.py (specific analysis script)
+- ./targeted_bias_test.py (dev test)
+- ./targeted_smoke_test.py (dev test)
+- ./test_enhanced_bias_detection.py (dev test)
+- ./smoke_test_all_datasets.py (dev test)
+- ./smoke_test_real_datasets.py (dev test)
+
+## PHASE 4: Remove Build/Download/Preparation Scripts
+- ./scripts/build_swebench_csv.py
+- ./scripts/download_code_dataset.py  
+- ./scripts/download_swebench.py
+- ./scripts/make_subsets.py
+- ./scripts/prepare_scaling_datasets.py
+- ./scripts/fetch_datasets.py
+- ./scripts/package_artifacts.py
+- ./setup_multimedia_sourcer.sh
+
+## PHASE 5: Remove Specific Task Scripts (keep generic ones)
+- ./scripts/eval_gsm8k.py (specific to GSM8K)
+- ./scripts/eval_humaneval.py (specific to HumanEval)  
+- ./scripts/run_gsm8k.py
+- ./scripts/run_humaneval.py
+- ./scripts/run_humaneval_sample.py
+- ./scripts/fix_claude_models.py
+- ./scripts/generate_corrected_gsm8k_metrics.py
+- ./scripts/reevaluate_gsm8k.py
+
+## PHASE 6: Remove Development/Test Files
+- ./tests/test_*.py (except essential ones for CI)
+- Test data files that aren't essential
+- Debug/log files
+- Temporary files
+
+## PRESERVE ALWAYS (SAFETY CHECK)
+- All files in KEY_FILES_TO_PRESERVE.txt
+- All configuration files in ./configs/
+- All essential data in ./data/scaling/
+- All output directories (./outputs/, ./runs/, ./full_scale_study_results/)
+- Package configuration (setup.py, requirements.txt, etc.)
+- Documentation (README.md, etc.)
+
+## VERIFICATION AFTER EACH PHASE
+1. Run demo pipeline test: `PYTHONPATH=. python src/main.py run --dataset test_demo.csv --max-turns 2 --provider demo`
+2. Run full-scale dry run: `PYTHONPATH=. python run_full_scale_study.py --dry-run --models gpt-4o-mini --datasets gsm8k`
+3. Check all imports still work
+4. Verify no broken dependencies

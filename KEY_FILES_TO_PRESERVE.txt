@@ -1,0 +1,101 @@
+# KEY FILES TO PRESERVE - Repository Cleanup
+
+## Core Pipeline Execution
+./run_full_scale_study.py
+./src/main.py
+./src/loop/runner.py
+
+## Dataset Handling + Imports
+./src/data/scaling_datasets.py
+./src/data/gsm8k_loader.py
+./src/data/humaneval_loader.py
+./src/utils/dataset_loader.py
+./src/utils/normalizer_gsm8k.py
+./src/eval/humaneval_scorer.py
+./src/utils/harness_parity.py
+
+## Experimental Setup (Teacher/Learner)
+./src/agents/learner.py
+./src/agents/teacher.py
+./src/agents/code_bias_detector.py
+./src/rts/policy.py
+./src/evaluator_feedback.py
+./src/rts/code_coaching_templates.py
+./rts_templates.json
+./src/scaling/model_registry.py
+./configs/scaling_models.json
+./configs/scaling_experiment.yaml
+
+## Automated Analysis
+./src/eval/reasoning_extractor.py
+./src/eval/csv_formatter.py
+./src/utils/csv_output_formatter.py
+./src/utils/result_aggregator.py
+./src/metrics/accuracy.py
+./src/utils/ci_bootstrap.py
+./src/utils/sigtests.py
+./src/analysis/power_law_analysis.py
+./src/analysis/cost_bias_analysis.py
+./analyze_experimental_results.py
+./src/scaling/analysis.py
+./src/utils/scaling_analyzer.py
+
+## Experiment Management
+./src/experiments/scaling_experiment_runner.py
+./src/experiments/scaling_runner.py
+./src/utils/tracing.py
+./src/utils/trace_logger.py
+./src/utils/model_manager.py
+./src/utils/multi_model_manager.py
+./src/utils/cost_tracker.py
+./src/utils/rate_limit.py
+
+## Critical Support Files
+./src/utils/enhanced_trace_formatter.py
+./src/utils/trace_formatter.py
+./src/eval/code_executor.py
+./src/utils/accuracy_metrics.py
+./src/utils/config.py
+./src/utils/error_types.py
+./src/reproducibility/artifact_packager.py
+
+## Configuration Files
+./configs/classification_config.yaml
+./configs/eval.yaml
+./configs/models.json
+./configs/run.yaml
+./configs/seeds.json
+./configs/stop_rules.yaml
+
+## Package Files
+./setup.py
+./requirements.txt
+./requirements.lock.txt
+./pytest.ini
+
+## __init__ files (required for imports)
+./src/__init__.py
+./src/agents/__init__.py
+./src/loop/__init__.py
+./src/rts/__init__.py
+./src/utils/__init__.py
+
+## Demo/Test Files
+./test_demo.csv
+
+## Essential Data Files
+./data/test_data.csv
+./data/scaling/
+./data/cache/
+
+## Documentation
+./README.md
+./QUICK_START_GUIDE.md
+./Makefile
+./.env
+./.gitignore
+
+## Essential Output Directories (keep structure)
+./outputs/
+./runs/
+./full_scale_study_results/
