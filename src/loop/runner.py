@@ -19,6 +19,14 @@ from src.data.humaneval_loader import load_humaneval_dataset, create_demo_humane
 from src.eval.humaneval_scorer import score_humaneval_candidate
 from src.data.gsm8k_loader import load_gsm8k_dataset
 
+# Enhanced trace formatting and CSV output
+from src.utils.enhanced_trace_formatter import EnhancedTraceFormatter
+from src.utils.csv_output_formatter import CSVOutputFormatter
+
+# Reasoning extraction and CSV formatting
+from src.eval.reasoning_extractor import ReasoningExtractor
+from src.eval.csv_formatter import ReasoningCSVFormatter
+
 mismatch_log = 'outputs/mismatches.log'
 
 def accuracy(answer: str, reference: str) -> int:
@@ -100,6 +108,10 @@ def run_dataset(
 
     learner = LearnerBot(provider=provider, model=model)
     traces: List[Dict[str, Any]] = []
+    
+    # Initialize reasoning extractor and CSV formatter for full reasoning traces
+    reasoning_extractor = ReasoningExtractor()
+    csv_formatter = ReasoningCSVFormatter(output_dir / "csv_results")
 
     # Load dataset - supports both CSV and HumanEval formats
     rows = _load_dataset(dataset_csv, subset)
@@ -142,23 +154,44 @@ def run_dataset(
         
         history: List[Dict[str, Any]] = []
         
-        # Prepare prompt for HumanEval vs standard tasks
+        # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
         if is_humaneval:
             prompt = (
-                "You are a careful Python programmer. Do not include explanations or tests in your output.\n\n"
-                "Implement the following Python function. Return the complete function definition (signature + body).\n"
-                "Do not include any text outside code.\n\nProblem:\n" + q + "\n\nOutput format: Provide only a single Python code block containing the full function definition."
+                "You are a Python programmer. Show your complete reasoning and thought process.\n\n"
+                "Think through the problem step by step, explain your approach, then implement the solution.\n"
+                "Include your reasoning, then provide the complete function definition.\n\nProblem:\n" + q + "\n\n"
+                "Please show your full reasoning process and then provide your implementation."
             )
         else:
             prompt = (
-                "You are a meticulous math solver. Think privately. Provide only the final numeric answer.\n\n"
-                "Solve the problem. Think silently and provide only the final numeric answer with no units.\n\nQuestion:\n" + q + "\n\nOutput format: a single line containing only the final number."
+                "You are a math problem solver. Show your complete reasoning and work.\n\n"
+                "Think through the problem step by step. Show all calculations and explain your reasoning.\n"
+                "Work through the problem completely and provide your final answer.\n\nQuestion:\n" + q + "\n\n"
+                "Please show all your work and reasoning, then state your final answer."
             )
         
-        # First attempt
-        a0, self_conf = learner.answer(prompt, history, template=None, 
-                                      experiment_id=experiment_id, dataset_name=dataset_name, 
-                                      sample_id=sample_id, turn_number=0)
+        # First attempt - Get full reasoning trace
+        raw_answer, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
+                                                        experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                        sample_id=sample_id, turn_number=0)
+        
+        # Save full reasoning trace to file
+        dataset_type = "code" if is_humaneval else "math"
+        reasoning_trace_file = reasoning_extractor.save_reasoning_trace(
+            qid=sample_id, turn=0, reasoning_text=full_response_0,
+            output_dir=output_dir, dataset_type=dataset_type
+        )
+        
+        # Extract final answer from reasoning trace
+        if is_humaneval:
+            extracted_answer, reasoning_summary = reasoning_extractor.extract_code_answer(
+                full_response_0, task.get('entry_point', '')
+            )
+        else:
+            extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+        
+        # Use extracted answer for evaluation, fallback to raw if extraction fails
+        a0 = extracted_answer if extracted_answer is not None else raw_answer
         
         # Score based on task type
         if is_humaneval:
@@ -169,10 +202,15 @@ def run_dataset(
             execution_details = score_result.get('execution_result', {})
             passes.append(bool(score_result.get('passed', False)))
             for _ in range(max(0, k_try - 1)):
-                a_s, _ = learner.answer(prompt, history, template=None, 
-                                        experiment_id=experiment_id, dataset_name=dataset_name, 
-                                        sample_id=sample_id, turn_number=0)
-                sr = score_humaneval_candidate(task, a_s)
+                # For additional samples, also get full reasoning and extract
+                raw_sample, _, full_sample = learner.answer(prompt, history, template=None, 
+                                          experiment_id=experiment_id, dataset_name=dataset_name, 
+                                          sample_id=sample_id, turn_number=0)
+                extracted_sample, _ = reasoning_extractor.extract_code_answer(
+                    full_sample, task.get('entry_point', '')
+                )
+                sample_answer = extracted_sample if extracted_sample is not None else raw_sample
+                sr = score_humaneval_candidate(task, sample_answer)
                 passes.append(bool(sr.get('passed', False)))
             acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
         else:
@@ -191,14 +229,23 @@ def run_dataset(
             conf = 0.5
 
         turns = [{
-            "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
-            "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0,
+            "answer": a0,  # Extracted answer for evaluation
+            "raw_answer": raw_answer,  # Original learner output
+            "response_text": full_response_0,  # Full reasoning trace
+            "reasoning_trace_file": str(reasoning_trace_file),  # Path to saved reasoning trace
+            "reasoning_summary": reasoning_summary,  # Summary of reasoning process
+            "self_conf": round(self_conf,2), 
+            "teacher_bias": bias,
+            "teacher_conf": round(tconf,2),
+            "combined_confidence": round(conf,2),
+            "template": None, 
+            "accuracy": acc0,
             "execution_details": execution_details if is_humaneval else {}
         }]
         
         # Log first turn
         coaching_feedback = coaching_from_bias(bias)
-        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=a0, 
+        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=full_response_0, 
                       response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
                       evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
                       model_reported_confidence=self_conf, 
@@ -226,10 +273,20 @@ def run_dataset(
                 # Preserve the bias used for template selection to align feedback with the chosen template
                 bias_for_template = bias
 
-                # send template to learner
-                a1, self_conf = learner.answer(prompt, history + turns, template=template, 
-                                              experiment_id=experiment_id, dataset_name=dataset_name, 
-                                              sample_id=sample_id, turn_number=t)
+                # send template to learner - get full reasoning trace
+                raw_answer_1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
+                                                               experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                               sample_id=sample_id, turn_number=t)
+                
+                # Save reasoning trace for this turn
+                reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
+                    qid=sample_id, turn=t, reasoning_text=full_response_1,
+                    output_dir=output_dir, dataset_type="math"
+                )
+                
+                # Extract answer from reasoning trace
+                extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
 
                 # For GSM8K follow-up turns, use EM
                 acc1 = gsm8k_em(a1, ref)
@@ -248,10 +305,15 @@ def run_dataset(
 
                 # Append turn details with both before/after bias and selected template
                 turns.append({
-                    "answer": a1,
+                    "answer": a1,  # Extracted answer for evaluation
+                    "raw_answer": raw_answer_1,  # Original learner output
+                    "response_text": full_response_1,  # Full reasoning trace
+                    "reasoning_trace_file": str(reasoning_trace_file_1),  # Path to saved reasoning trace
+                    "reasoning_summary": reasoning_summary_1,  # Summary of reasoning process
                     "self_conf": round(self_conf,2),
                     "teacher_bias": bias_after,
                     "teacher_conf": round(tconf,2),
+                    "combined_confidence": round(conf,2),
                     "template": template,
                     "template_selected": template,
                     "evaluator_bias_label_before": bias_for_template,
@@ -266,7 +328,7 @@ def run_dataset(
                     ex,
                     turn_index=t,
                     prompt=f"Template: {template}",
-                    response_text=a1,
+                    response_text=full_response_1,
                     response_is_final=(t == max_turns-1 or acc1 == 1),
                     is_correct=bool(acc1),
                     evaluator_signal=('stop' if acc1 == 1 else 'continue'),
@@ -305,6 +367,32 @@ def run_dataset(
     out = {"summary": summary, "traces": traces}
     with open(traces_out, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
+    
+    # Generate CSV outputs with reasoning traces
+    experiment_config = {
+        'dataset_name': dataset_name,
+        'model': getattr(learner, 'model', model),
+        'provider': provider,
+        'temperature': float(os.getenv("OPENAI_TEMPERATURE", "0.2")),
+        'max_turns': max_turns,
+        'experiment_id': experiment_id
+    }
+    
+    print("🔧 Generating CSV outputs with reasoning traces...")
+    try:
+        results_csv = csv_formatter.format_experiment_results(traces, experiment_config)
+        summary_csv = csv_formatter.format_summary_results(traces, experiment_config) 
+        turn_analysis_csv = csv_formatter.format_turn_analysis(traces)
+        
+        from src.eval.csv_formatter import create_analysis_dashboard
+        dashboard = create_analysis_dashboard(
+            [results_csv, summary_csv, turn_analysis_csv], 
+            output_dir / "csv_results"
+        )
+        
+        print(f"✅ CSV analysis complete. Dashboard: {dashboard}")
+    except Exception as e:
+        print(f"⚠️ CSV generation failed: {e}")
 
     # New: emit paper-ready run directory with per-turn artifacts and structured traces
     try:
@@ -358,7 +446,9 @@ def run_dataset(
                 if is_he:
                     ref_path = writer.write_he_code(run_dir, ex['qid'], ti, t.get('answer',''))
                 else:
-                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, t.get('answer',''))
+                    # Try to get the actual response content from the turn data
+                    response_content = t.get('response_text', '') or t.get('answer', '') or t.get('normalized_answer', '') or ''
+                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, response_content)
                 # Write prompt template record
                 prompt_text = t.get('template') or ''
                 prompt_ref = None
@@ -374,6 +464,8 @@ def run_dataset(
                     'confidence': t.get('self_conf', None),
                     'normalized_answer': None,
                     'exec_result': t.get('execution_details', {}) if is_he else None,
+                    'accuracy': t.get('accuracy', 0),  # Add accuracy field
+                    'response_text': t.get('response_text', ''),  # Add response_text field
                 })
             items.append({
                 'id': ex['qid'],
@@ -396,10 +488,79 @@ def run_dataset(
         }
         writer.write_metrics(run_dir, metrics)
         writer.write_traces(run_dir, {'meta': asdict(meta), 'items': items})
+        
+        # NEW: Generate structured traces in desired format
+        try:
+            print("🔧 Generating structured trace outputs...")
+            
+            # Generate individual problem trace files
+            structured_files = []
+            for trace in traces:
+                problem_file = writer.write_structured_problem_trace(
+                    run_dir, trace['qid'], trace['turns']
+                )
+                structured_files.append(str(problem_file))
+                
+            # Generate flat JSON results with automatic dataset type detection
+            flat_json_file = writer.write_flat_json_results(run_dir, traces, "unknown")
+            
+            print(f"✅ Structured traces generated:")
+            print(f"  - Problem trace files: {len(structured_files)} files")
+            print(f"  - Flat JSON results: {flat_json_file}")
+            
+            # Add structured trace info to output
+            out['structured_traces'] = {
+                'problem_files': structured_files,
+                'flat_json': str(flat_json_file),
+                'format': 'desired_paper_format'
+            }
+            
+        except Exception as e:
+            print(f"⚠️ Structured trace generation failed: {e}")
+            # Don't fail the run if structured traces fail
     except Exception as _e:
         # Do not fail the run if writer errors; proceed silently (logged to stdout)
         print(f"WARN: tracing writer failed: {_e}")
 
     # Close the trace logger
     logger.close()
+    
+    # Enhanced trace formatting and CSV output
+    try:
+        print("🔧 Creating enhanced trace formatting and CSV outputs...")
+        
+        # Create enhanced trace formatter
+        enhanced_formatter = EnhancedTraceFormatter()
+        traces_file = str(run_dir / "traces.json")
+        
+        if Path(traces_file).exists():
+            # Format enhanced traces
+            enhanced_outputs = enhanced_formatter.format_experiment_traces(traces_file, experiment_id)
+            print(f"✅ Enhanced traces created: {len(enhanced_outputs)} outputs")
+            
+            # Create CSV outputs
+            csv_formatter = CSVOutputFormatter()
+            final_answers_csv = csv_formatter.create_final_answers_csv(traces_file, experiment_id)
+            multi_turn_csv = csv_formatter.create_multi_turn_accuracy_csv(traces_file, experiment_id)
+            summary_csv = csv_formatter.create_summary_metrics_csv(traces_file, experiment_id)
+            
+            print(f"✅ CSV outputs created:")
+            print(f"  - Final answers: {final_answers_csv}")
+            print(f"  - Multi-turn accuracy: {multi_turn_csv}")
+            print(f"  - Summary metrics: {summary_csv}")
+            
+            # Add CSV paths to output
+            out['enhanced_traces'] = enhanced_outputs
+            out['csv_outputs'] = {
+                'final_answers': final_answers_csv,
+                'multi_turn_accuracy': multi_turn_csv,
+                'summary_metrics': summary_csv
+            }
+        else:
+            print("⚠️ No traces.jsonl found for enhanced formatting")
+            
+    except Exception as e:
+        print(f"⚠️ Enhanced formatting failed: {e}")
+        # Don't fail the run if formatting fails
+    
     return out

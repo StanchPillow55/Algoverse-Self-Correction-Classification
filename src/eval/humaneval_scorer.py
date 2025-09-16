@@ -113,10 +113,12 @@ def score_humaneval_candidate(
     
     try:
         # Extract the function from the response
+        # Handle both 'question' and 'prompt' fields
+        prompt = task.get('question', task.get('prompt', ''))
         extracted_function = extract_function_from_response(
             candidate_response, 
             task['entry_point'], 
-            task['question']
+            prompt
         )
         result['extracted_function'] = extracted_function
         

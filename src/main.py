@@ -1,7 +1,11 @@
 import argparse, os, json
 import yaml
 from pathlib import Path
+from dotenv import load_dotenv
 from src.loop.runner import run_dataset
+
+# Load environment variables from .env file
+load_dotenv()
 
 def load_config_defaults():
     """Load defaults from configs/run.yaml if it exists"""
