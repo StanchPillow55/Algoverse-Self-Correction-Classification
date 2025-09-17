@@ -3,6 +3,7 @@ import csv, json, os
 from pathlib import Path
 from typing import Dict, Any, List
 from src.utils.trace_logger import TraceLogger
+from src.utils.checkpoint import CheckpointManager, create_stable_run_id, hash_config
 from src.metrics.accuracy import gsm8k_em, humaneval_pass_at_k
 from src.utils.tracing import RunWriter, RunMeta, sha256_text
 from src.utils.ci_bootstrap import mean_ci95
@@ -63,7 +64,7 @@ def _auto_map_row(row: dict) -> tuple[str, str, str]:
 
 
 def _load_dataset(dataset_csv: str, subset: str = None) -> List[Dict[str, Any]]:
-    """Load dataset, supporting both CSV, HumanEval, and GSM8K formats"""
+    """Load dataset with deterministic subset support for reproducible experiments."""
     # Check if this is a HumanEval dataset request
     if dataset_csv == "humaneval" or "humaneval" in dataset_csv.lower():
         try:
@@ -82,7 +83,29 @@ def _load_dataset(dataset_csv: str, subset: str = None) -> List[Dict[str, Any]]:
                 return demo_data[:100] if len(demo_data) > 100 else demo_data
             return demo_data
     elif dataset_csv == "gsm8k" or "gsm8k" in dataset_csv.lower():
-        # Check for GSM8K data
+        # NEW: Support for deterministic GSM8K subsets for reproducible experiments
+        if subset and subset.startswith("subset_"):
+            try:
+                subset_size = subset.split("_")[1]
+                # Try deterministic subset first
+                from src.data.scaling_datasets import ScalingDatasetManager
+                dm = ScalingDatasetManager()
+                deterministic_file = Path(f"data/scaling/gsm8k_deterministic_{subset_size}.json")
+                
+                if deterministic_file.exists():
+                    print(f"📊 Loading deterministic GSM8K subset: {subset_size} samples (ensures reproducibility)")
+                    import json
+                    with open(deterministic_file, 'r') as f:
+                        data = json.load(f)
+                    return data.get("samples", [])
+                else:
+                    print(f"⚠️ Deterministic subset not found, using seeded sampling for GSM8K {subset}")
+                    # Fallback to seeded sampling with consistent seed
+                    return dm.load_dataset('gsm8k', sample_size=int(subset_size), seed=42)
+            except Exception as e:
+                print(f"Failed to load GSM8K subset {subset}: {e}")
+        
+        # Default GSM8K loading
         return load_gsm8k_dataset()
     else:
         # Traditional CSV loading
@@ -105,7 +128,25 @@ def run_dataset(
     # Ensure output directory exists
     output_dir = Path(traces_out).parent
     output_dir.mkdir(parents=True, exist_ok=True)
-
+    
+    # Initialize checkpoint system if enabled
+    checkpoint_config = config.get('checkpoint', {}) if config else {}
+    enable_checkpoints = checkpoint_config.get('resume', False)
+    checkpoint_every = checkpoint_config.get('checkpoint_every', 10)
+    shard_config = checkpoint_config.get('shard')
+    
+    checkpoint_manager = None
+    if enable_checkpoints:
+        # Create stable checkpoint path
+        config_hash = hash_config(config or {}) if config else None
+        stable_run_id = create_stable_run_id(dataset_name, model or provider, config_hash)
+        
+        # Use JSONL checkpoint file alongside existing output
+        checkpoint_path = output_dir / f"{stable_run_id}.jsonl"
+        checkpoint_manager = CheckpointManager(str(checkpoint_path), checkpoint_every=checkpoint_every)
+        
+        print(f"📋 Checkpoint system enabled: {checkpoint_path}")
+    
     learner = LearnerBot(provider=provider, model=model)
     traces: List[Dict[str, Any]] = []
     
@@ -115,6 +156,33 @@ def run_dataset(
 
     # Load dataset - supports both CSV and HumanEval formats
     rows = _load_dataset(dataset_csv, subset)
+    
+    # Handle checkpointing and resume
+    completed_qids = set()
+    if checkpoint_manager:
+        # Load existing checkpoint state
+        completed_qids = checkpoint_manager.load_completed_ids()
+        
+        # Restore random state for deterministic resume
+        resume_state = checkpoint_manager.load_resume_state()
+        if resume_state:
+            checkpoint_manager.restore_random_state(resume_state)
+            print(f"🔄 Restored random state for deterministic resume")
+    
+    # Apply shard filtering if specified
+    if shard_config:
+        try:
+            shard_i, shard_n = map(int, shard_config.split('/'))
+            if not (1 <= shard_i <= shard_n):
+                raise ValueError(f"Invalid shard {shard_i}/{shard_n}")
+            
+            original_count = len(rows)
+            rows = [row for idx, row in enumerate(rows) if idx % shard_n == (shard_i - 1)]
+            print(f"🔀 Shard {shard_i}/{shard_n}: Processing {len(rows)}/{original_count} samples")
+            
+        except ValueError as e:
+            print(f"❌ Invalid shard specification '{shard_config}': {e}")
+            return {"error": f"Invalid shard: {e}", "summary": {}}
     
     # Initialize trace logger
     run_id = os.environ.get('RUN_ID', 'dev_run')
@@ -132,6 +200,11 @@ def run_dataset(
     if not enable_multi_turn:
         max_turns = 1
 
+    # Track progress for checkpointing
+    skipped_count = 0
+    processed_count = 0
+    error_count = 0
+    
     for idx, row in enumerate(rows):
         # Handle different data formats
         if isinstance(row, dict) and row.get('topic') == 'humaneval':
@@ -148,238 +221,298 @@ def run_dataset(
             task = None
             is_humaneval = False
         
-        # Start trace for this example
+        # Skip if already completed (resumable functionality)
+        if checkpoint_manager and checkpoint_manager.is_completed(qid):
+            skipped_count += 1
+            if skipped_count <= 5:  # Only show first few skips
+                print(f"⏭️ Skipping completed sample: {qid}")
+            elif skipped_count == 6:
+                print(f"⏭️ ... (skipping {len(completed_qids) - 5} more completed samples)")
+            continue
+        
+        # Start trace for this example  
         sample_id = qid
         ex = logger.start_example(problem_id=qid, text=q)
         
-        history: List[Dict[str, Any]] = []
-        
-        # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
-        if is_humaneval:
-            prompt = (
-                "You are a Python programmer. Show your complete reasoning and thought process.\n\n"
-                "Think through the problem step by step, explain your approach, then implement the solution.\n"
-                "Include your reasoning, then provide the complete function definition.\n\nProblem:\n" + q + "\n\n"
-                "Please show your full reasoning process and then provide your implementation."
-            )
-        else:
-            prompt = (
-                "You are a math problem solver. Show your complete reasoning and work.\n\n"
-                "Think through the problem step by step. Show all calculations and explain your reasoning.\n"
-                "Work through the problem completely and provide your final answer.\n\nQuestion:\n" + q + "\n\n"
-                "Please show all your work and reasoning, then state your final answer."
-            )
-        
-        # First attempt - Get full reasoning trace
-        raw_answer, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
-                                                        experiment_id=experiment_id, dataset_name=dataset_name, 
-                                                        sample_id=sample_id, turn_number=0)
-        
-        # Save full reasoning trace to file
-        dataset_type = "code" if is_humaneval else "math"
-        reasoning_trace_file = reasoning_extractor.save_reasoning_trace(
-            qid=sample_id, turn=0, reasoning_text=full_response_0,
-            output_dir=output_dir, dataset_type=dataset_type
-        )
-        
-        # Extract final answer from reasoning trace
-        if is_humaneval:
-            extracted_answer, reasoning_summary = reasoning_extractor.extract_code_answer(
-                full_response_0, task.get('entry_point', '')
-            )
-        else:
-            extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
-        
-        # Use extracted answer for evaluation, fallback to raw if extraction fails
-        a0 = extracted_answer if extracted_answer is not None else raw_answer
-        
-        # Score based on task type
-        if is_humaneval:
-            # pass@k via sampling (k from env or arg)
-            k_try = int(os.getenv("PASS_K", str(k))) if k else int(os.getenv("PASS_K", "1"))
-            passes = []
-            score_result = score_humaneval_candidate(task, a0)
-            execution_details = score_result.get('execution_result', {})
-            passes.append(bool(score_result.get('passed', False)))
-            for _ in range(max(0, k_try - 1)):
-                # For additional samples, also get full reasoning and extract
-                raw_sample, _, full_sample = learner.answer(prompt, history, template=None, 
-                                          experiment_id=experiment_id, dataset_name=dataset_name, 
-                                          sample_id=sample_id, turn_number=0)
-                extracted_sample, _ = reasoning_extractor.extract_code_answer(
-                    full_sample, task.get('entry_point', '')
+        # Wrap sample processing in error handling for checkpointing
+        try:
+            history: List[Dict[str, Any]] = []
+            
+            # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
+            if is_humaneval:
+                prompt = (
+                    "You are a Python programmer. Show your complete reasoning and thought process.\n\n"
+                    "Think through the problem step by step, explain your approach, then implement the solution.\n"
+                    "Include your reasoning, then provide the complete function definition.\n\nProblem:\n" + q + "\n\n"
+                    "Please show your full reasoning process and then provide your implementation."
                 )
-                sample_answer = extracted_sample if extracted_sample is not None else raw_sample
-                sr = score_humaneval_candidate(task, sample_answer)
-                passes.append(bool(sr.get('passed', False)))
-            acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
-        else:
-            acc0 = gsm8k_em(a0, ref)
-            execution_details = {}
-        
-        # Only run bias detection and confidence if enabled
-        if enable_error_awareness:
-            bias, tconf = detect_bias(
-                q, a0, ref, history, 
-                reasoning_text=full_response_0,
-                execution_result=execution_details,
-                is_code_task=is_humaneval
-            )
-        else:
-            bias, tconf = "None", 0.5
-        
-        if enable_confidence:
-            conf = combine_confidence(self_conf, tconf, None)
-        else:
-            conf = 0.5
-
-        turns = [{
-            "answer": a0,  # Extracted answer for evaluation
-            "raw_answer": raw_answer,  # Original learner output
-            "response_text": full_response_0,  # Full reasoning trace
-            "reasoning_trace_file": str(reasoning_trace_file),  # Path to saved reasoning trace
-            "reasoning_summary": reasoning_summary,  # Summary of reasoning process
-            "self_conf": round(self_conf,2), 
-            "teacher_bias": bias,
-            "teacher_conf": round(tconf,2),
-            "combined_confidence": round(conf,2),
-            "template": None, 
-            "accuracy": acc0,
-            "execution_details": execution_details if is_humaneval else {}
-        }]
-        
-        # Log first turn
-        coaching_feedback = coaching_from_bias(bias)
-        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=full_response_0, 
-                      response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
-                      evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
-                      model_reported_confidence=self_conf, 
-                      evaluator_bias_label=bias,
-                      evaluator_feedback=coaching_feedback,
-                      model_name=getattr(learner, 'model', provider),
-                      task_type='humaneval' if is_humaneval else 'standard',
-                      execution_details=execution_details if is_humaneval else None)
-
-        # Multi-turn loop for all datasets when enabled
-        if enable_multi_turn:
-            acc_prev = acc0
-            t = 1
-            while t < max_turns and acc_prev == 0:
-                # Determine whether to reprompt
-                if enable_error_awareness:
-                    reprompt, template = select_template(bias, conf, bool(acc_prev), len(history), is_code_task=is_humaneval)
-                else:
-                    # If error awareness is disabled, use a generic retry template
-                    reprompt, template = True, "try_again_concise"
-
-                if not reprompt:
-                    break
-
-                # Preserve the bias used for template selection to align feedback with the chosen template
-                bias_for_template = bias
-
-                # send template to learner - get full reasoning trace
-                raw_answer_1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
-                                                               experiment_id=experiment_id, dataset_name=dataset_name, 
-                                                               sample_id=sample_id, turn_number=t)
-                
-                # Save reasoning trace for this turn
-                dataset_type_turn = "code" if is_humaneval else "math"
-                reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
-                    qid=sample_id, turn=t, reasoning_text=full_response_1,
-                    output_dir=output_dir, dataset_type=dataset_type_turn
+            else:
+                prompt = (
+                    "You are a math problem solver. Show your complete reasoning and work.\n\n"
+                    "Think through the problem step by step. Show all calculations and explain your reasoning.\n"
+                    "Work through the problem completely and provide your final answer.\n\nQuestion:\n" + q + "\n\n"
+                    "Please show all your work and reasoning, then state your final answer."
                 )
-                
-                # Extract answer from reasoning trace
-                if is_humaneval:
-                    extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_code_answer(
-                        full_response_1, task.get('entry_point', '')
+            
+            # First attempt - Get full reasoning trace
+            raw_answer, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
+                                                            experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                            sample_id=sample_id, turn_number=0)
+            
+            # Save full reasoning trace to file
+            dataset_type = "code" if is_humaneval else "math"
+            reasoning_trace_file = reasoning_extractor.save_reasoning_trace(
+                qid=sample_id, turn=0, reasoning_text=full_response_0,
+                output_dir=output_dir, dataset_type=dataset_type
+            )
+            
+            # Extract final answer from reasoning trace
+            if is_humaneval:
+                extracted_answer, reasoning_summary = reasoning_extractor.extract_code_answer(
+                    full_response_0, task.get('entry_point', '')
+                )
+            else:
+                extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+            
+            # Use extracted answer for evaluation, fallback to raw if extraction fails
+            a0 = extracted_answer if extracted_answer is not None else raw_answer
+            
+            # Score based on task type
+            if is_humaneval:
+                # pass@k via sampling (k from env or arg)
+                k_try = int(os.getenv("PASS_K", str(k))) if k else int(os.getenv("PASS_K", "1"))
+                passes = []
+                score_result = score_humaneval_candidate(task, a0)
+                execution_details = score_result.get('execution_result', {})
+                passes.append(bool(score_result.get('passed', False)))
+                for _ in range(max(0, k_try - 1)):
+                    # For additional samples, also get full reasoning and extract
+                    raw_sample, _, full_sample = learner.answer(prompt, history, template=None, 
+                                              experiment_id=experiment_id, dataset_name=dataset_name, 
+                                              sample_id=sample_id, turn_number=0)
+                    extracted_sample, _ = reasoning_extractor.extract_code_answer(
+                        full_sample, task.get('entry_point', '')
                     )
-                else:
-                    extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
-                a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
-
-                # Score based on task type
-                if is_humaneval:
-                    score_result_1 = score_humaneval_candidate(task, a1)
-                    execution_details = score_result_1.get('execution_result', {})
-                    acc1 = int(score_result_1.get('passed', False))
-                else:
-                    acc1 = gsm8k_em(a1, ref)
-                    execution_details = {}
-
-                # Only run bias detection and confidence if enabled (after the new response)
-                if enable_error_awareness:
-                    bias_after, tconf = detect_bias(
-                        q, a1, ref, history + turns,
-                        reasoning_text=full_response_1,
-                        execution_result=execution_details,
-                        is_code_task=is_humaneval
-                    )
-                else:
-                    bias_after, tconf = "None", 0.5
-
-                if enable_confidence:
-                    conf = combine_confidence(self_conf, tconf, None)
-                else:
-                    conf = 0.5
-
-                # Append turn details with both before/after bias and selected template
-                turns.append({
-                    "answer": a1,  # Extracted answer for evaluation
-                    "raw_answer": raw_answer_1,  # Original learner output
-                    "response_text": full_response_1,  # Full reasoning trace
-                    "reasoning_trace_file": str(reasoning_trace_file_1),  # Path to saved reasoning trace
-                    "reasoning_summary": reasoning_summary_1,  # Summary of reasoning process
-                    "self_conf": round(self_conf,2),
-                    "teacher_bias": bias_after,
-                    "teacher_conf": round(tconf,2),
-                    "combined_confidence": round(conf,2),
-                    "template": template,
-                    "template_selected": template,
-                    "evaluator_bias_label_before": bias_for_template,
-                    "evaluator_bias_label_after": bias_after,
-                    "accuracy": acc1,
-                    "execution_details": execution_details if is_humaneval else {}
-                })
-
-                # Log this turn with feedback aligned to the bias used for template selection
-                coaching_feedback = coaching_from_bias(bias_for_template)
-                logger.on_turn(
-                    ex,
-                    turn_index=t,
-                    prompt=f"Template: {template}",
-                    response_text=full_response_1,
-                    response_is_final=(t == max_turns-1 or acc1 == 1),
-                    is_correct=bool(acc1),
-                    evaluator_signal=('stop' if acc1 == 1 else 'continue'),
-                    model_reported_confidence=self_conf,
-                    evaluator_bias_label=bias_for_template,
-                    evaluator_feedback=coaching_feedback,
-                    model_name=getattr(learner, 'model', provider),
-                    task_type='humaneval' if is_humaneval else 'standard',
-                    template_selected=template,
-                    evaluator_bias_label_after=bias_after,
-                    execution_details=execution_details if is_humaneval else None
+                    sample_answer = extracted_sample if extracted_sample is not None else raw_sample
+                    sr = score_humaneval_candidate(task, sample_answer)
+                    passes.append(bool(sr.get('passed', False)))
+                acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
+            else:
+                acc0 = gsm8k_em(a0, ref)
+                execution_details = {}
+            
+            # Only run bias detection and confidence if enabled
+            if enable_error_awareness:
+                bias, tconf = detect_bias(
+                    q, a0, ref, history, 
+                    reasoning_text=full_response_0,
+                    execution_result=execution_details,
+                    is_code_task=is_humaneval
                 )
+            else:
+                bias, tconf = "None", 0.5
+            
+            if enable_confidence:
+                conf = combine_confidence(self_conf, tconf, None)
+            else:
+                conf = 0.5
 
-                # Prepare for next iteration: use the latest bias as current
-                bias = bias_after
+            turns = [{
+                "answer": a0,  # Extracted answer for evaluation
+                "raw_answer": raw_answer,  # Original learner output
+                "response_text": full_response_0,  # Full reasoning trace
+                "reasoning_trace_file": str(reasoning_trace_file),  # Path to saved reasoning trace
+                "reasoning_summary": reasoning_summary,  # Summary of reasoning process
+                "self_conf": round(self_conf,2), 
+                "teacher_bias": bias,
+                "teacher_conf": round(tconf,2),
+                "combined_confidence": round(conf,2),
+                "template": None, 
+                "accuracy": acc0,
+                "execution_details": execution_details if is_humaneval else {}
+            }]
+            
+            # Log first turn
+            coaching_feedback = coaching_from_bias(bias)
+            logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=full_response_0, 
+                          response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
+                          evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
+                          model_reported_confidence=self_conf, 
+                          evaluator_bias_label=bias,
+                          evaluator_feedback=coaching_feedback,
+                          model_name=getattr(learner, 'model', provider),
+                          task_type='humaneval' if is_humaneval else 'standard',
+                          execution_details=execution_details if is_humaneval else None)
 
-                t += 1
-                # simple stop: two non-improvements handled implicitly by max_turns and correctness
-                if acc1 == 1: break
-                acc_prev = acc1
+            # Multi-turn loop for all datasets when enabled
+            if enable_multi_turn:
+                acc_prev = acc0
+                t = 1
+                while t < max_turns and acc_prev == 0:
+                    # Determine whether to reprompt
+                    if enable_error_awareness:
+                        reprompt, template = select_template(bias, conf, bool(acc_prev), len(history), is_code_task=is_humaneval)
+                    else:
+                        # If error awareness is disabled, use a generic retry template
+                        reprompt, template = True, "try_again_concise"
 
-        # Finalize the trace for this example
-        final_answer = turns[-1]["answer"]
-        final_correct = bool(turns[-1]["accuracy"])
-        logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
+                    if not reprompt:
+                        break
+
+                    # Preserve the bias used for template selection to align feedback with the chosen template
+                    bias_for_template = bias
+
+                    # send template to learner - get full reasoning trace
+                    raw_answer_1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
+                                                                   experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                                   sample_id=sample_id, turn_number=t)
+                    
+                    # Save reasoning trace for this turn
+                    dataset_type_turn = "code" if is_humaneval else "math"
+                    reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
+                        qid=sample_id, turn=t, reasoning_text=full_response_1,
+                        output_dir=output_dir, dataset_type=dataset_type_turn
+                    )
+                    
+                    # Extract answer from reasoning trace
+                    if is_humaneval:
+                        extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_code_answer(
+                            full_response_1, task.get('entry_point', '')
+                        )
+                    else:
+                        extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                    a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
+
+                    # Score based on task type
+                    if is_humaneval:
+                        score_result_1 = score_humaneval_candidate(task, a1)
+                        execution_details = score_result_1.get('execution_result', {})
+                        acc1 = int(score_result_1.get('passed', False))
+                    else:
+                        acc1 = gsm8k_em(a1, ref)
+                        execution_details = {}
+
+                    # Only run bias detection and confidence if enabled (after the new response)
+                    if enable_error_awareness:
+                        bias_after, tconf = detect_bias(
+                            q, a1, ref, history + turns,
+                            reasoning_text=full_response_1,
+                            execution_result=execution_details,
+                            is_code_task=is_humaneval
+                        )
+                    else:
+                        bias_after, tconf = "None", 0.5
+
+                    if enable_confidence:
+                        conf = combine_confidence(self_conf, tconf, None)
+                    else:
+                        conf = 0.5
+
+                    # Append turn details with both before/after bias and selected template
+                    turns.append({
+                        "answer": a1,  # Extracted answer for evaluation
+                        "raw_answer": raw_answer_1,  # Original learner output
+                        "response_text": full_response_1,  # Full reasoning trace
+                        "reasoning_trace_file": str(reasoning_trace_file_1),  # Path to saved reasoning trace
+                        "reasoning_summary": reasoning_summary_1,  # Summary of reasoning process
+                        "self_conf": round(self_conf,2),
+                        "teacher_bias": bias_after,
+                        "teacher_conf": round(tconf,2),
+                        "combined_confidence": round(conf,2),
+                        "template": template,
+                        "template_selected": template,
+                        "evaluator_bias_label_before": bias_for_template,
+                        "evaluator_bias_label_after": bias_after,
+                        "accuracy": acc1,
+                        "execution_details": execution_details if is_humaneval else {}
+                    })
+
+                    # Log this turn with feedback aligned to the bias used for template selection
+                    coaching_feedback = coaching_from_bias(bias_for_template)
+                    logger.on_turn(
+                        ex,
+                        turn_index=t,
+                        prompt=f"Template: {template}",
+                        response_text=full_response_1,
+                        response_is_final=(t == max_turns-1 or acc1 == 1),
+                        is_correct=bool(acc1),
+                        evaluator_signal=('stop' if acc1 == 1 else 'continue'),
+                        model_reported_confidence=self_conf,
+                        evaluator_bias_label=bias_for_template,
+                        evaluator_feedback=coaching_feedback,
+                        model_name=getattr(learner, 'model', provider),
+                        task_type='humaneval' if is_humaneval else 'standard',
+                        template_selected=template,
+                        evaluator_bias_label_after=bias_after,
+                        execution_details=execution_details if is_humaneval else None
+                    )
+
+                    # Prepare for next iteration: use the latest bias as current
+                    bias = bias_after
+
+                    t += 1
+                    # simple stop: two non-improvements handled implicitly by max_turns and correctness
+                    if acc1 == 1: break
+                    acc_prev = acc1
+
+            # Finalize the trace for this example
+            final_answer = turns[-1]["answer"]
+            final_correct = bool(turns[-1]["accuracy"])
+            logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
+            
+            traces.append({
+                "qid": qid, "question": q, "reference": ref, "turns": turns,
+                "final_accuracy": turns[-1]["accuracy"]
+            })
+            
+            # Checkpoint successful completion
+            if checkpoint_manager:
+                checkpoint_record = {
+                    "qid": str(qid),
+                    "status": "success", 
+                    "dataset": dataset_name,
+                    "model": getattr(learner, 'model', model or provider),
+                    "provider": provider,
+                    "turns": turns,
+                    "final_accuracy": turns[-1]["accuracy"],
+                    "question": q,
+                    "reference": ref,
+                    "experiment_id": experiment_id
+                }
+                
+                try:
+                    checkpoint_manager.append_result_atomic(checkpoint_record)
+                    processed_count += 1
+                    
+                    # Save resume state periodically
+                    if checkpoint_manager.should_checkpoint_state():
+                        experiment_metadata = {
+                            "dataset": dataset_csv,
+                            "model": getattr(learner, 'model', model or provider),
+                            "provider": provider,
+                            "max_turns": max_turns,
+                            "experiment_id": experiment_id
+                        }
+                        checkpoint_manager.save_resume_state(experiment_metadata)
+                        print(f"💾 Checkpoint saved: {processed_count} completed, {error_count} errors")
+                        
+                except Exception as checkpoint_error:
+                    print(f"⚠️ Failed to save checkpoint for {qid}: {checkpoint_error}")
+                    # Continue processing even if checkpoint fails
         
-        traces.append({
-            "qid": qid, "question": q, "reference": ref, "turns": turns,
-            "final_accuracy": turns[-1]["accuracy"]
-        })
+        except Exception as sample_error:
+            error_count += 1
+            print(f"❌ Error processing sample {qid}: {type(sample_error).__name__}: {sample_error}")
+            
+            # Record error in checkpoint if enabled
+            if checkpoint_manager:
+                try:
+                    checkpoint_manager.append_error_record(qid, sample_error, retryable=True)
+                except Exception as checkpoint_error:
+                    print(f"⚠️ Failed to record error for {qid}: {checkpoint_error}")
+            
+            # Continue with next sample rather than crashing entire run
+            continue
 
     summary = {
         "items": len(traces),

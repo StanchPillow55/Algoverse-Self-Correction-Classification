@@ -14,6 +14,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 import logging
+from datetime import datetime
 
 # Hugging Face datasets integration
 try:
@@ -495,8 +496,17 @@ class ScalingDatasetManager:
         with open(output_path, 'w') as f:
             json.dump(sample_data, f, indent=2)
     
-    def load_dataset(self, dataset_name: str, sample_size: int = None) -> List[Dict[str, Any]]:
-        """Load a dataset with optional sampling."""
+    def load_dataset(self, dataset_name: str, sample_size: int = None, seed: int = 42) -> List[Dict[str, Any]]:
+        """Load a dataset with optional deterministic sampling.
+        
+        Args:
+            dataset_name: Name of the dataset to load
+            sample_size: Number of samples to return (None for all)
+            seed: Random seed for deterministic sampling (default: 42)
+        
+        Returns:
+            List of dataset samples
+        """
         dataset_path = self.data_dir / f"{dataset_name}.json"
         
         if not dataset_path.exists():
@@ -509,9 +519,11 @@ class ScalingDatasetManager:
         samples = data.get("samples", [])
         
         if sample_size and sample_size < len(samples):
-            # Simple random sampling (in practice, you might want stratified sampling)
+            # FIXED: Deterministic sampling with seed for reproducible experiments
             import random
+            random.seed(seed)  # Set deterministic seed
             samples = random.sample(samples, sample_size)
+            logger.info(f"Sampled {sample_size} from {len(data.get('samples', []))} samples using seed {seed}")
         
         return samples
     
@@ -536,7 +548,7 @@ class ScalingDatasetManager:
         return info
     
     def create_sample_subsets(self, dataset_name: str) -> List[str]:
-        """Create sample subsets for cost control."""
+        """Create sample subsets for cost control (legacy method)."""
         dataset_path = self.data_dir / f"{dataset_name}.json"
         
         if not dataset_path.exists():
@@ -562,6 +574,51 @@ class ScalingDatasetManager:
                 
                 created_files.append(str(subset_path))
                 logger.info(f"Created {dataset_name} subset with {size} samples")
+        
+        return created_files
+    
+    def create_deterministic_subsets(self, dataset_name: str, sizes: List[int] = None) -> Dict[str, str]:
+        """Create deterministic subsets that are consistent across experiments.
+        
+        Args:
+            dataset_name: Name of the dataset
+            sizes: List of subset sizes to create
+        
+        Returns:
+            Dictionary mapping subset names to file paths
+        """
+        if sizes is None:
+            sizes = [20, 50, 100, 500, 1000]
+        
+        dataset_path = self.data_dir / f"{dataset_name}.json"
+        
+        if not dataset_path.exists():
+            logger.error(f"Dataset {dataset_name} not found")
+            return {}
+        
+        with open(dataset_path, 'r') as f:
+            data = json.load(f)
+        
+        samples = data.get("samples", [])
+        created_files = {}
+        
+        # Create deterministic subsets using FIRST N samples (not random)
+        for size in sizes:
+            if size <= len(samples):
+                subset_path = self.data_dir / f"{dataset_name}_deterministic_{size}.json"
+                
+                subset_data = data.copy()
+                # DETERMINISTIC: Always use first N samples
+                subset_data["samples"] = samples[:size]
+                subset_data["sample_size"] = size
+                subset_data["sampling_method"] = "deterministic_first_n"
+                subset_data["created_date"] = datetime.now().isoformat()
+                
+                with open(subset_path, 'w') as f:
+                    json.dump(subset_data, f, indent=2)
+                
+                created_files[f"subset_{size}"] = str(subset_path)
+                logger.info(f"Created deterministic {dataset_name} subset with {size} samples")
         
         return created_files
     
