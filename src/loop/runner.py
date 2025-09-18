@@ -156,7 +156,7 @@ def run_dataset(
             )
         
         # First attempt
-        a0, self_conf = learner.answer(prompt, history, template=None, 
+        full_response_0, a0, self_conf = learner.answer(prompt, history, template=None, 
                                       experiment_id=experiment_id, dataset_name=dataset_name, 
                                       sample_id=sample_id, turn_number=0)
         
@@ -169,7 +169,7 @@ def run_dataset(
             execution_details = score_result.get('execution_result', {})
             passes.append(bool(score_result.get('passed', False)))
             for _ in range(max(0, k_try - 1)):
-                a_s, _ = learner.answer(prompt, history, template=None, 
+                _, a_s, _ = learner.answer(prompt, history, template=None, 
                                         experiment_id=experiment_id, dataset_name=dataset_name, 
                                         sample_id=sample_id, turn_number=0)
                 sr = score_humaneval_candidate(task, a_s)
@@ -191,7 +191,7 @@ def run_dataset(
             conf = 0.5
 
         turns = [{
-            "answer": a0, "self_conf": round(self_conf,2), "teacher_bias": bias,
+            "answer": a0, "full_response": full_response_0, "self_conf": round(self_conf,2), "teacher_bias": bias,
             "teacher_conf": round(tconf,2), "template": None, "accuracy": acc0,
             "execution_details": execution_details if is_humaneval else {}
         }]
@@ -227,7 +227,7 @@ def run_dataset(
                 bias_for_template = bias
 
                 # send template to learner
-                a1, self_conf = learner.answer(prompt, history + turns, template=template, 
+                full_response_1, a1, self_conf = learner.answer(prompt, history + turns, template=template, 
                                               experiment_id=experiment_id, dataset_name=dataset_name, 
                                               sample_id=sample_id, turn_number=t)
 
@@ -249,6 +249,7 @@ def run_dataset(
                 # Append turn details with both before/after bias and selected template
                 turns.append({
                     "answer": a1,
+                    "full_response": full_response_1,
                     "self_conf": round(self_conf,2),
                     "teacher_bias": bias_after,
                     "teacher_conf": round(tconf,2),
@@ -354,11 +355,12 @@ def run_dataset(
             is_he = 'topic' in ex.get('question','').lower() or (isinstance(rows[0], dict) and rows[0].get('topic')=='humaneval')
             turns_schema = []
             for ti, t in enumerate(ex['turns']):
-                # Write per-turn artifacts
+                # Write per-turn artifacts - FIXED: Save full response instead of just extracted answer
+                full_response = t.get('full_response', t.get('answer',''))
                 if is_he:
-                    ref_path = writer.write_he_code(run_dir, ex['qid'], ti, t.get('answer',''))
+                    ref_path = writer.write_he_code(run_dir, ex['qid'], ti, full_response)
                 else:
-                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, t.get('answer',''))
+                    ref_path = writer.write_gsm8k_cot(run_dir, ex['qid'], ti, full_response)
                 # Write prompt template record
                 prompt_text = t.get('template') or ''
                 prompt_ref = None
