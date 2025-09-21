@@ -3,7 +3,36 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-ANTHROPIC_API_ERROR: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-sonnet-20240229'}, 'request_id': 'req_011CTCNqdcxPreQvekVWUjJG'}
+To solve this problem, I will follow these steps:
+
+1. First, I will create a list of vowels. This is because we are interested in consonants and any letter that is not a vowel is a consonant.
+
+2. Then, I will split the input string into words. This can be done using the split() function in Python which splits a string into a list where each word is a list item.
+
+3. After that, I will iterate over each word in the list. For each word, I will iterate over each character. If the character is not a vowel, I will increment a counter.
+
+4. If the counter is equal to the input number n at the end of the word, I will add the word to the result list.
+
+5. Finally, I will return the result list.
+
+Here is the Python function that implements the above steps:
+
+```python
+def select_words(s, n):
+    vowels = 'aeiouAEIOU'
+    words = s.split()
+    result = []
+    for word in words:
+        count = 0
+        for char in word:
+            if char not in vowels:
+                count += 1
+        if count == n:
+            result.append(word)
+    return result
+```
+
+This function works by counting the number of consonants in each word and comparing it to the input number n. If they are equal, the word is added to the result list. The function returns the result list which contains all words with exactly n consonants. The time complexity of this function is O(m*n) where m is the number of words in the string and n is the average length of the words. This is because we are iterating over each word and for each word, we are iterating over each character.
 
 ==================================================
 Trace saved at: full_scale_study_results/reasoning_traces/code/HumanEval/117/turn_0_reasoning.txt

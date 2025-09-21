@@ -3,7 +3,35 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-ANTHROPIC_API_ERROR: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-sonnet-20240229'}, 'request_id': 'req_011CTCNihRDTFtGhzhVeqL1q'}
+Reasoning:
+
+Given a list of strings and a substring, we are to determine which strings in the list contain the substring. We can obtain a solution for this by performing the following steps:
+1. Initialize an empty list `result` that would store all the strings that contain the substring.
+2. Iterate through all the strings in the list. On each iteration, check if the current string contains the substring. If it does, add it to the `result` list.
+3. After iterating through all the strings in the list, return the `result` list.
+
+Approach:
+
+1. Initialize an empty list `result`.
+2. Iterate through the list of strings.
+3. On each iteration, check if the current string contains the substring.
+4. If it does, add it to the `result` list.
+5. After iterating through all the strings, return the `result` list.
+
+Implementation:
+
+Here is the Python function that implements the above approach:
+
+```python
+from typing import List
+
+def filter_by_substring(strings: List[str], substring: str) -> List[str]:
+    """ Filter an input list of strings only for ones that contain given substring """
+    result = [s for s in strings if substring in s]
+    return result
+```
+
+This function uses list comprehension to create a new list that contains only the strings from the input list that contain the given substring. The `in` operator is used to check if the substring is in the current string. If it is, the string is included in the new list. If not, it is skipped. The resulting list is then returned.
 
 ==================================================
 Trace saved at: full_scale_study_results/reasoning_traces/code/HumanEval/7/turn_0_reasoning.txt
