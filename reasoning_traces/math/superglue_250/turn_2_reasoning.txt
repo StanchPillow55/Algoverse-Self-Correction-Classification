@@ -1,0 +1,60 @@
+Question ID: superglue_250
+Turn: 2
+Dataset Type: math
+==================================================
+
+To solve the problem effectively, let's first understand what "Sample reasoning question 250" might entail. Since the problem statement is not specific, I'll assume it's a hypothetical reasoning problem that requires logical thinking and mathematical calculations. Let's create a sample problem and solve it step by step.
+
+### Sample Problem:
+A company produces two types of products: A and B. The production cost for product A is $50 per unit, and for product B, it is $70 per unit. The company sells product A for $80 per unit and product B for $120 per unit. The company has a budget of $10,000 for production costs and wants to maximize its profit. How many units of each product should the company produce to maximize profit, given that it cannot produce more than 100 units of product A and 80 units of product B?
+
+### Step-by-Step Solution:
+
+1. **Define Variables:**
+   - Let \( x \) be the number of units of product A produced.
+   - Let \( y \) be the number of units of product B produced.
+
+2. **Objective Function:**
+   - The profit for product A is \( (80 - 50)x = 30x \).
+   - The profit for product B is \( (120 - 70)y = 50y \).
+   - The total profit \( P \) is given by:
+     \[
+     P = 30x + 50y
+     \]
+
+3. **Constraints:**
+   - Production cost constraint: \( 50x + 70y \leq 10,000 \)
+   - Production limit for product A: \( x \leq 100 \)
+   - Production limit for product B: \( y \leq 80 \)
+   - Non-negativity constraints: \( x \geq 0 \), \( y \geq 0 \)
+
+4. **Graphical Solution:**
+   - Plot the constraints on a graph to find the feasible region.
+   - The line \( 50x + 70y = 10,000 \) can be rewritten as \( y = \frac{10,000 - 50x}{70} \).
+
+5. **Find Intersection Points:**
+   - Intersection of \( 50x + 70y = 10,000 \) and \( x = 100 \):
+     \[
+     50(100) + 70y = 10,000 \implies 5000 + 70y = 10,000 \implies 70y = 5000 \implies y = \frac{5000}{70} \approx 71.43
+     \]
+     Since \( y \) must be an integer, \( y = 71 \).
+
+   - Intersection of \( 50x + 70y = 10,000 \) and \( y = 80 \):
+     \[
+     50x + 70(80) = 10,000 \implies 50x + 5600 = 10,000 \implies 50x = 4400 \implies x = \frac{4400}{50} = 88
+     \]
+
+6. **Evaluate Profit at Vertices:**
+   - At \( (100, 0) \): \( P = 30(100) + 50(0) = 3000 \)
+   - At \( (88, 80) \): \( P = 30(88) + 50(80) = 2640 + 4000 = 6640 \)
+   - At \( (0, 80) \): \( P = 30(0) + 50(80) = 4000 \)
+   - At \( (100, 71) \): \( P = 30(100) + 50(71) = 3000 + 3550 = 6550 \)
+
+7. **Conclusion:**
+   - The maximum profit is \( 6640 \) at the point \( (88, 80) \).
+
+### Final Answer:
+To maximize profit, the company should produce 88 units of product A and 80 units of product B, resulting in a maximum profit of $6640.
+
+==================================================
+Trace saved at: reasoning_traces/math/superglue_250/turn_2_reasoning.txt

@@ -1,0 +1,78 @@
+Question ID: HumanEval/87
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of finding the coordinates of a given integer `x` in a 2D list, we need to follow a systematic approach. Here's how we can break down the problem and implement the solution:
+
+### Problem Breakdown
+
+1. **Input Understanding**:
+   - We have a 2D list `lst` where each sublist can have a different number of elements.
+   - We need to find all occurrences of the integer `x` in this 2D list.
+   - The output should be a list of tuples, where each tuple represents the coordinates `(row, column)` of `x` in the list.
+
+2. **Output Requirements**:
+   - The list of tuples should be sorted by rows in ascending order.
+   - Within each row, the columns should be sorted in descending order.
+
+3. **Edge Cases**:
+   - If the list is empty or if `x` is not found, the function should return an empty list.
+   - If `x` appears multiple times in the same row, all occurrences should be captured with their respective coordinates.
+
+### Approach
+
+1. **Iterate through the 2D list**:
+   - Use a loop to iterate over each row of the 2D list.
+   - For each row, use another loop to iterate over each element to check if it matches `x`.
+
+2. **Collect Coordinates**:
+   - If an element matches `x`, store its coordinates `(row_index, column_index)` in a list.
+
+3. **Sort the Coordinates**:
+   - First, sort the list of coordinates by row index in ascending order.
+   - Then, for coordinates with the same row index, sort by column index in descending order.
+
+4. **Return the Result**:
+   - Return the sorted list of coordinates.
+
+### Implementation
+
+Let's implement the function based on the above approach:
+
+```python
+def get_row(lst, x):
+    # Step 1: Collect all coordinates where the element is equal to x
+    coordinates = []
+    for row_index, row in enumerate(lst):
+        for col_index, element in enumerate(row):
+            if element == x:
+                coordinates.append((row_index, col_index))
+    
+    # Step 2: Sort the coordinates
+    # Sort by row index ascending, and by column index descending within the same row
+    coordinates.sort(key=lambda coord: (coord[0], -coord[1]))
+    
+    # Step 3: Return the sorted list of coordinates
+    return coordinates
+
+# Test cases
+print(get_row([
+  [1,2,3,4,5,6],
+  [1,2,3,4,1,6],
+  [1,2,3,4,5,1]
+], 1))  # Expected: [(0, 0), (1, 4), (1, 0), (2, 5), (2, 0)]
+
+print(get_row([], 1))  # Expected: []
+
+print(get_row([[], [1], [1, 2, 3]], 3))  # Expected: [(2, 2)]
+```
+
+### Explanation
+
+- **Coordinate Collection**: We iterate over each row and column, checking if the element matches `x`. If it does, we record its coordinates.
+- **Sorting**: We use a custom sort key that sorts primarily by row index and secondarily by the negative of the column index to achieve the required order.
+- **Efficiency**: The solution efficiently handles the 2D list and sorts the coordinates in the desired order.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/87/turn_0_reasoning.txt

@@ -1,0 +1,59 @@
+Question ID: HumanEval/92
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve this problem, we need to create a function `any_int(x, y, z)` that checks if any of the three numbers is equal to the sum of the other two numbers, and all numbers must be integers. If these conditions are met, the function should return `True`; otherwise, it should return `False`.
+
+Let's break down the problem step by step:
+
+1. **Input Validation**: 
+   - First, we need to ensure that all inputs are integers. If any of the inputs is not an integer, we should immediately return `False`.
+
+2. **Check Sum Conditions**:
+   - We need to check three conditions:
+     - Is `x` equal to `y + z`?
+     - Is `y` equal to `x + z`?
+     - Is `z` equal to `x + y`?
+   - If any of these conditions is `True`, we should return `True`.
+
+3. **Return False**:
+   - If none of the above conditions are met, we should return `False`.
+
+Now, let's implement the function based on this reasoning:
+
+```python
+def any_int(x, y, z):
+    '''
+    Create a function that takes 3 numbers.
+    Returns true if one of the numbers is equal to the sum of the other two, and all numbers are integers.
+    Returns false in any other cases.
+    '''
+    # Check if all inputs are integers
+    if not (isinstance(x, int) and isinstance(y, int) and isinstance(z, int)):
+        return False
+    
+    # Check if any number is the sum of the other two
+    if x == y + z or y == x + z or z == x + y:
+        return True
+    
+    # If none of the conditions are met, return False
+    return False
+
+# Test cases
+print(any_int(5, 2, 7))  # ➞ True
+print(any_int(3, 2, 2))  # ➞ False
+print(any_int(3, -2, 1)) # ➞ True
+print(any_int(3.6, -2.2, 2)) # ➞ False
+```
+
+### Explanation:
+
+- **Input Validation**: We use `isinstance()` to check if each of `x`, `y`, and `z` is an integer. If any of them is not an integer, we return `False`.
+- **Sum Conditions**: We check if any of the numbers is equal to the sum of the other two. If any condition is `True`, we return `True`.
+- **Return False**: If none of the conditions are met, we return `False`.
+
+This implementation efficiently checks the conditions and handles the input validation as required by the problem statement.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/92/turn_0_reasoning.txt

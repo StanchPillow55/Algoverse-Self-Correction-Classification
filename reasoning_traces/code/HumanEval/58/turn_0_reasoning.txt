@@ -1,0 +1,52 @@
+Question ID: HumanEval/58
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of finding sorted unique common elements between two lists, we can break down the task into several steps:
+
+1. **Identify Common Elements**: We need to find elements that are present in both lists. A straightforward way to do this is by using set operations, which are efficient for such tasks. Specifically, the intersection of two sets will give us the common elements.
+
+2. **Ensure Uniqueness**: By converting the lists to sets, we automatically ensure that the elements are unique, as sets do not allow duplicate values.
+
+3. **Sort the Result**: After finding the common elements, we need to sort them in ascending order. This can be easily achieved using Python's built-in `sorted()` function.
+
+4. **Return the Result**: Finally, we return the sorted list of common elements.
+
+Now, let's implement the solution based on this reasoning:
+
+```python
+def common(l1: list, l2: list):
+    """Return sorted unique common elements for two lists."""
+    # Convert both lists to sets to find unique elements
+    set1 = set(l1)
+    set2 = set(l2)
+    
+    # Find the intersection of both sets to get common elements
+    common_elements = set1.intersection(set2)
+    
+    # Sort the common elements and convert to a list
+    sorted_common_elements = sorted(common_elements)
+    
+    # Return the sorted list of common elements
+    return sorted_common_elements
+
+# Example usage:
+# print(common([1, 4, 3, 34, 653, 2, 5], [5, 7, 1, 5, 9, 653, 121]))  # Output: [1, 5, 653]
+# print(common([5, 3, 2, 8], [3, 2]))  # Output: [2, 3]
+```
+
+### Explanation:
+
+- **Set Conversion**: We convert both input lists `l1` and `l2` into sets `set1` and `set2`. This step ensures that all elements are unique and allows us to use set operations.
+
+- **Intersection**: We use the `intersection()` method to find elements that are present in both `set1` and `set2`. This method returns a new set containing the common elements.
+
+- **Sorting**: The `sorted()` function is used to sort the common elements in ascending order. The result is a list, which is what we need to return.
+
+- **Return**: Finally, the sorted list of common elements is returned as the output of the function.
+
+This approach is efficient and concise, leveraging Python's set operations to handle uniqueness and intersection, and using `sorted()` for ordering the result.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/58/turn_0_reasoning.txt

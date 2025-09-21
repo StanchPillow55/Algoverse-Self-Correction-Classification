@@ -15,6 +15,10 @@ from src.utils.ci_bootstrap import mean_ci95
 from src.utils.harness_parity import harness_versions
 from dataclasses import asdict
 
+# Enhanced error handling and checkpointing
+from src.utils.checkpoint import CheckpointManager, CheckpointError
+from src.utils.api_error_handler import APIErrorHandler, ErrorHandlingConfig, create_error_handler_from_config
+
 from .learner import EnsembleLearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
 from src.rts.policy import select_template
@@ -133,6 +137,25 @@ def run_dataset(
     # Ensure output directory exists
     output_dir = Path(traces_out).parent
     output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Initialize checkpoint manager
+    checkpoint_file = output_dir / f"{Path(traces_out).stem}_checkpoint.jsonl"
+    checkpoint_manager = CheckpointManager(str(checkpoint_file))
+    
+    # Initialize API error handler
+    error_config = config.get('error_handling', {}) if config else {}
+    error_handler = create_error_handler_from_config(checkpoint_manager, error_config)
+    
+    # Check if experiment was previously terminated
+    was_terminated, termination_reason = checkpoint_manager.check_if_terminated()
+    if was_terminated:
+        print(f"🚨 Experiment was previously terminated: {termination_reason}")
+        print("Please review error logs and resolve issues before resuming.")
+        return {"error": "experiment_previously_terminated", "reason": termination_reason}
+    
+    # Load existing progress
+    completed_qids = checkpoint_manager.load_completed_ids()
+    print(f"📋 Resuming with {len(completed_qids)} completed samples")
 
     # Configure ensemble settings from config or environment
     ensemble_size = config.get('ensemble_size', 3) if config else int(os.getenv('ENSEMBLE_SIZE', '3'))
@@ -150,7 +173,8 @@ def run_dataset(
         model=model, 
         ensemble_size=ensemble_size,
         ensemble_models=ensemble_models,
-        ensemble_configs=ensemble_configs
+        ensemble_configs=ensemble_configs,
+        error_handler=error_handler
     )
     traces: List[Dict[str, Any]] = []
     
@@ -193,11 +217,32 @@ def run_dataset(
             task = None
             is_humaneval = False
         
+        # Skip if already completed (resumable experiments)
+        if checkpoint_manager.is_completed(qid):
+            print(f"⏭️ Skipping completed sample: {qid}")
+            continue
+        
+        # Skip if error handler says this sample has too many errors
+        if error_handler.should_skip_sample(qid):
+            print(f"⏭️ Skipping sample due to too many errors: {qid}")
+            continue
+        
+        # Check if experiment should terminate due to API errors
+        if error_handler.experiment_terminated:
+            print(f"🚨 Terminating experiment due to API errors: {error_handler.termination_reason}")
+            checkpoint_manager.save_experiment_termination(
+                error_handler.termination_reason,
+                error_context=error_handler.export_error_report()
+            )
+            break
+        
         # Start trace for this example
         sample_id = qid
         ex = logger.start_example(problem_id=qid, text=q)
         
-        history: List[Dict[str, Any]] = []
+        try:
+            # Process this sample with error handling
+            history: List[Dict[str, Any]] = []
         
         # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
         if is_humaneval:
@@ -421,10 +466,72 @@ def run_dataset(
         final_correct = bool(turns[-1]["accuracy"])
         logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
         
-        traces.append({
-            "qid": qid, "question": q, "reference": ref, "turns": turns,
-            "final_accuracy": turns[-1]["accuracy"]
-        })
+            # Save successful result to checkpoint
+            result_record = {
+                "qid": qid,
+                "status": "success", 
+                "question": q,
+                "reference": ref,
+                "final_accuracy": turns[-1]["accuracy"],
+                "turns_count": len(turns),
+                "processing_time": time.time() - ex.start_time if hasattr(ex, 'start_time') else None
+            }
+            checkpoint_manager.append_result_atomic(result_record)
+            
+            traces.append({
+                "qid": qid, "question": q, "reference": ref, "turns": turns,
+                "final_accuracy": turns[-1]["accuracy"]
+            })
+            
+            # Periodic checkpoint state saving
+            if checkpoint_manager.should_checkpoint_state():
+                experiment_metadata = {
+                    "dataset": dataset_csv,
+                    "experiment_id": experiment_id,
+                    "provider": provider,
+                    "model": getattr(learner, 'model', model),
+                    "max_turns": max_turns,
+                    "processed_samples": len(traces),
+                    "error_stats": error_handler.export_error_report()
+                }
+                checkpoint_manager.save_resume_state(experiment_metadata)
+                print(f"📋 Checkpoint saved: {len(traces)} samples completed")
+        
+        except Exception as e:
+            # Handle API and other errors during sample processing
+            print(f"⚠️ Error processing sample {qid}: {e}")
+            
+            # Use error handler to manage the error
+            if error_handler:
+                try:
+                    should_continue, backoff_delay = error_handler.handle_api_error(
+                        e, provider, getattr(learner, 'model', model), 
+                        experiment_id, qid, 0  # turn_number=0 for sample-level errors
+                    )
+                    
+                    if not should_continue:
+                        # Error handler decided to terminate experiment
+                        print(f"🚨 Terminating experiment due to error: {error_handler.termination_reason}")
+                        break
+                    
+                    if backoff_delay and backoff_delay > 0:
+                        print(f"Backing off for {backoff_delay:.1f}s before continuing")
+                        time.sleep(backoff_delay)
+                        
+                except Exception as handler_error:
+                    print(f"Error in error handler: {handler_error}")
+            
+            # Log error to checkpoint
+            error_context = {
+                "provider": provider,
+                "model": getattr(learner, 'model', model),
+                "experiment_id": experiment_id,
+                "dataset_name": dataset_name
+            }
+            checkpoint_manager.append_error_record(qid, e, retryable=True, error_context=error_context)
+            
+            # Continue to next sample unless error handler terminated
+            continue
 
     summary = {
         "items": len(traces),
@@ -588,6 +695,40 @@ def run_dataset(
         # Do not fail the run if writer errors; proceed silently (logged to stdout)
         print(f"WARN: tracing writer failed: {_e}")
 
+    # Save final checkpoint and error report
+    try:
+        final_experiment_metadata = {
+            "experiment_completed": True,
+            "dataset": dataset_csv,
+            "experiment_id": experiment_id,
+            "provider": provider,
+            "model": getattr(learner, 'model', model),
+            "max_turns": max_turns,
+            "total_samples_processed": len(traces),
+            "final_accuracy": summary.get("final_accuracy_mean", 0),
+            "error_summary": error_handler.export_error_report() if error_handler else {}
+        }
+        checkpoint_manager.save_resume_state(final_experiment_metadata)
+        
+        # Generate error report if there were API issues
+        if error_handler and error_handler.total_api_errors > 0:
+            error_report_file = output_dir / "api_error_report.json"
+            with open(error_report_file, 'w') as f:
+                json.dump(error_handler.export_error_report(), f, indent=2)
+            print(f"📄 API error report saved: {error_report_file}")
+            
+            # Print recovery recommendations
+            recommendations = error_handler.get_recovery_recommendations()
+            if recommendations:
+                print("\n🔧 Recovery Recommendations:")
+                for rec in recommendations:
+                    print(f"  • {rec}")
+        
+        print(f"✅ Final checkpoint saved: {checkpoint_manager.get_stats()}")
+        
+    except Exception as e:
+        print(f"Warning: Failed to save final checkpoint: {e}")
+    
     # Close the trace logger
     logger.close()
     

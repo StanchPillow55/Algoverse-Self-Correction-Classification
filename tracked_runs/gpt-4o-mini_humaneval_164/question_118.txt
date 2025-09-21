@@ -1,0 +1,135 @@
+Question ID: HumanEval/117
+
+Question:
+
+def select_words(s, n):
+    """Given a string s and a natural number n, you have been tasked to implement 
+    a function that returns a list of all words from string s that contain exactly 
+    n consonants, in order these words appear in the string s.
+    If the string s is empty then the function should return an empty list.
+    Note: you may assume the input string contains only letters and spaces.
+    Examples:
+    select_words("Mary had a little lamb", 4) ==> ["little"]
+    select_words("Mary had a little lamb", 3) ==> ["Mary", "lamb"]
+    select_words("simple white space", 2) ==> []
+    select_words("Hello world", 4) ==> ["world"]
+    select_words("Uncle sam", 3) ==> ["Uncle"]
+    """
+
+
+
+Reference Answer:
+
+
+
+=== Turn 1 ===
+
+
+Response:
+To solve the problem of selecting words from a string that contain exactly `n` consonants, we can break down the task into several steps:
+
+1. **Understanding the Input and Output**:
+   - The input consists of a string `s` and a natural number `n`.
+   - The output should be a list of words from the string `s` that contain exactly `n` consonants.
+
+2. **Identifying Consonants**:
+   - Consonants are all letters that are not vowels. In English, the vowels are 'a', 'e', 'i', 'o', 'u' (both uppercase and lowercase).
+   - We can define a set of vowels and derive consonants from the alphabet.
+
+3. **Splitting the String into Words**:
+   - We can use the `split()` method on the string `s` to break it into individual words based on spaces.
+
+4. **Counting Consonants in Each Word**:
+   - For each word, we will count the number of consonants. This can be done by iterating through each character in the word and checking if it is a consonant.
+
+5. **Collecting Words with Exactly `n` Consonants**:
+   - We will maintain a list to collect words that meet the criterion of having exactly `n` consonants.
+
+6. **Handling Edge Cases**:
+   - If the input string `s` is empty, we should return an empty list.
+
+Now, let's implement the function `select_words` based on this reasoning:
+
+```python
+def select_words(s, n):
+    """Given a string s and a natural number n, return a list of all words from string s 
+    that contain exactly n consonants, in the order they appear in the string s.
+    If the string s is empty, return an empty list."""
+    
+    # Define the set of vowels
+    vowels = set('aeiouAEIOU')
+    
+    # Initialize an empty list to hold the resulting words
+    result = []
+    
+    # Split the string into words
+    words = s.split()
+    
+    # Function to count consonants in a word
+    def count_consonants(word):
+        count = 0
+        for char in word:
+            if char.isalpha() and char not in vowels:  # Check if it's a consonant
+                count += 1
+        return count
+    
+    # Iterate through each word and count consonants
+    for word in words:
+        if count_consonants(word) == n:
+            result.append(word)
+    
+    return result
+```
+
+### Explanation of the Implementation:
+- We start by defining a set of vowels to easily check if a character is a consonant.
+- We initialize an empty list `result` to store the words that meet the criteria.
+- We split the input string `s` into words using `split()`.
+- We define a helper function `count_consonants` that counts the consonants in a given word.
+- We iterate through each word, count its consonants using the helper function, and if the count matches `n`, we append the word to the `result` list.
+- Finally, we return the `result` list.
+
+This implementation is efficient and straightforward, adhering to the requirements of the problem statement.
+
+
+Extracted Answer: def select_words(s, n):
+    """Given a string s and a natural number n, return a list of all words from string s 
+    that contain exactly n consonants, in the order they appear in the string s.
+    If the string s is empty, return an empty list."""
+    
+    # Define the set of vowels
+    vowels = set('aeiouAEIOU')
+    
+    # Initialize an empty list to hold the resulting words
+    result = []
+    
+    # Split the string into words
+    words = s.split()
+    
+    # Function to count consonants in a word
+    def count_consonants(word):
+        count = 0
+        for char in word:
+            if char.isalpha() and char not in vowels:  # Check if it's a consonant
+                count += 1
+        return count
+    
+    # Iterate through each word and count consonants
+    for word in words:
+        if count_consonants(word) == n:
+            result.append(word)
+    
+    return result
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: None
+  Teacher Confidence: 0.95
+  Self Confidence: 0.6
+  Combined Confidence: 0.77
+
+
+Turn Accuracy: 1
+
+
+Final Accuracy: 1

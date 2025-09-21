@@ -1,0 +1,68 @@
+Question ID: HumanEval/49
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of computing \(2^n \mod p\), we need to consider both efficiency and correctness, especially given that \(n\) can be very large. Directly computing \(2^n\) for large \(n\) is impractical due to the size of the number, so we need a more efficient approach.
+
+### Step-by-Step Reasoning:
+
+1. **Understanding the Problem:**
+   - We need to compute \(2^n \mod p\).
+   - The operation involves exponentiation followed by a modulo operation.
+   - Direct computation of \(2^n\) for large \(n\) is not feasible due to potential overflow and inefficiency.
+
+2. **Efficient Exponentiation:**
+   - We can use **exponentiation by squaring**, which is an efficient method to compute powers. This method reduces the time complexity from \(O(n)\) to \(O(\log n)\).
+   - The idea is based on the following properties:
+     - If \(n\) is even, \(2^n = (2^{n/2})^2\).
+     - If \(n\) is odd, \(2^n = 2 \times 2^{n-1}\).
+
+3. **Modulo Operation:**
+   - We can incorporate the modulo operation into the exponentiation process to keep the numbers manageable and prevent overflow.
+   - The property \((a \times b) \mod p = [(a \mod p) \times (b \mod p)] \mod p\) allows us to apply the modulo operation at each step.
+
+4. **Base Cases:**
+   - If \(n = 0\), \(2^0 = 1\), and \(1 \mod p = 1\).
+   - If \(p = 1\), any number modulo 1 is 0, so the result is 0.
+
+5. **Implementation Plan:**
+   - Implement a function `modp` that uses exponentiation by squaring with modulo.
+   - Handle the base cases for \(n = 0\) and \(p = 1\).
+
+### Implementation:
+
+```python
+def modp(n: int, p: int) -> int:
+    """Return 2^n modulo p."""
+    if p == 1:
+        return 0  # Any number mod 1 is 0
+    result = 1
+    base = 2 % p  # Initial base is 2
+    while n > 0:
+        if n % 2 == 1:  # If n is odd
+            result = (result * base) % p
+        base = (base * base) % p  # Square the base
+        n //= 2  # Divide n by 2
+    return result
+
+# Test cases
+print(modp(3, 5))   # Output: 3
+print(modp(1101, 101))  # Output: 2
+print(modp(0, 101))  # Output: 1
+print(modp(3, 11))  # Output: 8
+print(modp(100, 101))  # Output: 1
+```
+
+### Explanation of the Code:
+- We initialize `result` to 1, which will hold the final result of \(2^n \mod p\).
+- `base` is initialized to \(2 \mod p\) because we are computing powers of 2.
+- We loop while \(n > 0\):
+  - If \(n\) is odd, multiply `result` by `base` and take modulo \(p\).
+  - Square `base` and take modulo \(p\).
+  - Halve \(n\) using integer division.
+- The loop efficiently reduces the problem size by half each iteration, ensuring logarithmic time complexity.
+- Return the computed `result`.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/49/turn_0_reasoning.txt

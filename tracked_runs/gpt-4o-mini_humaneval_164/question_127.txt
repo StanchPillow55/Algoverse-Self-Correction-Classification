@@ -1,0 +1,383 @@
+Question ID: HumanEval/126
+
+Question:
+
+def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+
+    Examples
+    is_sorted([5]) ➞ True
+    is_sorted([1, 2, 3, 4, 5]) ➞ True
+    is_sorted([1, 3, 2, 4, 5]) ➞ False
+    is_sorted([1, 2, 3, 4, 5, 6]) ➞ True
+    is_sorted([1, 2, 3, 4, 5, 6, 7]) ➞ True
+    is_sorted([1, 3, 2, 4, 5, 6, 7]) ➞ False
+    is_sorted([1, 2, 2, 3, 3, 4]) ➞ True
+    is_sorted([1, 2, 2, 2, 3, 4]) ➞ False
+    '''
+
+
+
+Reference Answer:
+
+
+
+=== Turn 1 ===
+
+
+Response:
+To solve the problem of determining whether a list of numbers is sorted in ascending order while also ensuring that no number appears more than once, we can break down the solution into a series of logical steps:
+
+### Step-by-Step Reasoning:
+
+1. **Understanding the Requirements**:
+   - We need to check if the list is sorted in ascending order.
+   - We also need to ensure that no number appears more than once in the list. If a number appears more than once, we should return `False`.
+
+2. **Handling Edge Cases**:
+   - If the list is empty or contains only one element, it is considered sorted by default.
+   - We need to handle lists with duplicates carefully, as having more than one occurrence of any number should immediately return `False`.
+
+3. **Approach**:
+   - We can iterate through the list and check two conditions:
+     - If the current number is greater than or equal to the next number (to check for sorting).
+     - If the current number is equal to the next number (to check for duplicates).
+   - We can also maintain a set to track the numbers we have seen so far. If we encounter a number that is already in the set, we return `False`.
+
+4. **Implementation**:
+   - We will define a function `is_sorted(lst)` that implements the above logic.
+   - We will use a loop to check the conditions and a set to track duplicates.
+
+### Implementation:
+
+Here is the complete function definition based on the reasoning above:
+
+```python
+def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    '''
+    if len(lst) <= 1:
+        return True  # An empty list or a single element list is sorted by default
+
+    seen = set()  # To track seen numbers
+    for i in range(len(lst) - 1):
+        # Check for duplicates
+        if lst[i] in seen:
+            return False
+        seen.add(lst[i])
+        
+        # Check for sorting
+        if lst[i] > lst[i + 1]:
+            return False
+
+    # Check the last element for duplicates
+    if lst[-1] in seen:
+        return False
+
+    return True  # If all checks passed, the list is sorted and has no duplicates
+```
+
+### Explanation of the Code:
+- We first check if the list has one or zero elements, returning `True` in that case.
+- We initialize an empty set called `seen` to keep track of the numbers we have encountered.
+- We loop through the list up to the second-to-last element:
+  - If the current number is already in `seen`, we return `False` (indicating a duplicate).
+  - We add the current number to `seen`.
+  - We check if the current number is greater than the next number; if it is, we return `False` (indicating the list is not sorted).
+- Finally, we check the last element for duplicates before returning `True` if all checks pass.
+
+This implementation is efficient and straightforward, ensuring that we meet the problem's requirements effectively.
+
+
+Extracted Answer: def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    '''
+    if len(lst) <= 1:
+        return True  # An empty list or a single element list is sorted by default
+
+    seen = set()  # To track seen numbers
+    for i in range(len(lst) - 1):
+        # Check for duplicates
+        if lst[i] in seen:
+            return False
+        seen.add(lst[i])
+        
+        # Check for sorting
+        if lst[i] > lst[i + 1]:
+            return False
+
+    # Check the last element for duplicates
+    if lst[-1] in seen:
+        return False
+
+    return True  # If all checks passed, the list is sorted and has no duplicates
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: Anchoring
+  Teacher Confidence: 0.8
+  Self Confidence: 0.6
+  Combined Confidence: 0.7
+
+
+Turn Accuracy: 0
+
+
+=== Turn 2 ===
+
+
+Response:
+To solve the problem of determining whether a list of numbers is sorted in ascending order and adheres to the specified conditions regarding duplicates, we can break down the solution into a series of logical steps:
+
+### Step-by-Step Reasoning
+
+1. **Understanding the Requirements**:
+   - We need to check if the list is sorted in ascending order.
+   - If there are more than one duplicate of the same number, we should return `False`.
+   - The list can contain only non-negative integers.
+
+2. **Checking for Sorted Order**:
+   - A list is sorted in ascending order if each element is less than or equal to the next element. This can be checked using a loop or a built-in function.
+
+3. **Checking for Duplicates**:
+   - We need to ensure that no number appears more than once in the list. This can be done by using a set to track occurrences of each number.
+
+4. **Combining the Checks**:
+   - We will iterate through the list, checking both conditions simultaneously:
+     - If the current number is greater than the next number, the list is not sorted.
+     - If a number has already been seen (exists in the set), we have a duplicate.
+
+5. **Edge Cases**:
+   - A list with a single element is always sorted.
+   - An empty list can be considered sorted as well.
+
+### Implementation
+
+Now, let's implement the function based on the reasoning above:
+
+```python
+def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    '''
+    seen = set()  # To track seen numbers
+    n = len(lst)
+    
+    for i in range(n):
+        # Check for duplicates
+        if lst[i] in seen:
+            return False
+        seen.add(lst[i])
+        
+        # Check if the list is sorted
+        if i > 0 and lst[i] < lst[i - 1]:
+            return False
+            
+    return True  # If we pass all checks, the list is sorted and has no duplicates
+
+# Test cases
+print(is_sorted([5]))  # ➞ True
+print(is_sorted([1, 2, 3, 4, 5]))  # ➞ True
+print(is_sorted([1, 3, 2, 4, 5]))  # ➞ False
+print(is_sorted([1, 2, 3, 4, 5, 6]))  # ➞ True
+print(is_sorted([1, 2, 3, 4, 5, 6, 7]))  # ➞ True
+print(is_sorted([1, 3, 2, 4, 5, 6, 7]))  # ➞ False
+print(is_sorted([1, 2, 2, 3, 3, 4]))  # ➞ True
+print(is_sorted([1, 2, 2, 2, 3, 4]))  # ➞ False
+```
+
+### Explanation of the Code:
+- We initialize a set called `seen` to keep track of the numbers we encounter.
+- We loop through each number in the list:
+  - If the number is already in `seen`, we return `False` due to duplicates.
+  - If the current number is less than the previous number, we return `False` because the list is not sorted.
+- If we finish the loop without returning `False`, we return `True`, indicating the list is sorted and has no duplicates.
+
+This implementation efficiently checks both conditions in a single pass through the list, making it O(n) in time complexity, where n is the length of the list.
+
+
+Extracted Answer: def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    '''
+    seen = set()  # To track seen numbers
+    n = len(lst)
+    
+    for i in range(n):
+        # Check for duplicates
+        if lst[i] in seen:
+            return False
+        seen.add(lst[i])
+        
+        # Check if the list is sorted
+        if i > 0 and lst[i] < lst[i - 1]:
+            return False
+            
+    return True  # If we pass all checks, the list is sorted and has no duplicates
+
+# Test cases
+print(is_sorted([5]))  # ➞ True
+print(is_sorted([1, 2, 3, 4, 5]))  # ➞ True
+print(is_sorted([1, 3, 2, 4, 5]))  # ➞ False
+print(is_sorted([1, 2, 3, 4, 5, 6]))  # ➞ True
+print(is_sorted([1, 2, 3, 4, 5, 6, 7]))  # ➞ True
+print(is_sorted([1, 3, 2, 4, 5, 6, 7]))  # ➞ False
+print(is_sorted([1, 2, 2, 3, 3, 4]))  # ➞ True
+print(is_sorted([1, 2, 2, 2, 3, 4]))  # ➞ False
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: Anchoring
+  Teacher Confidence: 0.8
+  Self Confidence: 0.6
+  Combined Confidence: 0.7
+
+
+Turn Accuracy: 0
+
+Correction Template: generalize_from_examples_v1
+
+
+=== Turn 3 ===
+
+
+Response:
+To solve the problem of determining whether a list of numbers is sorted in ascending order while also checking for duplicates, we can break down the solution into a series of logical steps.
+
+### Step-by-Step Reasoning:
+
+1. **Understanding the Requirements**:
+   - We need to check if the list is sorted in ascending order.
+   - If there are more than one duplicate of any number, we should return `False`.
+   - The list can contain only non-negative integers.
+
+2. **Identifying Edge Cases**:
+   - An empty list or a list with a single element should return `True` since they are trivially sorted.
+   - A list with duplicates should be handled carefully to ensure that we only allow one occurrence of each number.
+
+3. **Approach**:
+   - We will iterate through the list and check two conditions:
+     - If the current number is greater than the next number (to check for sorting).
+     - If the current number is the same as the next number (to check for duplicates).
+   - We can also maintain a set to track the numbers we have seen so far. If we encounter a number that is already in the set, we will check how many times it appears.
+
+4. **Implementation Steps**:
+   - Initialize an empty set to keep track of seen numbers.
+   - Loop through the list and for each number:
+     - Check if it is greater than the next number.
+     - Check if it is already in the set (to handle duplicates).
+   - If any of the conditions for unsorted or duplicates are met, return `False`.
+   - If we finish the loop without issues, return `True`.
+
+### Implementation:
+
+Now, let's implement the function based on the above reasoning.
+
+```python
+def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    '''
+    if len(lst) <= 1:
+        return True  # A list with 0 or 1 element is sorted
+
+    seen = set()  # To track seen numbers
+    for i in range(len(lst) - 1):
+        # Check if the current number is greater than the next number
+        if lst[i] > lst[i + 1]:
+            return False
+        
+        # Check for duplicates
+        if lst[i] in seen:
+            return False
+        seen.add(lst[i])
+    
+    # Check the last element for duplicates
+    if lst[-1] in seen:
+        return False
+    
+    return True
+
+# Test cases
+print(is_sorted([5]))  # True
+print(is_sorted([1, 2, 3, 4, 5]))  # True
+print(is_sorted([1, 3, 2, 4, 5]))  # False
+print(is_sorted([1, 2, 3, 4, 5, 6]))  # True
+print(is_sorted([1, 2, 3, 4, 5, 6, 7]))  # True
+print(is_sorted([1, 3, 2, 4, 5, 6, 7]))  # False
+print(is_sorted([1, 2, 2, 3, 3, 4]))  # True
+print(is_sorted([1, 2, 2, 2, 3, 4]))  # False
+```
+
+### Explanation of the Code:
+- We start by checking if the list has 0 or 1 element, returning `True` if so.
+- We use a loop to compare each element with the next one to ensure they are in ascending order.
+- We also maintain a set to track previously seen numbers to check for duplicates.
+- Finally, we return `True` if all checks pass, indicating the list is sorted and has no excessive duplicates.
+
+
+Extracted Answer: def is_sorted(lst):
+    '''
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    '''
+    if len(lst) <= 1:
+        return True  # A list with 0 or 1 element is sorted
+
+    seen = set()  # To track seen numbers
+    for i in range(len(lst) - 1):
+        # Check if the current number is greater than the next number
+        if lst[i] > lst[i + 1]:
+            return False
+        
+        # Check for duplicates
+        if lst[i] in seen:
+            return False
+        seen.add(lst[i])
+    
+    # Check the last element for duplicates
+    if lst[-1] in seen:
+        return False
+    
+    return True
+
+# Test cases
+print(is_sorted([5]))  # True
+print(is_sorted([1, 2, 3, 4, 5]))  # True
+print(is_sorted([1, 3, 2, 4, 5]))  # False
+print(is_sorted([1, 2, 3, 4, 5, 6]))  # True
+print(is_sorted([1, 2, 3, 4, 5, 6, 7]))  # True
+print(is_sorted([1, 3, 2, 4, 5, 6, 7]))  # False
+print(is_sorted([1, 2, 2, 3, 3, 4]))  # True
+print(is_sorted([1, 2, 2, 2, 3, 4]))  # False
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: Anchoring
+  Teacher Confidence: 0.8
+  Self Confidence: 0.6
+  Combined Confidence: 0.7
+
+
+Turn Accuracy: 0
+
+Correction Template: generalize_from_examples_v1
+
+
+Final Accuracy: 0

@@ -1,0 +1,27 @@
+{
+  "name": "OpenAI Basic Ensemble",
+  "description": "3-model ensemble using different OpenAI models",
+  "provider": "openai",
+  "ensemble_size": 3,
+  "ensemble_models": [
+    "gpt-4o-mini",
+    "gpt-4o",
+    "gpt-3.5-turbo"
+  ],
+  "voting_strategy": "majority_with_confidence",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": true,
+    "enable_multi_turn": true
+  },
+  "cost_optimization": {
+    "enabled": true,
+    "max_cost_per_question": 0.10,
+    "early_stopping": true
+  },
+  "experiment_settings": {
+    "max_turns": 3,
+    "temperature": 0.2,
+    "max_tokens": 1024
+  }
+}

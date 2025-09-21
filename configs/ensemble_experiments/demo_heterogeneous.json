@@ -1,0 +1,40 @@
+{
+  "name": "Demo Heterogeneous Ensemble",
+  "description": "Demo heterogeneous ensemble for testing without API calls",
+  "provider": "mixed",
+  "ensemble_size": 4,
+  "ensemble_configs": [
+    {
+      "provider": "demo",
+      "model": "demo-openai-mini"
+    },
+    {
+      "provider": "demo", 
+      "model": "demo-anthropic-haiku"
+    },
+    {
+      "provider": "demo",
+      "model": "demo-openai-4o"
+    },
+    {
+      "provider": "demo",
+      "model": "demo-anthropic-sonnet"
+    }
+  ],
+  "voting_strategy": "adaptive",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": false,
+    "enable_multi_turn": false
+  },
+  "cost_optimization": {
+    "enabled": false,
+    "max_cost_per_question": 0.0,
+    "early_stopping": false
+  },
+  "experiment_settings": {
+    "max_turns": 1,
+    "temperature": 0.0,
+    "max_tokens": 256
+  }
+}

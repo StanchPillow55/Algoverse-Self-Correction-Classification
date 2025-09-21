@@ -1,0 +1,33 @@
+{
+  "error_handling": {
+    "max_api_errors_per_sample": 10,
+    "max_total_api_errors": 500,
+    "max_consecutive_failures": 20,
+    "checkpoint_on_error": true,
+    "terminate_on_quota_exceeded": false,
+    "terminate_on_auth_failure": true,
+    "backoff_multiplier": 1.5,
+    "max_backoff_seconds": 120.0,
+    "min_backoff_seconds": 0.5,
+    "ensemble_failure_threshold": 0.8
+  },
+  "health_monitoring": {
+    "monitoring_window_hours": 72,
+    "health_check_interval": 600,
+    "healthy_failure_rate_threshold": 0.15,
+    "degraded_failure_rate_threshold": 0.40,
+    "down_consecutive_failures_threshold": 25
+  },
+  "recovery": {
+    "enable_auto_recovery": true,
+    "max_recovery_attempts": 10,
+    "recovery_cooldown_minutes": 5,
+    "pause_experiment_on_critical": false
+  },
+  "logging": {
+    "log_all_api_calls": false,
+    "log_error_details": true,
+    "create_error_reports": true,
+    "error_log_level": "WARNING"
+  }
+}

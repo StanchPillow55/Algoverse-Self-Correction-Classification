@@ -1,0 +1,71 @@
+Question ID: HumanEval/91
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of counting the number of "boredoms" in a string, we need to identify sentences that start with the word "I". Sentences are delimited by '.', '?', or '!'. Let's break down the problem step by step:
+
+### Step-by-Step Approach:
+
+1. **Understand the Input and Output:**
+   - Input: A string `S` containing sentences.
+   - Output: An integer representing the number of sentences that start with the word "I".
+
+2. **Identify Sentence Delimiters:**
+   - Sentences are separated by '.', '?', or '!'. These characters indicate the end of a sentence.
+
+3. **Split the String into Sentences:**
+   - We can use Python's `re.split()` function from the `re` module to split the string into sentences based on the delimiters.
+
+4. **Trim and Check Each Sentence:**
+   - After splitting the string, each sentence might have leading or trailing whitespace. We should strip these whitespaces.
+   - Check if the stripped sentence starts with the word "I". If it does, increment the boredom count.
+
+5. **Return the Count:**
+   - Finally, return the count of sentences that start with "I".
+
+### Implementation:
+
+Let's implement the function `is_bored` following the above approach:
+
+```python
+import re
+
+def is_bored(S):
+    """
+    Count the number of sentences that start with the word "I".
+    Sentences are delimited by '.', '?' or '!'.
+    """
+    # Split the string into sentences using regex to handle '.', '?', and '!' as delimiters
+    sentences = re.split(r'[.?!]', S)
+    
+    # Initialize boredom count
+    boredom_count = 0
+    
+    # Iterate over each sentence
+    for sentence in sentences:
+        # Strip leading and trailing whitespace
+        stripped_sentence = sentence.strip()
+        
+        # Check if the sentence starts with "I"
+        if stripped_sentence.startswith("I"):
+            boredom_count += 1
+    
+    return boredom_count
+
+# Test cases
+print(is_bored("Hello world"))  # Output: 0
+print(is_bored("The sky is blue. The sun is shining. I love this weather"))  # Output: 1
+```
+
+### Explanation:
+
+- **Regex Split:** We use `re.split(r'[.?!]', S)` to split the input string `S` into sentences. The regex pattern `[.?!]` matches any of the sentence delimiters.
+- **Whitespace Stripping:** For each sentence obtained from the split, we use `strip()` to remove any leading or trailing whitespace.
+- **Sentence Check:** We check if the stripped sentence starts with "I" using `startswith("I")`. If it does, we increment the `boredom_count`.
+- **Return Value:** Finally, we return the `boredom_count` which gives the number of sentences starting with "I".
+
+This solution efficiently counts the number of "boredoms" by leveraging regular expressions and string manipulation functions.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/91/turn_0_reasoning.txt

@@ -65,7 +65,7 @@ MODEL_REGISTRY: Dict[str, ModelConfig] = {
         parameter_count_b=70.0,  # Estimated
         cost_per_1k_tokens=0.003,
         size_category="Medium", 
-        api_model_name="claude-3-5-sonnet-20241022",
+        api_model_name="claude-3-5-sonnet-20241210",
         notes="Mid-tier Anthropic model with strong reasoning (Claude 3.5)"
     ),
     
@@ -107,8 +107,8 @@ MODEL_REGISTRY: Dict[str, ModelConfig] = {
         parameter_count_b=70.0,  # Estimated
         cost_per_1k_tokens=0.003,
         size_category="Medium",
-        api_model_name="claude-3-5-sonnet-20241022",
-        notes="Latest Claude 3.5 Sonnet model (Oct 2024)"
+        api_model_name="claude-3-5-sonnet-20241210",
+        notes="Latest Claude 3.5 Sonnet model (Dec 2024)"
     )
 }
 

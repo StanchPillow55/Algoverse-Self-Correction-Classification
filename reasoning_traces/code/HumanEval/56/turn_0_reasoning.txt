@@ -1,0 +1,64 @@
+Question ID: HumanEval/56
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of determining if a string of brackets is correctly bracketed, we need to ensure that every opening bracket `<` has a corresponding closing bracket `>`. This is a common problem related to checking balanced parentheses, and we can solve it using a simple counter approach.
+
+### Thought Process
+
+1. **Initialization**: 
+   - We will use a counter to keep track of the number of unmatched opening brackets `<`.
+   - Initialize the counter to zero.
+
+2. **Iterate through the string**:
+   - For each character in the string:
+     - If the character is an opening bracket `<`, increment the counter.
+     - If the character is a closing bracket `>`:
+       - Check if the counter is greater than zero (indicating there is an unmatched opening bracket available to match with this closing bracket). If so, decrement the counter.
+       - If the counter is zero, it means there is a closing bracket without a preceding unmatched opening bracket, so the string is incorrectly bracketed, and we should return `False`.
+
+3. **Final Check**:
+   - After processing all characters, check if the counter is zero.
+   - If the counter is zero, it means all opening brackets have been matched with closing brackets, so return `True`.
+   - If the counter is not zero, it means there are unmatched opening brackets, so return `False`.
+
+### Implementation
+
+Now, let's implement the function `correct_bracketing` based on the above reasoning:
+
+```python
+def correct_bracketing(brackets: str) -> bool:
+    """ brackets is a string of "<" and ">".
+    return True if every opening bracket has a corresponding closing bracket.
+    """
+    counter = 0
+    
+    for char in brackets:
+        if char == '<':
+            counter += 1
+        elif char == '>':
+            if counter > 0:
+                counter -= 1
+            else:
+                return False
+    
+    return counter == 0
+
+# Test cases
+print(correct_bracketing("<"))        # Expected: False
+print(correct_bracketing("<>"))       # Expected: True
+print(correct_bracketing("<<><>>"))   # Expected: True
+print(correct_bracketing("><<>"))     # Expected: False
+```
+
+### Explanation
+
+- The function initializes a counter to zero.
+- It iterates over each character in the input string.
+- It adjusts the counter based on whether the character is an opening or closing bracket.
+- If a closing bracket is encountered without a matching opening bracket (i.e., the counter is zero), the function returns `False`.
+- After the loop, if the counter is zero, it returns `True`, indicating all brackets are correctly matched. Otherwise, it returns `False`.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/56/turn_0_reasoning.txt

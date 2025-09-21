@@ -1,0 +1,72 @@
+Question ID: HumanEval/158
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve this problem, we need to find the word in a list that has the maximum number of unique characters. If there are multiple words with the same number of unique characters, we should return the one that comes first in lexicographical order.
+
+Here's a step-by-step breakdown of how we can approach this problem:
+
+1. **Understand the Problem Requirements:**
+   - We are given a list of strings.
+   - We need to determine the number of unique characters in each string.
+   - We need to find the string with the maximum number of unique characters.
+   - If there is a tie (multiple strings with the same number of unique characters), we return the string that comes first lexicographically.
+
+2. **Plan the Solution:**
+   - Initialize a variable to keep track of the word with the maximum number of unique characters.
+   - Initialize a variable to keep track of the maximum number of unique characters found so far.
+   - Iterate over each word in the list:
+     - Convert the word to a set to get unique characters.
+     - Count the number of unique characters.
+     - Compare this count with the current maximum:
+       - If it's greater, update the maximum and the word.
+       - If it's equal, check lexicographical order and update if necessary.
+   - Return the word with the maximum number of unique characters.
+
+3. **Edge Cases:**
+   - If the list is empty, we should return an empty string.
+   - If all words have the same number of unique characters, the lexicographical order will determine the result.
+
+4. **Implementation:**
+   - We will use Python's `set` to determine unique characters and `min` function with a custom key for lexicographical comparison.
+
+Let's implement the function based on this plan:
+
+```python
+def find_max(words):
+    """Write a function that accepts a list of strings.
+    The list contains different words. Return the word with maximum number
+    of unique characters. If multiple strings have maximum number of unique
+    characters, return the one which comes first in lexicographical order.
+    """
+    if not words:
+        return ""
+    
+    max_unique_count = 0
+    max_word = ""
+    
+    for word in words:
+        unique_chars = set(word)
+        unique_count = len(unique_chars)
+        
+        if (unique_count > max_unique_count) or (unique_count == max_unique_count and word < max_word):
+            max_unique_count = unique_count
+            max_word = word
+    
+    return max_word
+
+# Test cases
+print(find_max(["name", "of", "string"]))  # Output: "string"
+print(find_max(["name", "enam", "game"]))  # Output: "enam"
+print(find_max(["aaaaaaa", "bb", "cc"]))   # Output: "aaaaaaa"
+```
+
+### Explanation:
+- We initialize `max_unique_count` to 0 and `max_word` to an empty string.
+- For each word, we calculate the number of unique characters using `set(word)`.
+- We update `max_unique_count` and `max_word` if the current word has more unique characters or if it has the same number but is lexicographically smaller.
+- Finally, we return the word with the maximum number of unique characters.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/158/turn_0_reasoning.txt

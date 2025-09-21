@@ -1,0 +1,19 @@
+problem_id,dataset,model,provider,temperature,question,reference_answer,final_answer,final_accuracy,total_turns,initial_accuracy,improvement,reasoning_trace_files,templates_used,biases_detected,final_confidence,experiment_config
+1824,gsm8k,gpt-4o-mini,openai,0.2,Five food companies sponsored a local food bank. Foster Farms donated 45 dressed chickens; American Summits donated twice the number of bottled water than the number of dressed chicken donated by Foster Farms; Hormel donated three times the number of dressed chickens that Foster Farms donated; Boudin Butchers donated one-third of the number of dressed chickens that Hormel donated; Del Monte Foods donated 30 fewer bottles of water than American Summits. How many food items did the companies donate in total?,"American Summits donated 45 x 2 = <<45*2=90>>90 bottled waters.
+Hormel donated 45 x 3 = <<45*3=135>>135 spams.
+Boudin Bakery donated 135 x 1/3 = <<135*1/3=45>>45 sourdoughs.
+Del Monte Foods donated 90 - 30 = <<90-30=60>>60 canned fruits.
+Therefore, a total of 45 + 90 + 135 + 45 + 60 = <<45+90+135+45+60=375>>375 different food.
+#### 375",375,1,1,1,0,reasoning_traces/math/1824/turn_0_reasoning.txt,,Confirmation,0.6,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"
+409,gsm8k,gpt-4o-mini,openai,0.2,Frank needs to meet a quota at work for his sales. It’s the beginning of the month and in 30 days he needs to have 50 cars sold. The first three days he sold 5 cars each day. Then the next 4 days he sold 3 cars each day. If the month is 30 days long how many cars does he need to sell for the remaining days to meet his quota?,"On days one, two, and three he sold 5 cars each day so, 5 cars + 5 cars + 5 cars = <<5+5+5=15>>15 cars that he sold on those days.
+On days 4,5,6 and 7 he sold 3 cars each day so, 3 cars + 3 cars + 3 cars + 3 cars = <<3+3+3+3=12>>12 cars that he sold on those days.
+Now we combine the cars he has already sold, which is 15 cars, and 12 cars, so 15 cars + 12 cars = <<15+12=27>>27 cars are sold in total.
+If he needs to sell 50 cars and has already sold 27 cars then 50 cars - 27 cars = <<50-27=23>>23 cars left to sell to meet his quota.
+#### 23",1,0,2,0,0,reasoning_traces/math/409/turn_0_reasoning.txt|reasoning_traces/math/409/turn_1_reasoning.txt,devils_advocate_v1,Confirmation|Confirmation,0.6,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"
+4506,gsm8k,gpt-4o-mini,openai,0.2,"Jean is wanted on 3 counts of arson, 2 burglary charges, and six times as many petty larceny as burglary charges. If each arson count has a 36-month sentence, each burglary charge is 18 months and each petty larceny charge is 1/3rd as long as a burglary charge, how many months in jail is Jean facing?","First find the total time for the burglary charges: 18 months/charge * 2 charges = 36 months
+Then find the total time for the arson charges: 3 counts * 36 months/count = <<3*36=108>>108 months
+Then find the time per larceny charge: 18 months / 3 = <<18/3=6>>6 months
+Then find the total number of larceny charges: 2 charges * 6 = <<2*6=12>>12 charges
+Then find the total time for the larceny charges: 6 months/charge * 12 charges = 72 months
+Then add up the time for all the charges to find the total jail time: 36 months + 72 months + 108 months = <<36+72+108=216>>216 months
+#### 216",12,0,2,0,0,reasoning_traces/math/4506/turn_0_reasoning.txt|reasoning_traces/math/4506/turn_1_reasoning.txt,devils_advocate_v1,Confirmation|Confirmation,0.6,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"

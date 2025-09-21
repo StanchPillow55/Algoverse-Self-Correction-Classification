@@ -1,0 +1,79 @@
+Question ID: HumanEval/143
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve this problem, we need to identify words in a given sentence whose lengths are prime numbers and return these words in the same order they appear in the sentence. Let's break down the problem and devise a solution step by step.
+
+### Step-by-Step Approach
+
+1. **Understand the Input and Output:**
+   - Input: A string `sentence` containing words separated by spaces.
+   - Output: A string containing words from the input sentence whose lengths are prime numbers, separated by spaces.
+
+2. **Identify Prime Numbers:**
+   - A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.
+   - We need a helper function to determine if a given number is prime.
+
+3. **Extract Words from the Sentence:**
+   - Split the sentence into words using the space character as a delimiter.
+
+4. **Filter Words by Prime Length:**
+   - For each word, calculate its length and check if this length is a prime number using the helper function.
+   - Collect words whose lengths are prime numbers.
+
+5. **Return the Result:**
+   - Join the filtered words with spaces to form the final output string.
+
+### Implementation
+
+Let's implement the solution based on the above approach:
+
+```python
+def is_prime(n):
+    """Helper function to check if a number is prime."""
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+def words_in_sentence(sentence):
+    """
+    Returns a string containing words from the original sentence
+    whose lengths are prime numbers.
+    """
+    # Split the sentence into words
+    words = sentence.split()
+    
+    # Filter words with prime length
+    prime_length_words = [word for word in words if is_prime(len(word))]
+    
+    # Join the filtered words with spaces
+    return ' '.join(prime_length_words)
+
+# Example usage:
+# print(words_in_sentence("This is a test"))  # Output: "is"
+# print(words_in_sentence("lets go for swimming"))  # Output: "go for"
+```
+
+### Explanation
+
+- **`is_prime` Function:** This helper function checks if a number is prime. It handles small numbers directly and uses a loop to check divisibility for larger numbers, optimizing by checking up to the square root of `n`.
+  
+- **`words_in_sentence` Function:**
+  - We split the input sentence into words.
+  - We use a list comprehension to filter words whose lengths are prime, utilizing the `is_prime` function.
+  - Finally, we join the filtered words with spaces to form the output string.
+
+This solution efficiently solves the problem by leveraging a helper function for prime checking and using Python's string and list operations to process the sentence.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/143/turn_0_reasoning.txt

@@ -1,0 +1,215 @@
+Question ID: 1012
+
+Question:
+Maria was charging her power bank before going to the park when she disconnected it and noticed the power bank wasn’t fully charged yet. Once at the park, her friends asked her if they could charge their phones. While charging her friends’ phones, she noticed that her power bank was losing 9% of the total capacity each hour. 5 hours later the battery started to lose instead 7% of the total capacity each hour for about 3 hours. In the end, the charge remaining was 28%. What was the charge of the power bank when Maria went out to the park?
+
+
+Reference Answer:
+At first, the power bank lost 9% per hour * 5 hours = 45%.
+Later on, the power bank lost 7% per hour * 3 hours = 21%.
+The power bank charge remaining was 28%, so the power bank charge before going to the park was 45 + 21 +28 = 94%.
+#### 94
+
+
+=== Turn 1 ===
+
+
+Response:
+Let \( x \) be the initial charge of the power bank when Maria went out to the park.
+
+1. **Calculate the charge after 5 hours:**
+   - The power bank loses 9% of its total capacity each hour for the first 5 hours.
+   - The charge lost in 5 hours is:
+     \[
+     5 \times 9\% = 45\%
+     \]
+   - Therefore, the remaining charge after 5 hours is:
+     \[
+     x - 0.45x = 0.55x
+     \]
+
+2. **Calculate the charge after the next 3 hours:**
+   - After 5 hours, the power bank starts losing 7% of its total capacity each hour for the next 3 hours.
+   - The charge lost in 3 hours is:
+     \[
+     3 \times 7\% = 21\%
+     \]
+   - Therefore, the remaining charge after these 3 hours is:
+     \[
+     0.55x - 0.21x = 0.34x
+     \]
+
+3. **Set up the equation with the final charge:**
+   - We know that the final charge remaining is 28%, so we can set up the equation:
+     \[
+     0.34x = 28\%
+     \]
+
+4. **Solve for \( x \):**
+   - To find \( x \), we divide both sides by 0.34:
+     \[
+     x = \frac{28\%}{0.34}
+     \]
+   - Calculating this gives:
+     \[
+     x \approx 82.35\%
+     \]
+
+Thus, the initial charge of the power bank when Maria went out to the park was approximately **82.35%**.
+
+
+Extracted Answer: 82.35
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: Confirmation
+  Teacher Confidence: 0.6
+  Self Confidence: 0.6
+  Combined Confidence: 0.6
+
+
+Turn Accuracy: 0
+
+
+=== Turn 2 ===
+
+
+Response:
+To solve the problem, we need to determine the initial charge of Maria's power bank before she went to the park. We will work backwards from the final charge of 28% after the charging process.
+
+1. **Understanding the problem**: 
+   - The power bank loses 9% of its total capacity each hour for the first 5 hours.
+   - After 5 hours, it loses 7% of its total capacity each hour for the next 3 hours.
+   - The final charge remaining after this entire process is 28%.
+
+2. **Calculating the charge after the 3 hours of 7% loss**:
+   - Let \( C \) be the charge of the power bank at the start of the 3 hours (after the first 5 hours).
+   - After losing 7% for 3 hours, the charge remaining can be calculated as follows:
+     - After 1 hour: \( C - 0.07C = 0.93C \)
+     - After 2 hours: \( 0.93C - 0.07(0.93C) = 0.93C \times 0.93 = 0.8649C \)
+     - After 3 hours: \( 0.8649C - 0.07(0.8649C) = 0.8649C \times 0.93 = 0.804357C \)
+
+   Thus, after 3 hours of losing 7%, the charge remaining is \( 0.804357C \).
+
+3. **Setting up the equation for the charge after the first 5 hours**:
+   - We know that after the 3 hours of 7% loss, the remaining charge is 28%. Therefore, we have:
+   \[
+   0.804357C = 28
+   \]
+   - To find \( C \):
+   \[
+   C = \frac{28}{0.804357} \approx 34.8
+   \]
+
+4. **Calculating the charge after the first 5 hours of 9% loss**:
+   - Let \( B \) be the charge of the power bank at the start of the 5 hours (before the first 5 hours).
+   - After losing 9% for 5 hours, the charge remaining can be calculated as follows:
+     - After 1 hour: \( B - 0.09B = 0.91B \)
+     - After 2 hours: \( 0.91B - 0.09(0.91B) = 0.91B \times 0.91 = 0.8281B \)
+     - After 3 hours: \( 0.8281B - 0.09(0.8281B) = 0.8281B \times 0.91 = 0.753571B \)
+     - After 4 hours: \( 0.753571B - 0.09(0.753571B) = 0.753571B \times 0.91 = 0.685749B \)
+     - After 5 hours: \( 0.685749B - 0.09(0.685749B) = 0.685749B \times 0.91 = 0.623057B \)
+
+   Thus, after 5 hours of losing 9%, the charge remaining is \( 0.623057B \).
+
+5. **Setting up the equation for the initial charge**:
+   - We know that after the 5 hours of 9% loss, the charge remaining is \( C \), which we found to be approximately 34.8. Therefore, we have:
+   \[
+   0.623057B = 34.8
+   \]
+   - To find \( B \):
+   \[
+   B = \frac{34.8}{0.623057} \approx 55.9
+   \]
+
+6. **Final answer**:
+   - The charge of the power bank when Maria went out to the park was approximately **55.9%**. 
+
+Thus, the final answer is:
+\[
+\boxed{55.9}
+\]
+
+
+Extracted Answer: 34.8
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: Confirmation
+  Teacher Confidence: 0.6
+  Self Confidence: 0.6
+  Combined Confidence: 0.6
+
+
+Turn Accuracy: 0
+
+Correction Template: devils_advocate_v1
+
+
+=== Turn 3 ===
+
+
+Response:
+To find the initial charge of Maria's power bank when she went out to the park, we need to work backwards from the final charge remaining after the charging sessions.
+
+Let \( x \) be the initial charge of the power bank when Maria left for the park.
+
+1. **Charge Loss During the First 5 Hours:**
+   - The power bank loses 9% of its total capacity each hour for the first 5 hours.
+   - The amount of charge lost after 5 hours can be calculated as:
+     \[
+     \text{Charge lost in 5 hours} = 5 \times 9\% = 45\%
+     \]
+   - Therefore, the remaining charge after 5 hours is:
+     \[
+     \text{Remaining charge after 5 hours} = x - 0.45x = 0.55x
+     \]
+
+2. **Charge Loss During the Next 3 Hours:**
+   - After 5 hours, the power bank starts losing 7% of its total capacity each hour for the next 3 hours.
+   - The amount of charge lost in these 3 hours is:
+     \[
+     \text{Charge lost in 3 hours} = 3 \times 7\% = 21\%
+     \]
+   - The remaining charge after these 3 hours is:
+     \[
+     \text{Remaining charge after 3 more hours} = 0.55x - 0.21x = 0.34x
+     \]
+
+3. **Final Charge Remaining:**
+   - We know that the final charge remaining after all the losses is 28%. Therefore, we can set up the equation:
+     \[
+     0.34x = 28\%
+     \]
+
+4. **Solving for \( x \):**
+   - To find \( x \), we divide both sides by 0.34:
+     \[
+     x = \frac{28\%}{0.34}
+     \]
+   - Calculating this gives:
+     \[
+     x \approx 82.35\%
+     \]
+
+Thus, the initial charge of the power bank when Maria went out to the park was approximately **82.35%**. 
+
+Final Answer: **82.35%**
+
+
+Extracted Answer: 82.35
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: Confirmation
+  Teacher Confidence: 0.6
+  Self Confidence: 0.6
+  Combined Confidence: 0.6
+
+
+Turn Accuracy: 0
+
+Correction Template: devils_advocate_v1
+
+
+Final Accuracy: 0

@@ -1,0 +1,74 @@
+Question ID: HumanEval/11
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of performing a binary XOR operation on two strings consisting of '1's and '0's, we need to follow these steps:
+
+### Step-by-Step Reasoning:
+
+1. **Understand XOR Operation**:
+   - XOR (exclusive OR) is a binary operation that takes two bits and returns 1 if the bits are different, and 0 if they are the same.
+   - The truth table for XOR is:
+     - 0 XOR 0 = 0
+     - 0 XOR 1 = 1
+     - 1 XOR 0 = 1
+     - 1 XOR 1 = 0
+
+2. **Input Constraints**:
+   - Both input strings `a` and `b` are of the same length.
+   - They consist only of the characters '1' and '0'.
+
+3. **Approach**:
+   - Iterate over the characters of the strings `a` and `b` simultaneously.
+   - For each pair of characters, apply the XOR operation according to the truth table.
+   - Collect the results of these operations into a new string.
+
+4. **Implementation Details**:
+   - Use a loop to iterate over the indices of the strings.
+   - Convert each character to an integer, perform the XOR operation, and convert the result back to a string.
+   - Concatenate these results to form the final output string.
+
+5. **Edge Cases**:
+   - Since the problem guarantees that the strings are of the same length and only contain '1's and '0's, we don't need to handle mismatched lengths or invalid characters.
+
+### Implementation:
+
+Here's the implementation of the `string_xor` function based on the above reasoning:
+
+```python
+from typing import List
+
+def string_xor(a: str, b: str) -> str:
+    """ Input are two strings a and b consisting only of 1s and 0s.
+    Perform binary XOR on these inputs and return result also as a string.
+    """
+    # Initialize an empty list to store the result characters
+    result = []
+    
+    # Iterate over the characters of both strings
+    for char_a, char_b in zip(a, b):
+        # Convert characters to integers, perform XOR, and convert back to string
+        xor_result = str(int(char_a) ^ int(char_b))
+        # Append the result to the list
+        result.append(xor_result)
+    
+    # Join the list into a single string and return
+    return ''.join(result)
+
+# Example usage
+print(string_xor('010', '110'))  # Output: '100'
+```
+
+### Explanation of the Code:
+
+- We use a list `result` to collect the XOR results of each pair of characters.
+- We use `zip(a, b)` to iterate over both strings simultaneously.
+- For each pair of characters `(char_a, char_b)`, we convert them to integers, perform the XOR operation using `^`, and convert the result back to a string.
+- We append each XOR result to the `result` list.
+- Finally, we join the list into a single string using `''.join(result)` and return it.
+
+This solution efficiently computes the XOR of two binary strings and returns the result as a new binary string.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/11/turn_0_reasoning.txt

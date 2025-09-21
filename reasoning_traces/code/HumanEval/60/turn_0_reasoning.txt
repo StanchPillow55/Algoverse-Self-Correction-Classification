@@ -1,0 +1,63 @@
+Question ID: HumanEval/60
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of summing numbers from 1 to \( n \), we can use a mathematical approach that leverages the formula for the sum of an arithmetic series. The sum of the first \( n \) natural numbers can be calculated using the formula:
+
+\[ S = \frac{n \times (n + 1)}{2} \]
+
+This formula is derived from the observation that if you list the numbers from 1 to \( n \) and then reverse them, pairing each number from the start with a number from the end, each pair sums to \( n + 1 \). For example, with \( n = 5 \):
+
+- Pair 1: \( 1 + 5 = 6 \)
+- Pair 2: \( 2 + 4 = 6 \)
+- Middle number: \( 3 \)
+
+Since there are \( n \) numbers, there are \( \frac{n}{2} \) pairs if \( n \) is even, or \( \frac{n-1}{2} \) pairs plus the middle number if \( n \) is odd. However, the formula \( \frac{n \times (n + 1)}{2} \) works for both even and odd \( n \).
+
+### Step-by-Step Approach:
+
+1. **Understand the Problem**: We need to sum all integers from 1 to \( n \).
+
+2. **Choose the Method**: Instead of using a loop to iterate through each number and sum them, we can use the arithmetic series formula to compute the sum directly.
+
+3. **Implement the Formula**: The formula \( \frac{n \times (n + 1)}{2} \) gives us the sum directly.
+
+4. **Consider Edge Cases**: The smallest possible input is \( n = 1 \), which should return 1. The formula handles this correctly as \( \frac{1 \times (1 + 1)}{2} = 1 \).
+
+5. **Implement the Function**: Write a Python function that takes an integer \( n \) and returns the sum using the formula.
+
+Here's the implementation:
+
+```python
+def sum_to_n(n: int) -> int:
+    """sum_to_n is a function that sums numbers from 1 to n.
+    >>> sum_to_n(30)
+    465
+    >>> sum_to_n(100)
+    5050
+    >>> sum_to_n(5)
+    15
+    >>> sum_to_n(10)
+    55
+    >>> sum_to_n(1)
+    1
+    """
+    return n * (n + 1) // 2
+
+# Test cases
+print(sum_to_n(30))  # Expected output: 465
+print(sum_to_n(100)) # Expected output: 5050
+print(sum_to_n(5))   # Expected output: 15
+print(sum_to_n(10))  # Expected output: 55
+print(sum_to_n(1))   # Expected output: 1
+```
+
+### Explanation:
+
+- **Formula Usage**: The function uses the formula \( \frac{n \times (n + 1)}{2} \) to compute the sum efficiently.
+- **Integer Division**: We use `//` for integer division to ensure the result is an integer, which is necessary since the sum of integers should be an integer.
+- **Efficiency**: This approach is efficient with a time complexity of \( O(1) \), as it computes the result in constant time without iteration.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/60/turn_0_reasoning.txt

@@ -1,0 +1,72 @@
+Question ID: HumanEval/140
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of replacing spaces in a given string according to specific rules, we need to carefully consider the requirements and implement a solution that handles all cases correctly. Let's break down the problem and devise a plan:
+
+### Problem Analysis
+
+1. **Single Spaces**: Any single space in the string should be replaced with an underscore (`_`).
+2. **Consecutive Spaces**: If there are more than two consecutive spaces, they should be replaced with a single hyphen (`-`).
+
+### Approach
+
+1. **Iterate Through the String**: We will iterate through the string character by character to identify spaces and count consecutive spaces.
+2. **Count Consecutive Spaces**: As we iterate, we will keep track of consecutive spaces using a counter.
+3. **Replace Spaces**:
+   - If we encounter a single space (i.e., the counter is 1), we replace it with an underscore.
+   - If the counter exceeds 2 (indicating more than two consecutive spaces), we replace the entire sequence with a hyphen.
+4. **Build the Result**: We will construct the resulting string by appending characters and replacements to a list, which we will join at the end to form the final string.
+
+### Implementation
+
+Let's implement the function `fix_spaces` based on the above approach:
+
+```python
+def fix_spaces(text):
+    result = []
+    i = 0
+    n = len(text)
+    
+    while i < n:
+        if text[i] == ' ':
+            # Start counting spaces
+            space_count = 0
+            while i < n and text[i] == ' ':
+                space_count += 1
+                i += 1
+            
+            # Determine replacement based on space count
+            if space_count == 1:
+                result.append('_')
+            elif space_count > 2:
+                result.append('-')
+        else:
+            # Append non-space characters directly
+            result.append(text[i])
+            i += 1
+    
+    return ''.join(result)
+
+# Test cases
+print(fix_spaces("Example"))        # "Example"
+print(fix_spaces("Example 1"))      # "Example_1"
+print(fix_spaces(" Example 2"))     # "_Example_2"
+print(fix_spaces(" Example   3"))   # "_Example-3"
+```
+
+### Explanation
+
+- **Loop Through Characters**: We use a `while` loop to iterate through the string. The index `i` is incremented as we process each character.
+- **Space Counting**: When we encounter a space, we enter a nested loop to count consecutive spaces. We increment `i` within this loop to skip over the spaces.
+- **Replacement Logic**: After counting spaces, we decide the replacement based on the count:
+  - A single space is replaced with `_`.
+  - More than two consecutive spaces are replaced with `-`.
+- **Appending Characters**: Non-space characters are directly appended to the result list.
+- **Result Construction**: Finally, we join the list of characters into a single string and return it.
+
+This solution efficiently handles the requirements and edge cases specified in the problem statement.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/140/turn_0_reasoning.txt
