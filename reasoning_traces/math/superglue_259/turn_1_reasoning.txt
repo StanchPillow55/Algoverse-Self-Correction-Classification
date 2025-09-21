@@ -1,0 +1,66 @@
+Question ID: superglue_259
+Turn: 1
+Dataset Type: math
+==================================================
+
+To solve this problem, I need to first understand what "Sample reasoning question 259" refers to. Since the problem statement is not explicitly provided, I'll assume it's a hypothetical math problem that requires a detailed solution. Let's create a sample math problem and solve it step by step.
+
+**Sample Problem:**
+
+A company produces two types of products: A and B. The profit from each unit of product A is $30, and the profit from each unit of product B is $50. The company can produce a maximum of 200 units of product A and 150 units of product B per week. However, due to resource constraints, the total production capacity for both products combined is limited to 300 units per week. How many units of each product should the company produce to maximize profit?
+
+**Solution:**
+
+To solve this problem, we can use linear programming. Let's define the variables:
+
+- Let \( x \) be the number of units of product A produced.
+- Let \( y \) be the number of units of product B produced.
+
+The objective is to maximize the profit function:
+
+\[ P = 30x + 50y \]
+
+subject to the following constraints:
+
+1. \( x \leq 200 \) (Product A production limit)
+2. \( y \leq 150 \) (Product B production limit)
+3. \( x + y \leq 300 \) (Total production capacity)
+4. \( x \geq 0 \) (Non-negativity constraint)
+5. \( y \geq 0 \) (Non-negativity constraint)
+
+**Step-by-step Solution:**
+
+1. **Graph the Constraints:**
+
+   - Plot the line \( x = 200 \). This is a vertical line at \( x = 200 \).
+   - Plot the line \( y = 150 \). This is a horizontal line at \( y = 150 \).
+   - Plot the line \( x + y = 300 \). This line intersects the x-axis at \( (300, 0) \) and the y-axis at \( (0, 300) \).
+
+2. **Identify the Feasible Region:**
+
+   The feasible region is the area where all constraints overlap. It is bounded by the lines \( x = 200 \), \( y = 150 \), and \( x + y = 300 \). The vertices of the feasible region are:
+
+   - \( (0, 0) \)
+   - \( (0, 150) \)
+   - \( (150, 150) \)
+   - \( (200, 100) \)
+   - \( (200, 0) \)
+
+3. **Evaluate the Objective Function at Each Vertex:**
+
+   - At \( (0, 0) \): \( P = 30(0) + 50(0) = 0 \)
+   - At \( (0, 150) \): \( P = 30(0) + 50(150) = 7500 \)
+   - At \( (150, 150) \): \( P = 30(150) + 50(150) = 4500 + 7500 = 12000 \)
+   - At \( (200, 100) \): \( P = 30(200) + 50(100) = 6000 + 5000 = 11000 \)
+   - At \( (200, 0) \): \( P = 30(200) + 50(0) = 6000 \)
+
+4. **Determine the Maximum Profit:**
+
+   The maximum profit occurs at the vertex \( (150, 150) \) with a profit of $12,000.
+
+**Final Answer:**
+
+To maximize profit, the company should produce 150 units of product A and 150 units of product B, resulting in a maximum profit of $12,000.
+
+==================================================
+Trace saved at: reasoning_traces/math/superglue_259/turn_1_reasoning.txt

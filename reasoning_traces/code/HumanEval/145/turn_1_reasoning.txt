@@ -1,0 +1,49 @@
+Question ID: HumanEval/145
+Turn: 1
+Dataset Type: code
+==================================================
+
+To solve the problem of sorting a list of integers based on the sum of their digits, we need to consider a few key points:
+
+1. **Sum of Digits Calculation**: We need a way to calculate the sum of the digits of each integer. This includes handling negative numbers correctly, where the negative sign should not be considered as a digit.
+
+2. **Stable Sorting**: The problem specifies that if two numbers have the same sum of digits, they should remain in the order they appear in the original list. This means we need a stable sorting algorithm.
+
+3. **Implementation**: Python's built-in sorting functions are stable, so we can use them directly. We can use the `sorted()` function with a custom key that calculates the sum of digits for each number.
+
+Let's break down the steps:
+
+- **Step 1**: Define a helper function to calculate the sum of digits of an integer. This function should handle negative numbers by taking the absolute value before summing the digits.
+
+- **Step 2**: Use the `sorted()` function with the custom key being the sum of digits calculated by our helper function. This will sort the list based on the sum of digits.
+
+- **Step 3**: Return the sorted list.
+
+Now, let's implement the solution:
+
+```python
+def order_by_points(nums):
+    def sum_of_digits(n):
+        # Convert the number to its absolute value and then to a string
+        # Sum the integer value of each character (digit) in the string
+        return sum(int(digit) for digit in str(abs(n)))
+    
+    # Sort the list using the sum_of_digits as the key
+    # sorted() is stable, so it maintains the order of elements with equal keys
+    return sorted(nums, key=sum_of_digits)
+
+# Test cases
+print(order_by_points([1, 11, -1, -11, -12]))  # Expected output: [-1, -11, 1, -12, 11]
+print(order_by_points([]))  # Expected output: []
+```
+
+### Explanation:
+
+- **sum_of_digits Function**: This function takes an integer `n`, converts it to its absolute value to ignore the negative sign, and then converts it to a string. It iterates over each character in the string, converts it back to an integer, and sums these integers to get the sum of digits.
+
+- **Sorting**: The `sorted()` function is used with `key=sum_of_digits`, which sorts the list based on the sum of digits of each number. Since `sorted()` is stable, it maintains the relative order of elements that have the same sum of digits.
+
+This approach efficiently sorts the list as required by the problem statement.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/145/turn_1_reasoning.txt

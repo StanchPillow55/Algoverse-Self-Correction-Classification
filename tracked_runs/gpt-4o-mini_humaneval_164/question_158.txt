@@ -1,0 +1,111 @@
+Question ID: HumanEval/157
+
+Question:
+
+def right_angle_triangle(a, b, c):
+    '''
+    Given the lengths of the three sides of a triangle. Return True if the three
+    sides form a right-angled triangle, False otherwise.
+    A right-angled triangle is a triangle in which one angle is right angle or 
+    90 degree.
+    Example:
+    right_angle_triangle(3, 4, 5) == True
+    right_angle_triangle(1, 2, 3) == False
+    '''
+
+
+
+Reference Answer:
+
+
+
+=== Turn 1 ===
+
+
+Response:
+To determine whether three given lengths can form a right-angled triangle, we can utilize the Pythagorean theorem. The theorem states that in a right-angled triangle, the square of the length of the hypotenuse (the longest side) is equal to the sum of the squares of the lengths of the other two sides. 
+
+### Step-by-Step Approach:
+
+1. **Identify the longest side**: Since we need to determine which side is the hypotenuse, we first need to identify the longest side among the three given lengths.
+
+2. **Sort the sides**: We can sort the three sides to easily identify the longest side and the other two sides. This will help us avoid manually comparing the sides.
+
+3. **Apply the Pythagorean theorem**: Once we have the sides sorted, we can apply the Pythagorean theorem:
+   - Let the sides be \( x \), \( y \), and \( z \) such that \( z \) is the longest side.
+   - We check if \( z^2 = x^2 + y^2 \).
+
+4. **Return the result**: If the condition holds true, we return `True`, indicating that the sides can form a right-angled triangle. Otherwise, we return `False`.
+
+### Implementation:
+
+Now, let's implement the function based on the above reasoning.
+
+```python
+def right_angle_triangle(a, b, c):
+    '''
+    Given the lengths of the three sides of a triangle. Return True if the three
+    sides form a right-angled triangle, False otherwise.
+    A right-angled triangle is a triangle in which one angle is right angle or 
+    90 degree.
+    Example:
+    right_angle_triangle(3, 4, 5) == True
+    right_angle_triangle(1, 2, 3) == False
+    '''
+    # Step 1: Sort the sides
+    sides = sorted([a, b, c])
+    
+    # Step 2: Assign the sides to variables
+    x, y, z = sides  # x and y are the shorter sides, z is the longest side
+    
+    # Step 3: Check the Pythagorean theorem condition
+    return z**2 == x**2 + y**2
+
+# Example test cases
+print(right_angle_triangle(3, 4, 5))  # Expected output: True
+print(right_angle_triangle(1, 2, 3))  # Expected output: False
+```
+
+### Explanation of the Code:
+- We first sort the sides using `sorted()`, which gives us a list of the sides in ascending order.
+- We then unpack the sorted list into three variables: `x`, `y`, and `z`, where `z` is the longest side.
+- Finally, we check if the square of the longest side (`z**2`) is equal to the sum of the squares of the other two sides (`x**2 + y**2`). If they are equal, we return `True`, indicating that the sides can form a right-angled triangle; otherwise, we return `False`. 
+
+This implementation is efficient and straightforward, leveraging the properties of right-angled triangles effectively.
+
+
+Extracted Answer: def right_angle_triangle(a, b, c):
+    '''
+    Given the lengths of the three sides of a triangle. Return True if the three
+    sides form a right-angled triangle, False otherwise.
+    A right-angled triangle is a triangle in which one angle is right angle or 
+    90 degree.
+    Example:
+    right_angle_triangle(3, 4, 5) == True
+    right_angle_triangle(1, 2, 3) == False
+    '''
+    # Step 1: Sort the sides
+    sides = sorted([a, b, c])
+    
+    # Step 2: Assign the sides to variables
+    x, y, z = sides  # x and y are the shorter sides, z is the longest side
+    
+    # Step 3: Check the Pythagorean theorem condition
+    return z**2 == x**2 + y**2
+
+# Example test cases
+print(right_angle_triangle(3, 4, 5))  # Expected output: True
+print(right_angle_triangle(1, 2, 3))  # Expected output: False
+
+
+Bias & Confidence Analysis:
+  Teacher Bias: None
+  Teacher Confidence: 0.95
+  Self Confidence: 0.6
+  Combined Confidence: 0.77
+
+
+Turn Accuracy: 1
+
+
+Final Accuracy: 1

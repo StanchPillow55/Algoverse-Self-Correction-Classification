@@ -1,0 +1,68 @@
+Question ID: HumanEval/95
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem, we need to determine if all keys in a given dictionary are either all lowercase strings or all uppercase strings. If the dictionary is empty, we should return `False`. Let's break down the problem step by step:
+
+### Step-by-Step Reasoning
+
+1. **Check for Empty Dictionary**: 
+   - If the dictionary is empty, we should immediately return `False` as per the problem statement.
+
+2. **Iterate Over Keys**:
+   - We need to iterate over all the keys in the dictionary to check their cases.
+
+3. **Check Key Type**:
+   - For each key, we should first check if it is a string. If any key is not a string, we should return `False` because the problem specifies that all keys must be strings.
+
+4. **Determine Case Consistency**:
+   - We need to determine if all string keys are either all lowercase or all uppercase.
+   - We can use two flags: `all_lower` and `all_upper`. Initialize both to `True`.
+   - As we iterate through the keys:
+     - If a key is not lowercase, set `all_lower` to `False`.
+     - If a key is not uppercase, set `all_upper` to `False`.
+
+5. **Final Decision**:
+   - After checking all keys, if either `all_lower` or `all_upper` remains `True`, it means all keys are consistently in one case, and we return `True`.
+   - If both flags are `False`, it means there is a mix of cases, and we return `False`.
+
+### Implementation
+
+Now, let's implement the function based on the above reasoning:
+
+```python
+def check_dict_case(d):
+    """
+    Given a dictionary, return True if all keys are strings in lower 
+    case or all keys are strings in upper case, else return False.
+    The function should return False if the given dictionary is empty.
+    """
+    if not d:
+        return False
+    
+    all_lower = True
+    all_upper = True
+    
+    for key in d:
+        if not isinstance(key, str):
+            return False
+        if not key.islower():
+            all_lower = False
+        if not key.isupper():
+            all_upper = False
+    
+    return all_lower or all_upper
+
+# Test cases
+print(check_dict_case({"a": "apple", "b": "banana"}))  # True
+print(check_dict_case({"a": "apple", "A": "banana", "B": "banana"}))  # False
+print(check_dict_case({"a": "apple", 8: "banana", "a": "apple"}))  # False
+print(check_dict_case({"Name": "John", "Age": "36", "City": "Houston"}))  # False
+print(check_dict_case({"STATE": "NC", "ZIP": "12345"}))  # True
+```
+
+This implementation checks each key to ensure it's a string and then verifies if all keys are either lowercase or uppercase. If any key is not a string, or if there's a mix of cases, it returns `False`. Otherwise, it returns `True` if all keys are consistently in one case.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/95/turn_0_reasoning.txt

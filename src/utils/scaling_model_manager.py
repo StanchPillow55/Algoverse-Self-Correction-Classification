@@ -97,7 +97,7 @@ class ScalingModelManager:
             ModelConfig(
                 name="claude-sonnet",
                 provider="anthropic",
-                model_id="claude-3-5-sonnet-20241022", 
+                model_id="claude-3-5-sonnet-20241210", 
                 size_category="medium",
                 estimated_cost_per_1k_tokens=0.003
             ),

@@ -1,0 +1,66 @@
+problem_id,dataset,model,provider,temperature,turn,max_turns,template,reasoning_trace_file,extracted_answer,reference_answer,accuracy,self_confidence,teacher_bias,teacher_confidence,combined_confidence,reasoning_summary,execution_details,final_accuracy,total_turns,experiment_config
+1824,gsm8k,gpt-4o-mini,openai,0.2,0,2,,reasoning_traces/math/1824/turn_0_reasoning.txt,375,"American Summits donated 45 x 2 = <<45*2=90>>90 bottled waters.
+Hormel donated 45 x 3 = <<45*3=135>>135 spams.
+Boudin Bakery donated 135 x 1/3 = <<135*1/3=45>>45 sourdoughs.
+Del Monte Foods donated 90 - 30 = <<90-30=60>>60 canned fruits.
+Therefore, a total of 45 + 90 + 135 + 45 + 60 = <<45+90+135+45+60=375>>375 different food.
+#### 375",1,0.6,Confirmation,0.6,0.6,"Key reasoning steps:
+To find the total number of food items donated by the five companies, we will calculate the donations from each company step by step.
+2. **American Summits**:
+- American Summits donated twice the number of bottled water than the number of dressed chickens donated by Foster Farms.
+- Since Foster Farms donated 45 chickens, American Summits donated:
+- **Donation from American Summits**: 90 bottles of water.
+
+Extracted answer: 375",{},1,1,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"
+409,gsm8k,gpt-4o-mini,openai,0.2,0,2,,reasoning_traces/math/409/turn_0_reasoning.txt,1,"On days one, two, and three he sold 5 cars each day so, 5 cars + 5 cars + 5 cars = <<5+5+5=15>>15 cars that he sold on those days.
+On days 4,5,6 and 7 he sold 3 cars each day so, 3 cars + 3 cars + 3 cars + 3 cars = <<3+3+3+3=12>>12 cars that he sold on those days.
+Now we combine the cars he has already sold, which is 15 cars, and 12 cars, so 15 cars + 12 cars = <<15+12=27>>27 cars are sold in total.
+If he needs to sell 50 cars and has already sold 27 cars then 50 cars - 27 cars = <<50-27=23>>23 cars left to sell to meet his quota.
+#### 23",0,0.6,Confirmation,0.6,0.6,"Key reasoning steps:
+To determine how many cars Frank needs to sell in the remaining days of the month to meet his quota, we can break the problem down step by step.
+1. **Identify the total quota**: Frank needs to sell a total of 50 cars in 30 days.
+2. **Calculate sales for the first 3 days**:
+- Frank sold 5 cars each day for the first 3 days.
+- Total cars sold in the first 3 days = 5 cars/day × 3 days = 15 cars.
+
+Extracted answer: 1",{},0,2,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"
+409,gsm8k,gpt-4o-mini,openai,0.2,1,2,devils_advocate_v1,reasoning_traces/math/409/turn_1_reasoning.txt,1,"On days one, two, and three he sold 5 cars each day so, 5 cars + 5 cars + 5 cars = <<5+5+5=15>>15 cars that he sold on those days.
+On days 4,5,6 and 7 he sold 3 cars each day so, 3 cars + 3 cars + 3 cars + 3 cars = <<3+3+3+3=12>>12 cars that he sold on those days.
+Now we combine the cars he has already sold, which is 15 cars, and 12 cars, so 15 cars + 12 cars = <<15+12=27>>27 cars are sold in total.
+If he needs to sell 50 cars and has already sold 27 cars then 50 cars - 27 cars = <<50-27=23>>23 cars left to sell to meet his quota.
+#### 23",0,0.6,Confirmation,0.6,0.6,"Key reasoning steps:
+To determine how many cars Frank needs to sell in the remaining days of the month to meet his sales quota, we will follow these steps:
+1. **Calculate the total number of cars sold in the first 7 days.**
+- For the first 3 days, Frank sold 5 cars each day:
+- For the next 4 days, he sold 3 cars each day:
+- Now, we add the cars sold in both periods:
+
+Extracted answer: 1",{},0,2,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"
+4506,gsm8k,gpt-4o-mini,openai,0.2,0,2,,reasoning_traces/math/4506/turn_0_reasoning.txt,12,"First find the total time for the burglary charges: 18 months/charge * 2 charges = 36 months
+Then find the total time for the arson charges: 3 counts * 36 months/count = <<3*36=108>>108 months
+Then find the time per larceny charge: 18 months / 3 = <<18/3=6>>6 months
+Then find the total number of larceny charges: 2 charges * 6 = <<2*6=12>>12 charges
+Then find the total time for the larceny charges: 6 months/charge * 12 charges = 72 months
+Then add up the time for all the charges to find the total jail time: 36 months + 72 months + 108 months = <<36+72+108=216>>216 months
+#### 216",0,0.6,Confirmation,0.6,0.6,"Key reasoning steps:
+To determine how many months in jail Jean is facing, we need to calculate the total sentence based on the counts of arson, burglary, and petty larceny.
+- Arson: 3 counts
+First, we calculate the number of petty larceny charges:
+- Each arson count has a sentence of 36 months.
+3. **Calculating Total Sentences**:
+
+Extracted answer: 12",{},0,2,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"
+4506,gsm8k,gpt-4o-mini,openai,0.2,1,2,devils_advocate_v1,reasoning_traces/math/4506/turn_1_reasoning.txt,12,"First find the total time for the burglary charges: 18 months/charge * 2 charges = 36 months
+Then find the total time for the arson charges: 3 counts * 36 months/count = <<3*36=108>>108 months
+Then find the time per larceny charge: 18 months / 3 = <<18/3=6>>6 months
+Then find the total number of larceny charges: 2 charges * 6 = <<2*6=12>>12 charges
+Then find the total time for the larceny charges: 6 months/charge * 12 charges = 72 months
+Then add up the time for all the charges to find the total jail time: 36 months + 72 months + 108 months = <<36+72+108=216>>216 months
+#### 216",0,0.6,Confirmation,0.6,0.6,"Key reasoning steps:
+To solve the problem, we need to calculate the total jail time Jean is facing based on the counts of arson, burglary, and petty larceny. Let's break it down step by step.
+- Arson: 3 counts
+2. **Calculate the number of petty larceny charges:**
+- Each arson count has a sentence of 36 months.
+4. **Calculate the total sentence for each type of charge:**
+
+Extracted answer: 12",{},0,2,"{""dataset_name"": ""gsm8k"", ""model"": ""gpt-4o-mini"", ""provider"": ""openai"", ""temperature"": 0.2, ""max_turns"": 2, ""experiment_id"": ""main_run""}"

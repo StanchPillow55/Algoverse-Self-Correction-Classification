@@ -1,0 +1,80 @@
+Question ID: HumanEval/81
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of converting GPAs to letter grades based on the provided grading scale, we need to follow a systematic approach. Here's how we can think through the problem step by step:
+
+### Step-by-Step Reasoning:
+
+1. **Understand the Input and Output:**
+   - **Input:** A list of GPAs (floating-point numbers).
+   - **Output:** A list of corresponding letter grades (strings).
+
+2. **Analyze the Grading Scale:**
+   - The grading scale is defined by specific GPA thresholds that map to letter grades.
+   - The scale is hierarchical, meaning that a GPA is compared against thresholds in descending order to determine the appropriate letter grade.
+
+3. **Approach to Solution:**
+   - For each GPA in the input list, we need to determine the corresponding letter grade.
+   - We will iterate over the list of GPAs and for each GPA, compare it against the thresholds in descending order.
+   - Once a GPA meets a condition (i.e., is greater than a threshold), we assign the corresponding letter grade and move to the next GPA.
+
+4. **Implementation Details:**
+   - We can use a list of tuples to store the GPA thresholds and their corresponding letter grades. This allows us to iterate over them easily.
+   - We will iterate through the list of GPAs and for each GPA, iterate through the list of thresholds to find the correct letter grade.
+   - We will append the determined letter grade to the result list.
+
+5. **Edge Cases:**
+   - Ensure that the function handles edge cases such as the minimum GPA (0.0) and maximum GPA (4.0) correctly.
+
+### Implementation:
+
+Now, let's implement the function based on the above reasoning:
+
+```python
+def numerical_letter_grade(grades):
+    # Define the GPA thresholds and corresponding letter grades
+    gpa_to_letter = [
+        (4.0, 'A+'),
+        (3.7, 'A'),
+        (3.3, 'A-'),
+        (3.0, 'B+'),
+        (2.7, 'B'),
+        (2.3, 'B-'),
+        (2.0, 'C+'),
+        (1.7, 'C'),
+        (1.3, 'C-'),
+        (1.0, 'D+'),
+        (0.7, 'D'),
+        (0.0, 'D-'),
+    ]
+    
+    # List to store the resulting letter grades
+    letter_grades = []
+    
+    # Iterate over each GPA in the input list
+    for gpa in grades:
+        # Determine the letter grade for each GPA
+        for threshold, letter in gpa_to_letter:
+            if gpa >= threshold:
+                letter_grades.append(letter)
+                break
+    
+    return letter_grades
+
+# Example usage:
+print(numerical_letter_grade([4.0, 3, 1.7, 2, 3.5]))  # Output: ['A+', 'B', 'C-', 'C', 'A-']
+```
+
+### Explanation:
+
+- We defined a list `gpa_to_letter` containing tuples of GPA thresholds and their corresponding letter grades.
+- For each GPA in the input list, we iterate through `gpa_to_letter` and check if the GPA is greater than or equal to the threshold.
+- Once a matching threshold is found, we append the corresponding letter grade to `letter_grades` and break out of the inner loop.
+- Finally, we return the list of letter grades. 
+
+This approach ensures that each GPA is correctly mapped to its respective letter grade according to the specified grading scale.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/81/turn_0_reasoning.txt

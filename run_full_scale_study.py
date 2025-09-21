@@ -229,13 +229,22 @@ class FullScaleStudyRunner:
             
             start_time = time.time()
             
-            # Run the experiment using the runner
+            # Run the experiment using the runner with checkpointing enabled
+            config = {
+                "checkpoint": {
+                    "resume": True,
+                    "checkpoint_every": 5,  # More frequent checkpoints for large experiments
+                    "shard": None
+                }
+            }
+            
             results = run_dataset(
                 dataset_csv=dataset_csv,
                 traces_out=str(traces_output),
                 max_turns=self.max_turns,
                 provider=model_config.provider,
                 model=model_config.api_model_name,
+                config=config,
                 experiment_id=experiment_id,
                 dataset_name=dataset_name
             )

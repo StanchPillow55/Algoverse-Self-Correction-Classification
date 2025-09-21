@@ -1,0 +1,61 @@
+Question ID: HumanEval/152
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem, we need to compare two lists: `game` and `guess`. Each element in these lists represents the score of a match and the guessed score for that match, respectively. Our task is to determine how accurate each guess was compared to the actual score.
+
+### Step-by-Step Approach:
+
+1. **Input Validation**: 
+   - Ensure that both `game` and `guess` are lists of equal length. This is a precondition given in the problem, so we can assume it holds true.
+
+2. **Iterate Over the Lists**:
+   - We need to iterate over the indices of the lists. For each index `i`, we will compare `game[i]` and `guess[i]`.
+
+3. **Calculate the Difference**:
+   - If the guess is correct (i.e., `game[i] == guess[i]`), the difference is `0`.
+   - If the guess is incorrect, calculate the absolute difference between the actual score and the guessed score: `abs(game[i] - guess[i])`.
+
+4. **Store the Results**:
+   - For each comparison, store the result (either `0` or the absolute difference) in a new list.
+
+5. **Return the Result List**:
+   - After processing all elements, return the list containing the differences.
+
+### Implementation:
+
+Now, let's implement the function based on the above reasoning:
+
+```python
+def compare(game, guess):
+    # Initialize an empty list to store the results
+    result = []
+    
+    # Iterate over the indices of the lists
+    for i in range(len(game)):
+        # Calculate the difference
+        if game[i] == guess[i]:
+            result.append(0)
+        else:
+            result.append(abs(game[i] - guess[i]))
+    
+    # Return the result list
+    return result
+
+# Test cases
+print(compare([1, 2, 3, 4, 5, 1], [1, 2, 3, 4, 2, -2]))  # Expected: [0, 0, 0, 0, 3, 3]
+print(compare([0, 5, 0, 0, 0, 4], [4, 1, 1, 0, 0, -2]))  # Expected: [4, 4, 1, 0, 0, 6]
+```
+
+### Explanation of the Code:
+
+- We initialize an empty list `result` to store the differences.
+- We loop through each index of the `game` and `guess` lists.
+- For each index, we check if the guess matches the actual score. If it does, we append `0` to the result list. Otherwise, we append the absolute difference.
+- Finally, we return the `result` list, which contains the differences for each match.
+
+This solution efficiently computes the required differences and handles the problem constraints effectively.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/152/turn_0_reasoning.txt

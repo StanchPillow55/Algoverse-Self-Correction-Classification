@@ -1,0 +1,40 @@
+{
+  "name": "Mirror GPT-4 Ensemble (Large Model Category)",
+  "description": "Ensemble mirroring self-correction experiments for gpt-4 (100B+ category)",
+  "provider": "mixed",
+  "ensemble_size": 3,
+  "ensemble_configs": [
+    {
+      "provider": "openai",
+      "model": "gpt-4"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-opus-20240229"
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4o"
+    }
+  ],
+  "voting_strategy": "majority_with_confidence",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": false,
+    "enable_multi_turn": false
+  },
+  "cost_optimization": {
+    "enabled": true,
+    "max_cost_per_question": 0.50,
+    "early_stopping": false
+  },
+  "experiment_settings": {
+    "max_turns": 1,
+    "temperature": 0.2,
+    "max_tokens": 1024
+  },
+  "research_category": "large",
+  "mirror_experiments": [
+    "20250914T071025Z__gsm8k__dev__gpt-4__seed1__t0.2__mt3"
+  ]
+}

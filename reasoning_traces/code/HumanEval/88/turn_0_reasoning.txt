@@ -1,0 +1,76 @@
+Question ID: HumanEval/88
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem, we need to sort a given array of non-negative integers based on a specific condition. The condition is determined by the sum of the first and last elements of the array. Here's how we can approach the problem step-by-step:
+
+### Step-by-Step Approach:
+
+1. **Understand the Input and Output:**
+   - Input: An array of non-negative integers.
+   - Output: A new array that is sorted based on the condition derived from the sum of the first and last elements.
+
+2. **Condition for Sorting:**
+   - If the sum of the first and last elements of the array is odd, sort the array in ascending order.
+   - If the sum is even, sort the array in descending order.
+
+3. **Edge Cases:**
+   - If the array is empty, return an empty array.
+   - If the array has only one element, return a copy of the array as sorting is not needed.
+
+4. **Implementation Steps:**
+   - Check if the array is empty. If so, return an empty array.
+   - Check if the array has only one element. If so, return a copy of the array.
+   - Calculate the sum of the first and last elements of the array.
+   - Determine if the sum is odd or even.
+   - Sort the array in ascending order if the sum is odd.
+   - Sort the array in descending order if the sum is even.
+   - Return the sorted array.
+
+5. **Implementation:**
+   - Use Python's built-in `sorted()` function to create a sorted copy of the array.
+   - Use slicing `[::-1]` to reverse the array for descending order when needed.
+
+Now, let's implement the function based on this plan:
+
+```python
+def sort_array(array):
+    """
+    Given an array of non-negative integers, return a copy of the given array after sorting,
+    you will sort the given array in ascending order if the sum( first index value, last index value) is odd,
+    or sort it in descending order if the sum( first index value, last index value) is even.
+    
+    Note:
+    * don't change the given array.
+    """
+    # Check if the array is empty
+    if not array:
+        return []
+    
+    # Check if the array has only one element
+    if len(array) == 1:
+        return array[:]
+    
+    # Calculate the sum of the first and last elements
+    first_last_sum = array[0] + array[-1]
+    
+    # Determine if the sum is odd or even
+    if first_last_sum % 2 == 1:
+        # Sum is odd, sort in ascending order
+        return sorted(array)
+    else:
+        # Sum is even, sort in descending order
+        return sorted(array, reverse=True)
+
+# Test cases
+print(sort_array([]))  # => []
+print(sort_array([5]))  # => [5]
+print(sort_array([2, 4, 3, 0, 1, 5]))  # => [0, 1, 2, 3, 4, 5]
+print(sort_array([2, 4, 3, 0, 1, 5, 6]))  # => [6, 5, 4, 3, 2, 1, 0]
+```
+
+This implementation covers all the specified conditions and edge cases, ensuring that the original array is not modified and a sorted copy is returned based on the sum condition.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/88/turn_0_reasoning.txt

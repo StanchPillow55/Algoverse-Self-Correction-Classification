@@ -1,0 +1,84 @@
+Question ID: HumanEval/126
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem of determining whether a list of numbers is sorted in ascending order and contains no more than one duplicate of the same number, we need to consider the following steps:
+
+### Step-by-Step Reasoning:
+
+1. **Understand the Problem Requirements:**
+   - The list should be sorted in ascending order.
+   - There should be no more than one duplicate of any number.
+   - The list contains only non-negative integers.
+
+2. **Identify Edge Cases:**
+   - A list with a single element is trivially sorted.
+   - A list with two elements should be checked for order and duplicates.
+   - Lists with multiple duplicates of the same number should return `False`.
+
+3. **Approach:**
+   - Iterate through the list and compare each element with the next one to ensure the list is sorted.
+   - Use a dictionary or a counter to keep track of the occurrences of each number to ensure no number appears more than twice.
+
+4. **Implementation Details:**
+   - Use a loop to iterate through the list.
+   - For each element, check if it is greater than the next element. If so, the list is not sorted, and we return `False`.
+   - Use a dictionary to count occurrences of each number. If any number appears more than twice, return `False`.
+   - If the loop completes without finding any issues, return `True`.
+
+5. **Edge Cases to Consider:**
+   - An empty list should return `True` since there are no elements to be out of order.
+   - Lists with all unique elements should return `True` if they are in ascending order.
+
+### Implementation:
+
+```python
+def is_sorted(lst):
+    if len(lst) <= 1:
+        return True
+    
+    # Dictionary to count occurrences of each number
+    count = {}
+    
+    for i in range(len(lst) - 1):
+        # Check if the list is sorted
+        if lst[i] > lst[i + 1]:
+            return False
+        
+        # Count occurrences of each number
+        if lst[i] in count:
+            count[lst[i]] += 1
+        else:
+            count[lst[i]] = 1
+        
+        # If any number appears more than twice, return False
+        if count[lst[i]] > 2:
+            return False
+    
+    # Check the last element for duplicates
+    if lst[-1] in count:
+        count[lst[-1]] += 1
+    else:
+        count[lst[-1]] = 1
+    
+    if count[lst[-1]] > 2:
+        return False
+    
+    return True
+
+# Test cases
+print(is_sorted([5]))  # ➞ True
+print(is_sorted([1, 2, 3, 4, 5]))  # ➞ True
+print(is_sorted([1, 3, 2, 4, 5]))  # ➞ False
+print(is_sorted([1, 2, 3, 4, 5, 6]))  # ➞ True
+print(is_sorted([1, 2, 3, 4, 5, 6, 7]))  # ➞ True
+print(is_sorted([1, 3, 2, 4, 5, 6, 7]))  # ➞ False
+print(is_sorted([1, 2, 2, 3, 3, 4]))  # ➞ True
+print(is_sorted([1, 2, 2, 2, 3, 4]))  # ➞ False
+```
+
+This implementation checks both the sorting order and the occurrence of duplicates efficiently. It iterates through the list once, making it an O(n) solution, which is optimal for this problem.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/126/turn_0_reasoning.txt

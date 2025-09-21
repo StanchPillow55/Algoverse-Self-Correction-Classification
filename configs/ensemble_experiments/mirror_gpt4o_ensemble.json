@@ -1,0 +1,41 @@
+{
+  "name": "Mirror GPT-4o Ensemble (Medium Model Category)",
+  "description": "Ensemble mirroring self-correction experiments for gpt-4o (8-70B category)",
+  "provider": "mixed",
+  "ensemble_size": 3,
+  "ensemble_configs": [
+    {
+      "provider": "openai",
+      "model": "gpt-4o"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-20241210"
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini"
+    }
+  ],
+  "voting_strategy": "majority_with_confidence",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": false,
+    "enable_multi_turn": false
+  },
+  "cost_optimization": {
+    "enabled": true,
+    "max_cost_per_question": 0.15,
+    "early_stopping": false
+  },
+  "experiment_settings": {
+    "max_turns": 1,
+    "temperature": 0.2,
+    "max_tokens": 1024
+  },
+  "research_category": "medium",
+  "mirror_experiments": [
+    "20250918T211532Z__gsm8k__dev__gpt-4o__seed1__t0.2__mt3",
+    "20250918T222028Z__humaneval__dev__gpt-4o__seed1__t0.2__mt3"
+  ]
+}

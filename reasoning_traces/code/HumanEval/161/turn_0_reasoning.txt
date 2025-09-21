@@ -1,0 +1,66 @@
+Question ID: HumanEval/161
+Turn: 0
+Dataset Type: code
+==================================================
+
+To solve the problem, we need to handle two main cases based on the content of the string `s`:
+
+1. **Case 1: The string contains letters.**
+   - For each character in the string, if it is a letter, we need to reverse its case. This means converting lowercase letters to uppercase and vice versa.
+   - If the character is not a letter, we leave it unchanged.
+
+2. **Case 2: The string contains no letters.**
+   - If there are no letters in the string, we simply reverse the entire string.
+
+Let's break down the steps to implement this:
+
+### Step-by-step Approach:
+
+1. **Check for Letters:**
+   - Iterate through the string to check if there is at least one letter. We can use the `isalpha()` method to determine if a character is a letter.
+
+2. **Process the String:**
+   - If there is at least one letter:
+     - Create a new string by iterating over each character in the original string.
+     - For each character, check if it is a letter using `isalpha()`.
+     - If it is a letter, change its case using the `swapcase()` method.
+     - If it is not a letter, keep it unchanged.
+   - If there are no letters:
+     - Reverse the string using slicing.
+
+3. **Return the Result:**
+   - Return the processed string based on the above conditions.
+
+Now, let's implement the function:
+
+```python
+def solve(s):
+    # Check if there is at least one letter in the string
+    contains_letter = any(char.isalpha() for char in s)
+    
+    if contains_letter:
+        # If there is at least one letter, swap the case of each letter
+        result = ''.join(char.swapcase() if char.isalpha() else char for char in s)
+    else:
+        # If there are no letters, reverse the string
+        result = s[::-1]
+    
+    return result
+
+# Test cases
+print(solve("1234"))  # Expected output: "4321"
+print(solve("ab"))    # Expected output: "AB"
+print(solve("#a@C"))  # Expected output: "#A@c"
+```
+
+### Explanation of the Code:
+
+- We first determine if the string contains any letters using a generator expression with `any()`. This checks each character with `isalpha()`.
+- If the string contains letters, we use a list comprehension to iterate over each character. We use `swapcase()` to change the case of letters and leave non-letters unchanged.
+- If the string contains no letters, we reverse it using slicing (`s[::-1]`).
+- Finally, we return the processed string.
+
+This solution efficiently handles both cases and provides the correct output for the given examples.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/161/turn_0_reasoning.txt

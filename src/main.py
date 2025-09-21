@@ -47,6 +47,13 @@ def main():
     p_run.add_argument("--model", help="Specific model to use (overrides provider default)")
     p_run.add_argument("--config", help="Path to config file")
     p_run.add_argument("--subset", help="Dataset subset (for HumanEval: subset_20, subset_100, full)")
+    
+    # Resume and checkpoint options
+    p_run.add_argument("--resume", action="store_true", default=True, help="Resume from existing checkpoint (default: True)")
+    p_run.add_argument("--no-resume", dest="resume", action="store_false", help="Start fresh, ignore existing checkpoints")
+    p_run.add_argument("--overwrite", action="store_true", help="Force fresh start, delete existing outputs")
+    p_run.add_argument("--checkpoint-every", type=int, default=10, help="Save resume state every N samples")
+    p_run.add_argument("--shard", help="Process only shard i/n (e.g., '2/4' for 2nd quarter)")
 
     args = p.parse_args()
     if args.cmd == "info":
@@ -67,6 +74,34 @@ def main():
         # Only set demo mode if no explicit setting and provider is not openai
         if "DEMO_MODE" not in os.environ and args.provider != "openai":
             os.environ.setdefault("DEMO_MODE", "1")
+        
+        # Handle overwrite flag
+        if args.overwrite:
+            from pathlib import Path
+            output_path = Path(args.out)
+            if output_path.exists():
+                output_path.unlink()
+                print(f"🗑️ Removed existing output: {args.out}")
+            
+            # Also remove checkpoint files
+            checkpoint_path = output_path.with_suffix('.jsonl')
+            resume_state_path = output_path.parent / f"{output_path.stem}_resume_state.json"
+            for path in [checkpoint_path, resume_state_path]:
+                if path.exists():
+                    path.unlink()
+                    print(f"🗑️ Removed checkpoint: {path}")
+        
+        # Add checkpoint options to config
+        checkpoint_config = {
+            "resume": args.resume and not args.overwrite,
+            "checkpoint_every": args.checkpoint_every,
+            "shard": args.shard
+        }
+        
+        # Merge with existing config
+        if config is None:
+            config = {}
+        config['checkpoint'] = checkpoint_config
             
         res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, model=args.model, config=config, subset=args.subset, experiment_id="main_run", dataset_name=os.path.basename(args.dataset))
         print(json.dumps(res["summary"], indent=2))

@@ -1,0 +1,27 @@
+{
+  "name": "Demo Ensemble (No API)",
+  "description": "Demo ensemble for testing without API calls",
+  "provider": "demo",
+  "ensemble_size": 3,
+  "ensemble_models": [
+    "demo-model-1",
+    "demo-model-2", 
+    "demo-model-3"
+  ],
+  "voting_strategy": "majority_with_confidence",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": false,
+    "enable_multi_turn": false
+  },
+  "cost_optimization": {
+    "enabled": false,
+    "max_cost_per_question": 0.0,
+    "early_stopping": false
+  },
+  "experiment_settings": {
+    "max_turns": 1,
+    "temperature": 0.0,
+    "max_tokens": 256
+  }
+}

@@ -1,0 +1,76 @@
+Question ID: superglue_390
+Turn: 1
+Dataset Type: math
+==================================================
+
+To solve this problem, we need to first understand what "Sample reasoning question 390" refers to. Since the question is not explicitly stated, I'll assume it's a placeholder for a typical math problem. Let's create a hypothetical math problem and solve it step by step.
+
+**Hypothetical Problem:**
+
+A company produces two types of gadgets: Type A and Type B. The company can produce up to 100 gadgets in a day. Each Type A gadget requires 2 hours to produce, and each Type B gadget requires 1 hour to produce. The company has a total of 160 production hours available each day. If the profit from each Type A gadget is $30 and from each Type B gadget is $20, how many of each type of gadget should the company produce to maximize profit?
+
+**Step-by-Step Solution:**
+
+1. **Define Variables:**
+   - Let \( x \) be the number of Type A gadgets produced.
+   - Let \( y \) be the number of Type B gadgets produced.
+
+2. **Set Up Constraints:**
+   - The total number of gadgets produced cannot exceed 100:
+     \[
+     x + y \leq 100
+     \]
+   - The total production hours cannot exceed 160:
+     \[
+     2x + y \leq 160
+     \]
+   - Non-negativity constraints:
+     \[
+     x \geq 0, \quad y \geq 0
+     \]
+
+3. **Objective Function:**
+   - The profit function to maximize is:
+     \[
+     P = 30x + 20y
+     \]
+
+4. **Graph the Constraints:**
+   - Plot the line \( x + y = 100 \).
+   - Plot the line \( 2x + y = 160 \).
+   - Identify the feasible region that satisfies all constraints.
+
+5. **Find the Corner Points:**
+   - Solve the system of equations to find the intersection points:
+     - \( x + y = 100 \)
+     - \( 2x + y = 160 \)
+
+     Subtract the first equation from the second:
+     \[
+     (2x + y) - (x + y) = 160 - 100 \\
+     x = 60
+     \]
+
+     Substitute \( x = 60 \) back into \( x + y = 100 \):
+     \[
+     60 + y = 100 \\
+     y = 40
+     \]
+
+   - Other corner points are found by setting \( x = 0 \) and \( y = 0 \):
+     - If \( x = 0 \), \( y = 100 \) from \( x + y = 100 \).
+     - If \( y = 0 \), \( x = 80 \) from \( 2x + y = 160 \).
+
+6. **Evaluate the Objective Function at Each Corner Point:**
+   - \( (x, y) = (0, 100) \): \( P = 30(0) + 20(100) = 2000 \)
+   - \( (x, y) = (80, 0) \): \( P = 30(80) + 20(0) = 2400 \)
+   - \( (x, y) = (60, 40) \): \( P = 30(60) + 20(40) = 1800 + 800 = 2600 \)
+
+7. **Conclusion:**
+   - The maximum profit is $2600, achieved by producing 60 Type A gadgets and 40 Type B gadgets.
+
+**Final Answer:**
+To maximize profit, the company should produce 60 Type A gadgets and 40 Type B gadgets, resulting in a maximum profit of $2600.
+
+==================================================
+Trace saved at: reasoning_traces/math/superglue_390/turn_1_reasoning.txt

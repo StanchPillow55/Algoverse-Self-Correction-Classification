@@ -159,6 +159,46 @@ done
 | [`configs/scaling_models.json`](configs/scaling_models.json) | **Model & dataset definitions** | 7 models, 4 datasets, experiment phases |
 | [`configs/experiments/*.yaml`](configs/experiments/) | **Feature flag configs** | baseline, confidence_only, full_system, etc. |
 
+## 🎭 **Ensemble Voting System (New!)**
+
+Extended implementation featuring **multi-model ensemble voting** for improved accuracy and robustness.
+
+### **Key Features**
+- **Multiple Voting Strategies**: Majority voting, confidence-weighted voting, consensus detection, adaptive voting
+- **Multi-Provider Support**: Mix OpenAI, Anthropic, and other providers in single ensemble
+- **Cost Optimization**: Smart cost control with early stopping and dynamic sizing
+- **Comprehensive Analysis**: Detailed ensemble performance metrics and disagreement analysis
+
+### **Quick Ensemble Start**
+```bash
+# Basic ensemble with demo models
+python run_ensemble_experiments.py --dataset gsm8k --subset subset_20 --demo
+
+# Production ensemble with OpenAI models
+python run_ensemble_experiments.py \
+  --config configs/ensemble_experiments/openai_basic.json \
+  --dataset humaneval --subset subset_100
+
+# Batch ensemble experiments
+python run_ensemble_experiments.py --batch --dataset gsm8k
+```
+
+### **Available Ensemble Configurations**
+- **`openai_basic.json`**: 3-model OpenAI ensemble (GPT-4o-mini, GPT-4o, GPT-3.5-turbo)
+- **`anthropic_ensemble.json`**: 3-model Anthropic ensemble (Haiku, Sonnet, Opus)
+- **`mixed_provider.json`**: Mixed provider ensemble for maximum diversity
+- **`demo_ensemble.json`**: Testing configuration (no API calls required)
+
+### **Ensemble Analysis**
+```bash
+# Analyze ensemble results
+python -m src.ensemble.metrics \
+  outputs/ensemble_experiments/experiment_id/traces.json \
+  outputs/analysis_results
+```
+
+**📖 Full ensemble documentation**: [`docs/ENSEMBLE_GUIDE.md`](docs/ENSEMBLE_GUIDE.md)
+
 ## 🔄 **Teacher/Learner Cycle Details**
 
 ### **Multi-Turn Self-Correction Process**

@@ -1,0 +1,64 @@
+Question ID: HumanEval/145
+Turn: 2
+Dataset Type: code
+==================================================
+
+To solve the problem of sorting a list of integers based on the sum of their digits, we need to follow a structured approach. Let's break down the problem and think through the solution step by step.
+
+### Problem Analysis
+
+1. **Input**: A list of integers, which can be positive, negative, or zero.
+2. **Output**: A list of integers sorted based on the sum of their digits. If two numbers have the same digit sum, they should appear in the order they were in the original list.
+
+### Steps to Solve the Problem
+
+1. **Calculate the Sum of Digits**:
+   - For each number in the list, calculate the sum of its digits. 
+   - Since the numbers can be negative, we should consider the absolute value of each number when calculating the digit sum.
+
+2. **Sorting Criteria**:
+   - Primary criterion: Sort by the sum of digits.
+   - Secondary criterion: Maintain the original order for numbers with the same digit sum.
+
+3. **Implementation Strategy**:
+   - Use Python's built-in `sorted()` function, which is stable and maintains the order of elements that compare equal.
+   - Use a custom key function in `sorted()` to compute the sum of digits for sorting.
+
+### Detailed Implementation
+
+- **Key Function**: Define a function that computes the sum of digits for a given number. This function will take the absolute value of the number, convert it to a string, and sum the integer values of each character.
+- **Sorting**: Use the `sorted()` function with the key function defined above.
+
+### Edge Cases
+
+- An empty list should return an empty list.
+- Lists with all elements having the same digit sum should return the list in its original order.
+
+Now, let's implement the solution.
+
+```python
+def order_by_points(nums):
+    """
+    Sorts the given list of integers in ascending order according to the sum of their digits.
+    If there are several items with similar sum of their digits, they are ordered based on their index in the original list.
+    """
+    def digit_sum(n):
+        return sum(int(d) for d in str(abs(n)))
+    
+    # Sort using the digit_sum as the key
+    return sorted(nums, key=digit_sum)
+
+# Test cases
+print(order_by_points([1, 11, -1, -11, -12]))  # Expected output: [-1, -11, 1, -12, 11]
+print(order_by_points([]))  # Expected output: []
+```
+
+### Explanation
+
+- **digit_sum Function**: This function calculates the sum of digits for a given integer `n`. It uses `abs(n)` to handle negative numbers and converts the number to a string to iterate over each digit.
+- **Sorting**: The `sorted()` function is used with `digit_sum` as the key. This ensures that the list is sorted based on the sum of digits, and due to the stability of `sorted()`, elements with the same digit sum retain their original order.
+
+This approach efficiently solves the problem by leveraging Python's sorting capabilities and a custom key function to determine the sorting order.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/145/turn_2_reasoning.txt
