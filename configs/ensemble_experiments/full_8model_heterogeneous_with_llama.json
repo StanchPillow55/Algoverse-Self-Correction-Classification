@@ -1,0 +1,101 @@
+{
+  "name": "Full 8-Model Heterogeneous Ensemble with Mid-Size Llama",
+  "description": "Complete 8-model ensemble including mid-size Llama-2-13B: Small (1-7B), Medium (8-70B), Large (100B+)",
+  "provider": "mixed",
+  "ensemble_size": 8,
+  "ensemble_configs": [
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "size_category": "Small",
+      "parameter_count_b": 1.8
+    },
+    {
+      "provider": "anthropic", 
+      "model": "claude-3-haiku-20240307",
+      "size_category": "Small",
+      "parameter_count_b": 3.0
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4o",
+      "size_category": "Medium",
+      "parameter_count_b": 8.0
+    },
+    {
+      "provider": "huggingface",
+      "model": "meta-llama/Llama-2-13b-chat-hf",
+      "size_category": "Medium",
+      "parameter_count_b": 13.0
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-20241022",
+      "size_category": "Medium", 
+      "parameter_count_b": 70.0
+    },
+    {
+      "provider": "replicate",
+      "model": "meta/meta-llama-3-70b",
+      "size_category": "Medium",
+      "parameter_count_b": 70.0
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4",
+      "size_category": "Large",
+      "parameter_count_b": 100.0
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-opus-20240229",
+      "size_category": "Large", 
+      "parameter_count_b": 175.0
+    }
+  ],
+  "voting_strategy": "majority_with_confidence",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": false,
+    "enable_multi_turn": false,
+    "deterministic_datasets": true
+  },
+  "cost_optimization": {
+    "enabled": true,
+    "max_cost_per_question": 1.2,
+    "early_stopping": false
+  },
+  "experiment_settings": {
+    "max_turns": 1,
+    "temperature": 0.2,
+    "max_tokens": 1024,
+    "deterministic": true
+  },
+  "comparison_mode": {
+    "enabled": true,
+    "baseline_method": "multi_turn_self_correction",
+    "use_same_datasets": true,
+    "dataset_alignment": {
+      "gsm8k": "same_1000_questions_as_gpt4o_mini_experiment",
+      "humaneval": "same_164_questions_as_gpt4o_mini_experiment"
+    }
+  },
+  "diversity_metrics": {
+    "provider_diversity": true,
+    "model_size_diversity": true,
+    "training_data_diversity": true,
+    "llama_representation": true
+  },
+  "model_distribution": {
+    "small_models": 2,
+    "medium_models": 4,
+    "large_models": 2,
+    "providers": {
+      "openai": 3,
+      "anthropic": 2,
+      "huggingface": 1,
+      "replicate": 2
+    },
+    "llama_models": 2
+  }
+}

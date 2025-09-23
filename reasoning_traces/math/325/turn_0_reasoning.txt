@@ -3,49 +3,71 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we will calculate the number of questions Bob created in each hour based on the information provided.
+To solve the problem, we will follow these steps:
 
-1. **First Hour:**
-   - Bob created 13 questions in the first hour.
-   - Questions created in the first hour = 13.
+1. **Determine the number of junior programmers.**
+2. **Calculate the number of senior programmers.**
+3. **Calculate the monthly salary for senior programmers.**
+4. **Calculate the total salary for all programmers.**
 
-2. **Second Hour:**
-   - Bob doubled his rate from the first hour. 
-   - Therefore, the number of questions created in the second hour = 2 × 13 = 26.
+### Step 1: Determine the number of junior programmers
 
-3. **Third Hour:**
-   - Bob doubled his second hour rate.
-   - Therefore, the number of questions created in the third hour = 2 × 26 = 52.
-
-Now, we will sum the number of questions created in all three hours:
+We know that the total number of employees in the company is 100. According to the problem, the number of junior programmers is \( \frac{2}{5} \) of the total number of employees.
 
 \[
-\text{Total questions} = \text{Questions in first hour} + \text{Questions in second hour} + \text{Questions in third hour}
+\text{Number of junior programmers} = \frac{2}{5} \times 100 = 40
 \]
 
-Substituting the values we calculated:
+### Step 2: Calculate the number of senior programmers
+
+Since there are 100 employees in total and 40 of them are junior programmers, we can find the number of senior programmers by subtracting the number of junior programmers from the total number of employees.
 
 \[
-\text{Total questions} = 13 + 26 + 52
+\text{Number of senior programmers} = 100 - 40 = 60
 \]
 
-Now, we will perform the addition step by step:
+### Step 3: Calculate the monthly salary for senior programmers
 
-- First, add the questions from the first and second hours:
-  \[
-  13 + 26 = 39
-  \]
-
-- Next, add the result to the questions from the third hour:
-  \[
-  39 + 52 = 91
-  \]
-
-Thus, the total number of questions Bob created in the three hours is:
+We know that junior programmers are paid $2000 per month. The problem states that senior programmers are paid $400 more than junior programmers.
 
 \[
-\boxed{91}
+\text{Salary of senior programmers} = 2000 + 400 = 2400
 \]
+
+### Step 4: Calculate the total salary for all programmers
+
+Now we can calculate the total salary for junior programmers and senior programmers separately, and then sum them up.
+
+**Total salary for junior programmers:**
+
+\[
+\text{Total salary for junior programmers} = \text{Number of junior programmers} \times \text{Salary of junior programmers}
+\]
+\[
+= 40 \times 2000 = 80000
+\]
+
+**Total salary for senior programmers:**
+
+\[
+\text{Total salary for senior programmers} = \text{Number of senior programmers} \times \text{Salary of senior programmers}
+\]
+\[
+= 60 \times 2400 = 144000
+\]
+
+**Total salary for all programmers:**
+
+\[
+\text{Total salary for all programmers} = \text{Total salary for junior programmers} + \text{Total salary for senior programmers}
+\]
+\[
+= 80000 + 144000 = 224000
+\]
+
+### Final Answer
+
+The total amount of money the company pays to all the programmers per month is **$224,000**.
 
 ==================================================
 Trace saved at: reasoning_traces/math/325/turn_0_reasoning.txt

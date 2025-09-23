@@ -1,0 +1,52 @@
+Question ID: 1190
+Turn: 0
+Dataset Type: math
+==================================================
+
+To solve the problem, we need to determine how many bandages the nurses started with on the first day. Let's break down the information provided step by step.
+
+1. **Understanding the Bandage Usage and Orders**:
+   - **Day 1**:
+     - Bandages used: 38
+     - Bandages ordered: 1 bulk pack of 50
+   - **Day 2**:
+     - Bandages used: 10 fewer than Day 1, which is \(38 - 10 = 28\)
+   - **Day 3**:
+     - Bandages ordered: 2 bulk packs, which is \(2 \times 50 = 100\)
+     - Bandages used: Half a pack, which is \(50 / 2 = 25\)
+
+2. **Calculating Bandage Inventory**:
+   - Let \(x\) be the number of bandages they started with on the first day.
+
+   - **End of Day 1**:
+     - Bandages left after Day 1 = Starting bandages - Bandages used + Bandages ordered
+     - Bandages left after Day 1 = \(x - 38 + 50 = x + 12\)
+
+   - **End of Day 2**:
+     - Bandages left after Day 2 = Bandages left after Day 1 - Bandages used on Day 2
+     - Bandages left after Day 2 = \((x + 12) - 28 = x - 16\)
+
+   - **End of Day 3**:
+     - Bandages left after Day 3 = Bandages left after Day 2 + Bandages ordered on Day 3 - Bandages used on Day 3
+     - Bandages left after Day 3 = \((x - 16) + 100 - 25 = x - 16 + 75 = x + 59\)
+
+3. **Setting Up the Equation**:
+   - We know from the problem that at the end of Day 3, they had 78 bandages left:
+   \[
+   x + 59 = 78
+   \]
+
+4. **Solving for \(x\)**:
+   - To find \(x\), we subtract 59 from both sides:
+   \[
+   x = 78 - 59
+   \]
+   \[
+   x = 19
+   \]
+
+5. **Final Answer**:
+   - The number of bandages they started with on the first day is \( \boxed{19} \).
+
+==================================================
+Trace saved at: reasoning_traces/math/1190/turn_0_reasoning.txt

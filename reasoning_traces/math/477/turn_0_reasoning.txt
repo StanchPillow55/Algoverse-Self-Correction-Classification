@@ -3,43 +3,40 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to determine how many friends attended the wedding reception given the total number of guests and the number of family members invited.
+To solve the problem, we can use the principle of inclusion-exclusion to find out how many kids are allergic to at least one of the allergens (dairy or peanuts) and then subtract that from the total number of kids in the class to find out how many are not allergic to anything.
 
-1. **Identify the total number of guests**: 
-   The total number of people at the wedding reception is given as 180.
+1. **Identify the sets:**
+   - Let \( A \) be the set of kids allergic to dairy.
+   - Let \( B \) be the set of kids allergic to peanuts.
 
-2. **Determine the number of family members invited**:
-   The bride and groom each invited 20 couples from their side of the family. Since a couple consists of 2 people, we can calculate the total number of family members invited as follows:
+   From the problem, we have:
+   - \( |A| = 9 \) (number of kids allergic to dairy)
+   - \( |B| = 6 \) (number of kids allergic to peanuts)
+   - \( |A \cap B| = 3 \) (number of kids allergic to both dairy and peanuts)
 
-   - Each couple consists of 2 people.
-   - The bride invited 20 couples, which means she invited:
-     \[
-     20 \text{ couples} \times 2 \text{ people/couple} = 40 \text{ people}
-     \]
-   - The groom also invited 20 couples, which means he invited:
-     \[
-     20 \text{ couples} \times 2 \text{ people/couple} = 40 \text{ people}
-     \]
-   - Therefore, the total number of family members invited is:
-     \[
-     40 \text{ (bride's side)} + 40 \text{ (groom's side)} = 80 \text{ family members}
-     \]
-
-3. **Calculate the number of friends**:
-   To find out how many friends attended the reception, we subtract the total number of family members from the total number of guests:
+2. **Use the inclusion-exclusion principle:**
+   The number of kids allergic to at least one of the allergens (either dairy or peanuts) can be calculated using the formula:
    \[
-   \text{Number of friends} = \text{Total guests} - \text{Total family members}
+   |A \cup B| = |A| + |B| - |A \cap B|
    \]
    Substituting the values we have:
    \[
-   \text{Number of friends} = 180 - 80 = 100
+   |A \cup B| = 9 + 6 - 3 = 12
+   \]
+   This means there are 12 kids who are allergic to either dairy, peanuts, or both.
+
+3. **Calculate the number of kids not allergic to anything:**
+   We know the total number of kids in the class is 32. To find the number of kids who are not allergic to anything, we subtract the number of kids who are allergic to at least one allergen from the total number of kids:
+   \[
+   \text{Number of kids not allergic to anything} = \text{Total kids} - |A \cup B|
+   \]
+   Substituting the values:
+   \[
+   \text{Number of kids not allergic to anything} = 32 - 12 = 20
    \]
 
-4. **Final answer**:
-   Therefore, the number of friends who attended the reception is:
-   \[
-   \boxed{100}
-   \]
+4. **Final answer:**
+   Therefore, the number of kids in Gina's class who aren't allergic to anything is \( \boxed{20} \).
 
 ==================================================
 Trace saved at: reasoning_traces/math/477/turn_0_reasoning.txt

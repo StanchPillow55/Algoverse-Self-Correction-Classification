@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 from src.utils.trace_logger import TraceLogger
 from src.utils.checkpoint import CheckpointManager, create_stable_run_id, hash_config
+from src.utils.multi_turn_error_handler import create_multi_turn_error_handler, MultiTurnErrorHandler
 from src.metrics.accuracy import gsm8k_em, humaneval_pass_at_k
 from src.utils.tracing import RunWriter, RunMeta, sha256_text
 from src.utils.ci_bootstrap import mean_ci95
@@ -65,8 +66,13 @@ def _auto_map_row(row: dict) -> tuple[str, str, str]:
 
 def _load_dataset(dataset_csv: str, subset: str = None) -> List[Dict[str, Any]]:
     """Load dataset with deterministic subset support for reproducible experiments."""
+    # Check for custom file paths first (before keyword matching)
+    if Path(dataset_csv).exists() and (dataset_csv.endswith('.json') or dataset_csv.endswith('.jsonl')):
+        # Custom GSM8K file path
+        print(f"📁 Loading custom dataset file: {dataset_csv}")
+        return load_gsm8k_dataset(dataset_csv)
     # Check if this is a HumanEval dataset request
-    if dataset_csv == "humaneval" or "humaneval" in dataset_csv.lower():
+    elif dataset_csv == "humaneval" or "humaneval" in dataset_csv.lower():
         try:
             if subset:
                 data = load_humaneval_dataset(subset=subset)
@@ -129,23 +135,21 @@ def run_dataset(
     output_dir = Path(traces_out).parent
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Initialize checkpoint system if enabled
-    checkpoint_config = config.get('checkpoint', {}) if config else {}
-    enable_checkpoints = checkpoint_config.get('resume', False)
-    checkpoint_every = checkpoint_config.get('checkpoint_every', 10)
-    shard_config = checkpoint_config.get('shard')
+    # Initialize unified multi-turn error handler (replaces basic checkpointing)
+    multi_turn_handler = create_multi_turn_error_handler(
+        output_dir=output_dir,
+        experiment_id=experiment_id,
+        config=config,
+        learner_type="standard"  # This is for single-model, not ensemble
+    )
     
-    checkpoint_manager = None
-    if enable_checkpoints:
-        # Create stable checkpoint path
-        config_hash = hash_config(config or {}) if config else None
-        stable_run_id = create_stable_run_id(dataset_name, model or provider, config_hash)
-        
-        # Use JSONL checkpoint file alongside existing output
-        checkpoint_path = output_dir / f"{stable_run_id}.jsonl"
-        checkpoint_manager = CheckpointManager(str(checkpoint_path), checkpoint_every=checkpoint_every)
-        
-        print(f"📋 Checkpoint system enabled: {checkpoint_path}")
+    # Initialize experiment and check if it should proceed
+    if not multi_turn_handler.initialize_experiment(dataset_name, provider, model or "unknown"):
+        return {"error": "experiment_initialization_failed"}
+    
+    # Handle legacy checkpoint configuration
+    checkpoint_config = config.get('checkpoint', {}) if config else {}
+    shard_config = checkpoint_config.get('shard')
     
     learner = LearnerBot(provider=provider, model=model)
     traces: List[Dict[str, Any]] = []
@@ -157,17 +161,8 @@ def run_dataset(
     # Load dataset - supports both CSV and HumanEval formats
     rows = _load_dataset(dataset_csv, subset)
     
-    # Handle checkpointing and resume
-    completed_qids = set()
-    if checkpoint_manager:
-        # Load existing checkpoint state
-        completed_qids = checkpoint_manager.load_completed_ids()
-        
-        # Restore random state for deterministic resume
-        resume_state = checkpoint_manager.load_resume_state()
-        if resume_state:
-            checkpoint_manager.restore_random_state(resume_state)
-            print(f"🔄 Restored random state for deterministic resume")
+    # Get completed QIDs from unified error handler (legacy checkpoint support)
+    completed_qids = multi_turn_handler.get_completed_qids()
     
     # Apply shard filtering if specified
     if shard_config:
@@ -221,13 +216,9 @@ def run_dataset(
             task = None
             is_humaneval = False
         
-        # Skip if already completed (resumable functionality)
-        if checkpoint_manager and checkpoint_manager.is_completed(qid):
+        # Check if sample should be processed using unified handler
+        if not multi_turn_handler.start_sample_processing(qid, q):
             skipped_count += 1
-            if skipped_count <= 5:  # Only show first few skips
-                print(f"⏭️ Skipping completed sample: {qid}")
-            elif skipped_count == 6:
-                print(f"⏭️ ... (skipping {len(completed_qids) - 5} more completed samples)")
             continue
         
         # Start trace for this example  
@@ -272,7 +263,47 @@ def run_dataset(
                     full_response_0, task.get('entry_point', '')
                 )
             else:
-                extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+                # Detect dataset type for appropriate answer extraction
+                is_boolean_dataset = (
+                    'boolq' in dataset_csv.lower() or 
+                    'superglue' in dataset_csv.lower() or
+                    any(col.lower() in ['boolq', 'superglue'] for col in (row.keys() if isinstance(row, dict) else []))
+                )
+                
+                is_mathbench_dataset = (
+                    'mathbench' in dataset_csv.lower() or
+                    any(col.lower() in ['mathbench'] for col in (row.keys() if isinstance(row, dict) else []))
+                )
+                
+                is_toolqa_dataset = (
+                    'toolqa' in dataset_csv.lower() or
+                    any(col.lower() in ['toolqa'] for col in (row.keys() if isinstance(row, dict) else []))
+                )
+                
+                if is_boolean_dataset:
+                    # Use boolean extraction for Yes/No questions
+                    from ..metrics.accuracy import extract_boolean_answer
+                    extracted_answer = extract_boolean_answer(full_response_0)
+                    # Still use reasoning extractor for summary
+                    _, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+                elif is_mathbench_dataset:
+                    # Use enhanced math extraction for MathBench problems
+                    from ..metrics.accuracy import extract_mathbench_answer
+                    extracted_answer = extract_mathbench_answer(full_response_0)
+                    # Still use reasoning extractor for summary
+                    _, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+                elif is_toolqa_dataset:
+                    # Use ToolQA-specific extraction for tool-augmented questions
+                    from ..metrics.accuracy import extract_toolqa_answer
+                    extracted_answer = extract_toolqa_answer(full_response_0)
+                    # Still use reasoning extractor for summary
+                    _, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
+                else:
+                    # Use GSM8K extraction for standard math problems
+                    from ..metrics.accuracy import extract_final_answer
+                    extracted_answer = extract_final_answer(full_response_0)
+                    # Still use reasoning extractor for summary
+                    _, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
             
             # Use extracted answer for evaluation, fallback to raw if extraction fails
             a0 = extracted_answer if extracted_answer is not None else raw_answer
@@ -380,7 +411,31 @@ def run_dataset(
                             full_response_1, task.get('entry_point', '')
                         )
                     else:
-                        extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                        # Use same dataset detection logic as first turn
+                        if is_boolean_dataset:
+                            # Use boolean extraction for Yes/No questions
+                            from ..metrics.accuracy import extract_boolean_answer
+                            extracted_answer_1 = extract_boolean_answer(full_response_1)
+                            # Still use reasoning extractor for summary
+                            _, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                        elif is_mathbench_dataset:
+                            # Use enhanced math extraction for MathBench problems
+                            from ..metrics.accuracy import extract_mathbench_answer
+                            extracted_answer_1 = extract_mathbench_answer(full_response_1)
+                            # Still use reasoning extractor for summary
+                            _, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                        elif is_toolqa_dataset:
+                            # Use ToolQA-specific extraction for tool-augmented questions
+                            from ..metrics.accuracy import extract_toolqa_answer
+                            extracted_answer_1 = extract_toolqa_answer(full_response_1)
+                            # Still use reasoning extractor for summary
+                            _, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                        else:
+                            # Use GSM8K extraction for standard math problems
+                            from ..metrics.accuracy import extract_final_answer
+                            extracted_answer_1 = extract_final_answer(full_response_1)
+                            # Still use reasoning extractor for summary
+                            _, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
                     a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
 
                     # Score based on task type
@@ -460,58 +515,33 @@ def run_dataset(
             final_correct = bool(turns[-1]["accuracy"])
             logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
             
-            traces.append({
-                "qid": qid, "question": q, "reference": ref, "turns": turns,
+            # Complete sample processing using unified handler
+            sample_data = {
+                "qid": qid, 
+                "question": q, 
+                "reference": ref, 
+                "turns": turns,
                 "final_accuracy": turns[-1]["accuracy"]
-            })
+            }
             
-            # Checkpoint successful completion
-            if checkpoint_manager:
-                checkpoint_record = {
-                    "qid": str(qid),
-                    "status": "success", 
-                    "dataset": dataset_name,
-                    "model": getattr(learner, 'model', model or provider),
-                    "provider": provider,
-                    "turns": turns,
-                    "final_accuracy": turns[-1]["accuracy"],
-                    "question": q,
-                    "reference": ref,
-                    "experiment_id": experiment_id
-                }
-                
-                try:
-                    checkpoint_manager.append_result_atomic(checkpoint_record)
-                    processed_count += 1
-                    
-                    # Save resume state periodically
-                    if checkpoint_manager.should_checkpoint_state():
-                        experiment_metadata = {
-                            "dataset": dataset_csv,
-                            "model": getattr(learner, 'model', model or provider),
-                            "provider": provider,
-                            "max_turns": max_turns,
-                            "experiment_id": experiment_id
-                        }
-                        checkpoint_manager.save_resume_state(experiment_metadata)
-                        print(f"💾 Checkpoint saved: {processed_count} completed, {error_count} errors")
-                        
-                except Exception as checkpoint_error:
-                    print(f"⚠️ Failed to save checkpoint for {qid}: {checkpoint_error}")
-                    # Continue processing even if checkpoint fails
+            multi_turn_handler.complete_sample_processing(sample_data)
+            traces.append(sample_data)
+            processed_count += 1
         
         except Exception as sample_error:
             error_count += 1
             print(f"❌ Error processing sample {qid}: {type(sample_error).__name__}: {sample_error}")
             
-            # Record error in checkpoint if enabled
-            if checkpoint_manager:
-                try:
-                    checkpoint_manager.append_error_record(qid, sample_error, retryable=True)
-                except Exception as checkpoint_error:
-                    print(f"⚠️ Failed to record error for {qid}: {checkpoint_error}")
+            # Handle sample error using unified handler
+            should_continue = multi_turn_handler.handle_sample_error(
+                sample_error, provider, getattr(learner, 'model', model or provider)
+            )
             
-            # Continue with next sample rather than crashing entire run
+            if not should_continue:
+                print(f"🚨 Terminating experiment due to error handling decision")
+                break
+            
+            # Continue with next sample
             continue
 
     summary = {
@@ -676,6 +706,10 @@ def run_dataset(
         # Do not fail the run if writer errors; proceed silently (logged to stdout)
         print(f"WARN: tracing writer failed: {_e}")
 
+    # Finalize experiment using unified handler
+    final_results = multi_turn_handler.finalize_experiment(traces)
+    out.update(final_results)
+    
     # Close the trace logger
     logger.close()
     

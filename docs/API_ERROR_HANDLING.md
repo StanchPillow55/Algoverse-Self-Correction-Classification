@@ -14,7 +14,22 @@ The system provides robust handling of API issues with the following key feature
 
 ## Components
 
-### 1. API Error Handler (`src/utils/api_error_handler.py`)
+### 1. Unified Multi-Turn Error Handler (`src/utils/multi_turn_error_handler.py`)
+
+**NEW**: A unified interface that provides consistent error handling across different multi-turn experiment runners:
+
+- **Consistent Interface**: Same error handling behavior for ensemble and standard (loop) runners
+- **Experiment Lifecycle Management**: Handles initialization, sample processing, and finalization
+- **Automatic Integration**: Seamlessly integrates with existing checkpoint and health monitoring systems
+- **Runner-Agnostic**: Works with both ensemble voting and single-model multi-turn experiments
+
+#### Key Features:
+- `MultiTurnErrorHandler`: Central coordinator for all error handling activities
+- `MultiTurnAPIWrapper`: Safe API call wrapper with automatic retry logic
+- Factory functions for easy integration: `create_multi_turn_error_handler()`
+- Supports both "ensemble" and "standard" learner types
+
+### 2. API Error Handler (`src/utils/api_error_handler.py`)
 
 The core error handling system that provides:
 
@@ -90,14 +105,26 @@ Resilient ensemble processing with error handling:
 - **Ensemble Health Monitoring**: Tracks error rates across ensemble members
 - **Smart Retry Logic**: Implements exponential backoff with jitter
 
-### 5. Multi-Turn Runner with Error Awareness (`src/ensemble/runner.py`)
+### 5. Enhanced Multi-Turn Runners
 
-Updated experiment runner with comprehensive error handling:
+**Both runners now use the unified error handling interface:**
 
+#### Ensemble Runner (`src/ensemble/runner.py`)
 - **Turn-Level Checkpointing**: Saves progress after each turn
-- **Sample-Level Error Tracking**: Tracks errors per sample
-- **Experiment Termination Logic**: Gracefully terminates on critical errors
-- **Recovery State Preservation**: Maintains state for future resumption
+- **Ensemble-Aware Error Handling**: Manages errors across multiple models
+- **Voting Resilience**: Continues voting even when some models fail
+
+#### Loop Runner (`src/loop/runner.py`) 
+- **Unified Integration**: Now uses the same error handling as ensemble runner
+- **Multi-Turn Error Tracking**: Tracks errors across turns for single-model experiments
+- **Legacy Compatibility**: Maintains backward compatibility with existing configurations
+
+**Common Features Across Both Runners:**
+- Sample-Level Error Tracking
+- Experiment Termination Logic
+- Recovery State Preservation
+- Health Monitoring Integration
+- Consistent Checkpointing Behavior
 
 ## Usage Guide
 

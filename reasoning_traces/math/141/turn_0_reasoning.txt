@@ -3,47 +3,77 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To determine how many minutes Larry spends on his dog each day, we need to calculate the total time he spends walking and playing with his dog, as well as the time he spends feeding his dog.
+To solve the problem, we need to set up equations based on the relationships given in the problem statement.
 
-1. **Walking and Playing with the Dog:**
-   - Larry spends half an hour twice a day.
-   - First, we calculate the total time spent walking and playing in hours:
-     \[
-     \text{Total time walking and playing} = 0.5 \text{ hours} \times 2 = 1 \text{ hour}
-     \]
+1. **Define Variables**:
+   - Let \( q \) be the number of queen bees.
+   - Let \( b \) be the number of baby bees.
+   - Let \( w \) be the number of worker bees.
 
-2. **Feeding the Dog:**
-   - Larry spends a fifth of an hour every day feeding his dog.
-   - We convert a fifth of an hour into hours:
+2. **Set Up Relationships**:
+   - According to the problem, there are twice as many worker bees as baby bees:
      \[
-     \text{Time feeding} = \frac{1}{5} \text{ hour}
+     w = 2b
      \]
-
-3. **Total Time in Hours:**
-   - Now, we add the total time spent walking and playing with the dog to the time spent feeding the dog:
+   - There are also twice as many baby bees as queens:
      \[
-     \text{Total time} = 1 \text{ hour} + \frac{1}{5} \text{ hour}
-     \]
-   - To add these, we need a common denominator. The common denominator for 1 (which is 1/1) and 1/5 is 5:
-     \[
-     1 \text{ hour} = \frac{5}{5} \text{ hour}
-     \]
-   - Now we can add:
-     \[
-     \text{Total time} = \frac{5}{5} \text{ hour} + \frac{1}{5} \text{ hour} = \frac{6}{5} \text{ hour}
+     b = 2q
      \]
 
-4. **Convert Total Time to Minutes:**
-   - Since there are 60 minutes in an hour, we convert \(\frac{6}{5}\) hours into minutes:
+3. **Total Bees**:
+   - The total number of bees in the hive is given as 700:
      \[
-     \text{Total time in minutes} = \frac{6}{5} \text{ hours} \times 60 \text{ minutes/hour}
-     \]
-   - Performing the multiplication:
-     \[
-     \text{Total time in minutes} = \frac{6 \times 60}{5} = \frac{360}{5} = 72 \text{ minutes}
+     w + b + q = 700
      \]
 
-Therefore, the total time Larry spends on his dog each day is \( \boxed{72} \) minutes.
+4. **Substituting Relationships**:
+   - We can substitute the expressions for \( w \) and \( b \) in terms of \( q \) into the total bees equation.
+   - First, substitute \( b = 2q \) into \( w = 2b \):
+     \[
+     w = 2(2q) = 4q
+     \]
+   - Now we have:
+     \[
+     w = 4q, \quad b = 2q
+     \]
+   - Substitute these into the total bees equation:
+     \[
+     4q + 2q + q = 700
+     \]
+
+5. **Combine Like Terms**:
+   - Combine the terms on the left side:
+     \[
+     4q + 2q + q = 7q
+     \]
+   - Thus, we have:
+     \[
+     7q = 700
+     \]
+
+6. **Solve for \( q \)**:
+   - Divide both sides by 7:
+     \[
+     q = \frac{700}{7} = 100
+     \]
+
+7. **Find \( b \) and \( w \)**:
+   - Now that we have \( q \), we can find \( b \):
+     \[
+     b = 2q = 2 \times 100 = 200
+     \]
+   - Next, find \( w \):
+     \[
+     w = 4q = 4 \times 100 = 400
+     \]
+
+8. **Final Answer**:
+   - The number of worker bees is:
+     \[
+     \boxed{400}
+     \]
+
+Thus, there are 400 worker bees in the hive.
 
 ==================================================
 Trace saved at: reasoning_traces/math/141/turn_0_reasoning.txt

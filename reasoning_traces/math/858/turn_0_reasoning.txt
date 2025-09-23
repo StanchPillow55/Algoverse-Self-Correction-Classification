@@ -1,0 +1,66 @@
+Question ID: 858
+Turn: 0
+Dataset Type: math
+==================================================
+
+To solve the problem, we need to track the number of infected people over the course of three days, given that each infected person infects six others each day.
+
+### Step 1: Initial Condition
+We start with 10 infected people on Day 0.
+
+### Step 2: Daily Infections
+Each infected person infects 6 new people each day. Therefore, we can calculate the number of new infections each day based on the number of infected people from the previous day.
+
+### Day-by-Day Breakdown
+
+#### Day 1:
+- **Initial infected**: 10
+- **New infections**: Each of the 10 infected people infects 6 others.
+  
+  \[
+  \text{New infections} = 10 \times 6 = 60
+  \]
+
+- **Total infected by the end of Day 1**:
+  
+  \[
+  \text{Total infected} = \text{Initial infected} + \text{New infections} = 10 + 60 = 70
+  \]
+
+#### Day 2:
+- **Initial infected**: 70 (from the end of Day 1)
+- **New infections**: Each of the 70 infected people infects 6 others.
+  
+  \[
+  \text{New infections} = 70 \times 6 = 420
+  \]
+
+- **Total infected by the end of Day 2**:
+  
+  \[
+  \text{Total infected} = 70 + 420 = 490
+  \]
+
+#### Day 3:
+- **Initial infected**: 490 (from the end of Day 2)
+- **New infections**: Each of the 490 infected people infects 6 others.
+  
+  \[
+  \text{New infections} = 490 \times 6 = 2940
+  \]
+
+- **Total infected by the end of Day 3**:
+  
+  \[
+  \text{Total infected} = 490 + 2940 = 3430
+  \]
+
+### Final Answer
+After three days, the total number of infected people is:
+
+\[
+\boxed{3430}
+\]
+
+==================================================
+Trace saved at: reasoning_traces/math/858/turn_0_reasoning.txt

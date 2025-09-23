@@ -1,0 +1,65 @@
+Question ID: superglue_248
+Turn: 1
+Dataset Type: math
+==================================================
+
+To solve this problem, we need to first understand what "Sample reasoning question 248" entails. Since the problem statement is not explicitly provided, I'll assume it's a hypothetical math problem that requires logical reasoning and step-by-step calculations. Let's create a sample problem and solve it.
+
+**Sample Problem:**
+
+A company produces two types of widgets: Type A and Type B. Each Type A widget requires 2 hours of labor and 3 units of raw material. Each Type B widget requires 1 hour of labor and 4 units of raw material. The company has a maximum of 100 hours of labor and 120 units of raw material available per week. The profit from each Type A widget is $40, and the profit from each Type B widget is $30. How many of each type of widget should the company produce to maximize profit?
+
+**Solution:**
+
+1. **Define Variables:**
+   - Let \( x \) be the number of Type A widgets produced.
+   - Let \( y \) be the number of Type B widgets produced.
+
+2. **Set Up Constraints:**
+   - Labor constraint: \( 2x + y \leq 100 \)
+   - Raw material constraint: \( 3x + 4y \leq 120 \)
+   - Non-negativity constraints: \( x \geq 0 \), \( y \geq 0 \)
+
+3. **Objective Function:**
+   - Maximize profit: \( P = 40x + 30y \)
+
+4. **Graphical Solution Method:**
+   - Plot the constraints on a graph:
+     - For \( 2x + y = 100 \), the intercepts are \( (50, 0) \) and \( (0, 100) \).
+     - For \( 3x + 4y = 120 \), the intercepts are \( (40, 0) \) and \( (0, 30) \).
+
+5. **Identify Feasible Region:**
+   - The feasible region is the area on the graph where all constraints overlap, including the axes.
+
+6. **Find Corner Points:**
+   - Solve the system of equations to find intersection points:
+     - \( 2x + y = 100 \)
+     - \( 3x + 4y = 120 \)
+
+   Solving these simultaneously:
+   - Multiply the first equation by 4: \( 8x + 4y = 400 \)
+   - Subtract the second equation: \( 8x + 4y - 3x - 4y = 400 - 120 \)
+   - \( 5x = 280 \)
+   - \( x = 56 \)
+
+   Substitute \( x = 56 \) into \( 2x + y = 100 \):
+   - \( 2(56) + y = 100 \)
+   - \( 112 + y = 100 \)
+   - \( y = -12 \) (not feasible as \( y \geq 0 \))
+
+   Check other corner points from intercepts:
+   - \( (0, 0) \), \( (50, 0) \), \( (0, 30) \)
+
+7. **Evaluate Objective Function at Corner Points:**
+   - \( P(0, 0) = 40(0) + 30(0) = 0 \)
+   - \( P(50, 0) = 40(50) + 30(0) = 2000 \)
+   - \( P(0, 30) = 40(0) + 30(30) = 900 \)
+
+8. **Determine Maximum Profit:**
+   - The maximum profit is $2000 at the point \( (50, 0) \).
+
+**Final Answer:**
+The company should produce 50 Type A widgets and 0 Type B widgets to maximize profit, resulting in a maximum profit of $2000.
+
+==================================================
+Trace saved at: reasoning_traces/math/superglue_248/turn_1_reasoning.txt

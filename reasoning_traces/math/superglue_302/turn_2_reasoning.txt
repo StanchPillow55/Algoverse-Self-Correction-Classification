@@ -1,0 +1,81 @@
+Question ID: superglue_302
+Turn: 2
+Dataset Type: math
+==================================================
+
+To solve this problem, we need to first understand what "Sample reasoning question 302" entails. Since the problem statement is not explicitly provided, I'll assume this is a placeholder for a typical math problem. Let's create a hypothetical problem and solve it step-by-step.
+
+**Hypothetical Problem:**
+
+A company produces two types of widgets: A and B. The company can produce up to 100 widgets per day. Each widget A requires 2 hours of labor and each widget B requires 3 hours of labor. The company has a maximum of 240 labor hours available per day. If the profit from each widget A is $5 and from each widget B is $7, how many of each type of widget should the company produce to maximize profit?
+
+**Step-by-Step Solution:**
+
+1. **Define Variables:**
+   - Let \( x \) be the number of widget A produced.
+   - Let \( y \) be the number of widget B produced.
+
+2. **Set Up Constraints:**
+   - The total number of widgets produced cannot exceed 100:
+     \[
+     x + y \leq 100
+     \]
+   - The total labor hours cannot exceed 240:
+     \[
+     2x + 3y \leq 240
+     \]
+   - Non-negativity constraints:
+     \[
+     x \geq 0, \quad y \geq 0
+     \]
+
+3. **Objective Function:**
+   - The profit function to maximize is:
+     \[
+     P = 5x + 7y
+     \]
+
+4. **Graphical Solution Method:**
+   - Plot the constraints on a graph:
+     - \( x + y = 100 \) is a line with intercepts at (100, 0) and (0, 100).
+     - \( 2x + 3y = 240 \) is a line with intercepts at (120, 0) and (0, 80).
+   - Identify the feasible region bounded by these lines and the axes.
+
+5. **Find Corner Points:**
+   - Intersection of \( x + y = 100 \) and \( 2x + 3y = 240 \):
+     - Solve the system of equations:
+       \[
+       x + y = 100
+       \]
+       \[
+       2x + 3y = 240
+       \]
+     - From the first equation, \( y = 100 - x \).
+     - Substitute into the second equation:
+       \[
+       2x + 3(100 - x) = 240
+       \]
+       \[
+       2x + 300 - 3x = 240
+       \]
+       \[
+       -x + 300 = 240
+       \]
+       \[
+       x = 60, \quad y = 40
+       \]
+   - Other corner points are (0, 80) and (100, 0).
+
+6. **Evaluate Objective Function at Each Corner Point:**
+   - \( P(60, 40) = 5(60) + 7(40) = 300 + 280 = 580 \)
+   - \( P(0, 80) = 5(0) + 7(80) = 560 \)
+   - \( P(100, 0) = 5(100) + 7(0) = 500 \)
+
+7. **Determine Maximum Profit:**
+   - The maximum profit is \( 580 \), which occurs at the point (60, 40).
+
+**Final Answer:**
+The company should produce 60 widgets of type A and 40 widgets of type B to maximize profit, resulting in a maximum profit of $580.
+
+==================================================
+Trace saved at: reasoning_traces/math/superglue_302/turn_2_reasoning.txt

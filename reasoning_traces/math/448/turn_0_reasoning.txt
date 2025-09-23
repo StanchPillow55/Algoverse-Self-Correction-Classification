@@ -3,45 +3,56 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to determine the number of marbles in each jar and then find the total number of marbles across all jars.
+To find the salesman's profit, we need to follow these steps:
 
-1. **Determine the number of marbles in Jar A:**
-   - Jar A has 28 marbles.
+1. **Calculate the cost per sneaker**:
+   The salesman bought a case of 48 sneakers for $576. To find the cost per sneaker, we divide the total cost by the number of sneakers:
 
-2. **Determine the number of marbles in Jar B:**
-   - Jar B has 12 more marbles than Jar A.
-   - Therefore, the number of marbles in Jar B can be calculated as:
-     \[
-     \text{Marbles in Jar B} = \text{Marbles in Jar A} + 12 = 28 + 12 = 40
-     \]
+   \[
+   \text{Cost per sneaker} = \frac{\text{Total cost}}{\text{Number of sneakers}} = \frac{576}{48} = 12
+   \]
 
-3. **Determine the number of marbles in Jar C:**
-   - Jar C has twice as many marbles as Jar B.
-   - Therefore, the number of marbles in Jar C can be calculated as:
-     \[
-     \text{Marbles in Jar C} = 2 \times \text{Marbles in Jar B} = 2 \times 40 = 80
-     \]
+   So, the cost per sneaker is $12.
 
-4. **Calculate the total number of marbles:**
-   - Now we add the number of marbles in all three jars together:
-     \[
-     \text{Total marbles} = \text{Marbles in Jar A} + \text{Marbles in Jar B} + \text{Marbles in Jar C}
-     \]
-     \[
-     \text{Total marbles} = 28 + 40 + 80
-     \]
+2. **Calculate the revenue from the flash sale**:
+   The salesman sold 17 sneakers for $20 each during the flash sale. To find the total revenue from this sale, we multiply the number of sneakers sold by the price per sneaker:
 
-5. **Perform the addition:**
-   - First, add the marbles in Jar A and Jar B:
-     \[
-     28 + 40 = 68
-     \]
-   - Next, add the result to the number of marbles in Jar C:
-     \[
-     68 + 80 = 148
-     \]
+   \[
+   \text{Revenue from flash sale} = 17 \times 20 = 340
+   \]
 
-Thus, the total number of marbles in all jars is \( \boxed{148} \).
+3. **Calculate the number of sneakers sold to the department store**:
+   The total number of sneakers is 48. After selling 17 sneakers at the flash sale, the number of sneakers left is:
+
+   \[
+   \text{Sneakers left} = 48 - 17 = 31
+   \]
+
+4. **Calculate the revenue from the department store**:
+   The remaining 31 sneakers were sold to a department store for $25 each. To find the total revenue from this sale, we multiply the number of sneakers sold by the price per sneaker:
+
+   \[
+   \text{Revenue from department store} = 31 \times 25 = 775
+   \]
+
+5. **Calculate total revenue**:
+   Now, we add the revenue from the flash sale and the revenue from the department store to find the total revenue:
+
+   \[
+   \text{Total revenue} = \text{Revenue from flash sale} + \text{Revenue from department store} = 340 + 775 = 1115
+   \]
+
+6. **Calculate total cost**:
+   The total cost for the case of sneakers was $576, which we already know.
+
+7. **Calculate profit**:
+   Profit is calculated as total revenue minus total cost:
+
+   \[
+   \text{Profit} = \text{Total revenue} - \text{Total cost} = 1115 - 576 = 539
+   \]
+
+Thus, the salesman's profit is \(\boxed{539}\) dollars.
 
 ==================================================
 Trace saved at: reasoning_traces/math/448/turn_0_reasoning.txt

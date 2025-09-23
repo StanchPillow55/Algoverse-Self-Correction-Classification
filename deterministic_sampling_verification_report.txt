@@ -1,0 +1,101 @@
+📊 DETERMINISTIC SAMPLING VERIFICATION REPORT
+============================================================
+
+Report generated: 2025-09-21 17:50:13.822708
+
+🎯 Verification Goals:
+1. Dataset sampling is deterministic across multiple runs
+2. Multi-turn and ensemble experiments use identical problem subsets
+3. All datasets support deterministic sampling
+4. Sample order is consistent for fair comparison
+
+📈 Overall Results:
+  • Total tests: 10
+  • Consistent multi-turn vs ensemble: 7
+  • Consistency rate: 70.0%
+
+🔍 Detailed Test Results:
+------------------------------------------------------------
+
+gsm8k_20:
+  deterministic_file: 70f649f765b6de60
+  scaling_manager_run1: 092f342e28913d31
+  scaling_manager_run2: 092f342e28913d31
+  multi_turn_runner: 70f649f765b6de60
+  ensemble_runner: 70f649f765b6de60
+  Sample counts: {'deterministic_file': 20, 'scaling_manager_run1': 20, 'scaling_manager_run2': 20, 'multi_turn_runner': 20, 'ensemble_runner': 20}
+
+gsm8k_100:
+  deterministic_file: bfedbf87aba6c5d2
+  scaling_manager_run1: 0d6245bdb95e9bf0
+  scaling_manager_run2: 0d6245bdb95e9bf0
+  multi_turn_runner: bfedbf87aba6c5d2
+  ensemble_runner: bfedbf87aba6c5d2
+  Sample counts: {'deterministic_file': 100, 'scaling_manager_run1': 100, 'scaling_manager_run2': 100, 'multi_turn_runner': 100, 'ensemble_runner': 100}
+
+gsm8k_500:
+  deterministic_file: c8f21b3fd5c400d0
+  scaling_manager_run1: 36cd1ab60eeda77b
+  scaling_manager_run2: 36cd1ab60eeda77b
+  multi_turn_runner: c8f21b3fd5c400d0
+  ensemble_runner: c8f21b3fd5c400d0
+  Sample counts: {'deterministic_file': 500, 'scaling_manager_run1': 500, 'scaling_manager_run2': 500, 'multi_turn_runner': 500, 'ensemble_runner': 500}
+
+mathbench_mathbench_sample_100:
+  multi_turn_run1: bbb13acbfacc181b
+  multi_turn_run2: bbb13acbfacc181b
+  ensemble_run1: bbb13acbfacc181b
+  ensemble_run2: bbb13acbfacc181b
+  Sample counts: {'multi_turn_run1': 500, 'multi_turn_run2': 500, 'ensemble_run1': 500, 'ensemble_run2': 500}
+  ✅ STATUS: CONSISTENT
+
+mathbench_mathbench_sample_500:
+  multi_turn_run1: bbb13acbfacc181b
+  multi_turn_run2: bbb13acbfacc181b
+  ensemble_run1: bbb13acbfacc181b
+  ensemble_run2: bbb13acbfacc181b
+  Sample counts: {'multi_turn_run1': 500, 'multi_turn_run2': 500, 'ensemble_run1': 500, 'ensemble_run2': 500}
+  ✅ STATUS: CONSISTENT
+
+superglue_superglue_sample_100:
+  multi_turn_run1: be59ea7dc2118066
+  multi_turn_run2: be59ea7dc2118066
+  ensemble_run1: be59ea7dc2118066
+  ensemble_run2: be59ea7dc2118066
+  Sample counts: {'multi_turn_run1': 500, 'multi_turn_run2': 500, 'ensemble_run1': 500, 'ensemble_run2': 500}
+  ✅ STATUS: CONSISTENT
+
+superglue_superglue_sample_500:
+  multi_turn_run1: be59ea7dc2118066
+  multi_turn_run2: be59ea7dc2118066
+  ensemble_run1: be59ea7dc2118066
+  ensemble_run2: be59ea7dc2118066
+  Sample counts: {'multi_turn_run1': 500, 'multi_turn_run2': 500, 'ensemble_run1': 500, 'ensemble_run2': 500}
+  ✅ STATUS: CONSISTENT
+
+humaneval_full:
+  multi_turn_run1: e06eb5a908f6ed4f
+  multi_turn_run2: e06eb5a908f6ed4f
+  ensemble_run1: e06eb5a908f6ed4f
+  ensemble_run2: e06eb5a908f6ed4f
+  Sample counts: {'multi_turn_run1': 164, 'multi_turn_run2': 164, 'ensemble_run1': 164, 'ensemble_run2': 164}
+  ✅ STATUS: CONSISTENT
+
+humaneval_subset_20:
+  multi_turn_run1: 5623cecf4449acfe
+  multi_turn_run2: 5623cecf4449acfe
+  ensemble_run1: 5623cecf4449acfe
+  ensemble_run2: 5623cecf4449acfe
+  Sample counts: {'multi_turn_run1': 20, 'multi_turn_run2': 20, 'ensemble_run1': 20, 'ensemble_run2': 20}
+  ✅ STATUS: CONSISTENT
+
+humaneval_subset_100:
+  multi_turn_run1: 8da25b814ad24a03
+  multi_turn_run2: 8da25b814ad24a03
+  ensemble_run1: 8da25b814ad24a03
+  ensemble_run2: 8da25b814ad24a03
+  Sample counts: {'multi_turn_run1': 100, 'multi_turn_run2': 100, 'ensemble_run1': 100, 'ensemble_run2': 100}
+  ✅ STATUS: CONSISTENT
+
+============================================================
+End of Report

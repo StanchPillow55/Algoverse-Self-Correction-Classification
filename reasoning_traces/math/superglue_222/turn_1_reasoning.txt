@@ -3,65 +3,49 @@ Turn: 1
 Dataset Type: math
 ==================================================
 
-To solve the problem effectively, let's first understand what "Sample reasoning question 222" might entail. Since the problem statement is not specific, I'll assume it's a generic math problem-solving exercise. I'll create a hypothetical problem and solve it step by step.
+To solve the problem effectively, let's first understand what "Sample reasoning question 222" might entail. Since the problem is not explicitly stated, I'll create a hypothetical math problem that involves reasoning and problem-solving skills. Let's assume the problem is as follows:
 
-### Hypothetical Problem:
-**Question:** If \( x \) and \( y \) are integers such that \( 2x + 3y = 12 \), find all possible pairs \((x, y)\).
+**Problem:**
+A company produces two types of widgets: Type A and Type B. The company can produce up to 100 widgets in a day. The profit from selling one Type A widget is $3, and the profit from selling one Type B widget is $5. The company wants to maximize its profit, but it must produce at least 20 Type A widgets and at least 10 Type B widgets each day. How many of each type of widget should the company produce to maximize its profit?
 
-### Step-by-Step Solution:
+**Solution:**
 
-1. **Understand the Equation:**
-   The equation given is \( 2x + 3y = 12 \). This is a linear Diophantine equation, which means we are looking for integer solutions.
+1. **Define Variables:**
+   - Let \( x \) be the number of Type A widgets produced.
+   - Let \( y \) be the number of Type B widgets produced.
 
-2. **Express \( x \) in terms of \( y \):**
-   Rearrange the equation to solve for \( x \):
-   \[
-   2x = 12 - 3y
-   \]
-   \[
-   x = \frac{12 - 3y}{2}
-   \]
-   For \( x \) to be an integer, \( 12 - 3y \) must be even.
+2. **Set Up the Constraints:**
+   - The total production constraint: \( x + y \leq 100 \).
+   - The minimum production constraints: \( x \geq 20 \) and \( y \geq 10 \).
 
-3. **Determine when \( 12 - 3y \) is even:**
-   Since 12 is even, \( 3y \) must also be even. This implies \( y \) must be even (since 3 is odd, \( y \) must be even for \( 3y \) to be even).
+3. **Objective Function:**
+   - The profit function to maximize is \( P = 3x + 5y \).
 
-4. **Find possible values of \( y \):**
-   Since \( y \) must be even, let \( y = 2k \) where \( k \) is an integer. Substitute \( y = 2k \) into the equation:
-   \[
-   x = \frac{12 - 3(2k)}{2}
-   \]
-   \[
-   x = \frac{12 - 6k}{2}
-   \]
-   \[
-   x = 6 - 3k
-   \]
+4. **Graph the Constraints:**
+   - Plot the line \( x + y = 100 \).
+   - Shade the region below this line, as it represents \( x + y \leq 100 \).
+   - Plot the vertical line \( x = 20 \) and shade to the right, representing \( x \geq 20 \).
+   - Plot the horizontal line \( y = 10 \) and shade above, representing \( y \geq 10 \).
 
-5. **Find integer pairs \((x, y)\):**
-   We need to find integer values of \( k \) such that both \( x \) and \( y \) are integers. Substitute back to find pairs:
-   - If \( k = 0 \), \( y = 0 \), \( x = 6 \) → Pair: \((6, 0)\)
-   - If \( k = 1 \), \( y = 2 \), \( x = 3 \) → Pair: \((3, 2)\)
-   - If \( k = 2 \), \( y = 4 \), \( x = 0 \) → Pair: \((0, 4)\)
-   - If \( k = 3 \), \( y = 6 \), \( x = -3 \) → Pair: \((-3, 6)\)
+5. **Identify the Feasible Region:**
+   - The feasible region is the area where all shaded regions overlap. It is bounded by the lines \( x = 20 \), \( y = 10 \), and \( x + y = 100 \).
 
-6. **Check for negative values of \( k \):**
-   - If \( k = -1 \), \( y = -2 \), \( x = 9 \) → Pair: \((9, -2)\)
-   - If \( k = -2 \), \( y = -4 \), \( x = 12 \) → Pair: \((12, -4)\)
+6. **Find the Corner Points:**
+   - The corner points of the feasible region are where the lines intersect:
+     - Intersection of \( x = 20 \) and \( y = 10 \): \( (20, 10) \).
+     - Intersection of \( x = 20 \) and \( x + y = 100 \): \( (20, 80) \).
+     - Intersection of \( y = 10 \) and \( x + y = 100 \): \( (90, 10) \).
 
-7. **Verify all solutions:**
-   Substitute each pair back into the original equation to ensure they satisfy \( 2x + 3y = 12 \).
+7. **Evaluate the Objective Function at Each Corner Point:**
+   - At \( (20, 10) \): \( P = 3(20) + 5(10) = 60 + 50 = 110 \).
+   - At \( (20, 80) \): \( P = 3(20) + 5(80) = 60 + 400 = 460 \).
+   - At \( (90, 10) \): \( P = 3(90) + 5(10) = 270 + 50 = 320 \).
 
-### Final Answer:
-The integer solutions to the equation \( 2x + 3y = 12 \) are:
-- \((6, 0)\)
-- \((3, 2)\)
-- \((0, 4)\)
-- \((-3, 6)\)
-- \((9, -2)\)
-- \((12, -4)\)
+8. **Determine the Maximum Profit:**
+   - The maximum profit occurs at the point \( (20, 80) \) with a profit of $460.
 
-These pairs represent all possible integer solutions to the given equation.
+**Final Answer:**
+To maximize profit, the company should produce 20 Type A widgets and 80 Type B widgets each day, resulting in a maximum profit of $460.
 
 ==================================================
 Trace saved at: reasoning_traces/math/superglue_222/turn_1_reasoning.txt

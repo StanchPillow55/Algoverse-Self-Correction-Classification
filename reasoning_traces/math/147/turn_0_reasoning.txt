@@ -3,38 +3,50 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To determine how many crayons Mary has left after giving some to Becky, we will follow these steps:
+To solve the problem, we will break it down into parts and calculate the number of bees that leave and return to the hive in each time segment.
 
-1. **Identify the initial number of crayons**:
-   - Mary has 5 green crayons.
-   - Mary has 8 blue crayons.
+### Step 1: Bees leaving the hive in the first 6 hours
+Debra sees **30 bees** leave the hive in the first 6 hours.
 
-2. **Calculate the total number of crayons Mary starts with**:
-   \[
-   \text{Total crayons} = \text{Green crayons} + \text{Blue crayons} = 5 + 8 = 13
-   \]
-
-3. **Determine how many crayons Mary gives to Becky**:
-   - Mary gives away 3 green crayons.
-   - Mary gives away 1 blue crayon.
-
-4. **Calculate the total number of crayons given to Becky**:
-   \[
-   \text{Total given to Becky} = \text{Green crayons given} + \text{Blue crayons given} = 3 + 1 = 4
-   \]
-
-5. **Calculate how many crayons Mary has left**:
-   - We subtract the total number of crayons given to Becky from the total number of crayons Mary initially had:
-   \[
-   \text{Crayons left} = \text{Total crayons} - \text{Total given to Becky} = 13 - 4 = 9
-   \]
-
-6. **Final answer**:
-   Mary has **9 crayons left** after giving some to Becky.
-
-Thus, the final answer is:
+### Step 2: Bees returning to the hive in the next 6 hours
+In the next 6 hours, Debra sees **1/2** of the bees that left return. Since 30 bees left, the number of bees that return is:
 \[
-\boxed{9}
+\text{Bees returning} = \frac{1}{2} \times 30 = 15 \text{ bees}
+\]
+
+### Step 3: Bees leaving the hive in the next 6 hours
+In the following 6 hours, Debra sees **two times** as many bees leave as the first group. Therefore, the number of bees that leave is:
+\[
+\text{Bees leaving} = 2 \times 30 = 60 \text{ bees}
+\]
+
+### Step 4: Bees returning to the hive in the last 6 hours
+In the final 6 hours, every bee that left before this point and hadn't already returned will return to the hive. 
+
+- **Total bees that left before the last 6 hours**: 
+  - First 6 hours: 30 bees
+  - Second 6 hours: 60 bees
+  - Total = \(30 + 60 = 90\) bees
+
+- **Bees that returned before the last 6 hours**: 
+  - From the first 6 hours, 15 bees returned.
+
+- **Bees that have not returned**: 
+  \[
+  \text{Bees not returned} = \text{Total left} - \text{Total returned} = 90 - 15 = 75 \text{ bees}
+  \]
+
+### Final Calculation
+In the last 6 hours, all 75 bees that had left and not yet returned will return to the hive.
+
+Thus, the total number of bees that Debra sees return to the hive in the last 6 hours is:
+\[
+\text{Final answer} = 75 \text{ bees}
+\]
+
+Therefore, the final answer is:
+\[
+\boxed{75}
 \]
 
 ==================================================
