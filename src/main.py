@@ -31,6 +31,18 @@ def load_config_defaults():
         'config': None
     }
 
+def determine_dataset_subsets(dataset_name):
+    """Determine appropriate subset sizes for different datasets."""
+    dataset_lower = dataset_name.lower()
+    
+    if "gsm8k" in dataset_lower:
+        return ["subset_100", "subset_500", "subset_1000"]
+    elif "humaneval" in dataset_lower:
+        return [None]  # Full dataset (164 samples)
+    else:
+        # Other datasets (SuperGLUE, ToolQA, MathBench, etc.)
+        return ["subset_100", "subset_500"]
+
 def main():
     # Load config defaults
     defaults = load_config_defaults()
@@ -47,6 +59,7 @@ def main():
     p_run.add_argument("--model", help="Specific model to use (overrides provider default)")
     p_run.add_argument("--config", help="Path to config file")
     p_run.add_argument("--subset", help="Dataset subset (for HumanEval: subset_20, subset_100, full)")
+    p_run.add_argument("--auto-subsets", action="store_true", help="Automatically run all appropriate subsets for the dataset")
     
     # Resume and checkpoint options
     p_run.add_argument("--resume", action="store_true", default=True, help="Resume from existing checkpoint (default: True)")
@@ -71,9 +84,8 @@ def main():
         elif defaults['config']:
             config = defaults['config']
             
-        # Only set demo mode if no explicit setting and provider is not openai
-        if "DEMO_MODE" not in os.environ and args.provider != "openai":
-            os.environ.setdefault("DEMO_MODE", "1")
+        # Demo mode is only enabled if explicitly set
+        # Remove automatic demo mode enablement
         
         # Handle overwrite flag
         if args.overwrite:
@@ -102,9 +114,39 @@ def main():
         if config is None:
             config = {}
         config['checkpoint'] = checkpoint_config
+        
+        # Handle automatic subset execution
+        if args.auto_subsets:
+            subsets = determine_dataset_subsets(args.dataset)
+            print(f"🔄 Running {len(subsets)} subsets for {args.dataset}: {subsets}")
             
-        res = run_dataset(args.dataset, args.out, args.max_turns, provider=args.provider, model=args.model, config=config, subset=args.subset, experiment_id="main_run", dataset_name=os.path.basename(args.dataset))
-        print(json.dumps(res["summary"], indent=2))
+            all_results = []
+            for subset in subsets:
+                print(f"\n🚀 Running subset: {subset or 'full'}")
+                subset_out = args.out.replace('.json', f'_{subset or "full"}.json')
+                
+                res = run_dataset(
+                    args.dataset, subset_out, args.max_turns, 
+                    provider=args.provider, model=args.model, 
+                    config=config, subset=subset, 
+                    experiment_id=f"main_run_{subset or 'full'}", 
+                    dataset_name=os.path.basename(args.dataset)
+                )
+                all_results.append({"subset": subset or "full", "results": res["summary"]})
+                print(f"✅ Completed subset {subset or 'full'}: {res['summary']}")
+            
+            print("\n📊 All Subsets Summary:")
+            for result in all_results:
+                print(f"  {result['subset']}: {result['results']}")
+        else:
+            res = run_dataset(
+                args.dataset, args.out, args.max_turns, 
+                provider=args.provider, model=args.model, 
+                config=config, subset=args.subset, 
+                experiment_id="main_run", 
+                dataset_name=os.path.basename(args.dataset)
+            )
+            print(json.dumps(res["summary"], indent=2))
     else:
         p.print_help()
 

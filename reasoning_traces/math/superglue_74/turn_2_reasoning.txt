@@ -3,52 +3,69 @@ Turn: 2
 Dataset Type: math
 ==================================================
 
-To solve the problem effectively, I need to understand the context and details of "Sample reasoning question 74." However, since the problem statement is not provided, I'll demonstrate a general approach to solving a typical math reasoning problem. Let's assume a sample problem and work through it step by step.
+To solve the problem, I need to first understand what "Sample reasoning question 74" refers to. Since I don't have access to external databases or specific documents, I'll assume this is a hypothetical math problem. Without specific details, I'll create a sample math problem and solve it step by step.
 
 **Sample Problem:**
 
-A train travels from City A to City B, a distance of 300 miles. The train travels the first 100 miles at a speed of 50 miles per hour, the next 100 miles at a speed of 60 miles per hour, and the final 100 miles at a speed of 75 miles per hour. What is the average speed of the train for the entire trip?
+A company produces two types of widgets: Type A and Type B. The profit from each Type A widget is $5, and the profit from each Type B widget is $7. The company can produce a maximum of 100 widgets per day due to resource constraints. Additionally, the company has a contract that requires it to produce at least 20 Type A widgets per day. How many of each type of widget should the company produce to maximize its profit?
 
-**Step-by-Step Solution:**
+**Solution:**
 
-1. **Understand the Problem:**
-   - We need to find the average speed of the train over the entire 300-mile journey.
-   - The journey is divided into three segments, each with different speeds.
+1. **Define Variables:**
+   - Let \( x \) be the number of Type A widgets produced per day.
+   - Let \( y \) be the number of Type B widgets produced per day.
 
-2. **Calculate the Time for Each Segment:**
-   - **First Segment:** Distance = 100 miles, Speed = 50 mph
+2. **Set Up the Objective Function:**
+   - The profit function \( P \) is given by:
      \[
-     \text{Time} = \frac{\text{Distance}}{\text{Speed}} = \frac{100 \text{ miles}}{50 \text{ mph}} = 2 \text{ hours}
+     P = 5x + 7y
      \]
-   - **Second Segment:** Distance = 100 miles, Speed = 60 mph
+   - We want to maximize \( P \).
+
+3. **Set Up the Constraints:**
+   - The total number of widgets produced per day cannot exceed 100:
      \[
-     \text{Time} = \frac{100 \text{ miles}}{60 \text{ mph}} = \frac{5}{3} \text{ hours} \approx 1.67 \text{ hours}
+     x + y \leq 100
      \]
-   - **Third Segment:** Distance = 100 miles, Speed = 75 mph
+   - At least 20 Type A widgets must be produced per day:
      \[
-     \text{Time} = \frac{100 \text{ miles}}{75 \text{ mph}} = \frac{4}{3} \text{ hours} \approx 1.33 \text{ hours}
+     x \geq 20
+     \]
+   - Non-negativity constraints:
+     \[
+     x \geq 0, \quad y \geq 0
      \]
 
-3. **Calculate the Total Time:**
-   \[
-   \text{Total Time} = 2 \text{ hours} + \frac{5}{3} \text{ hours} + \frac{4}{3} \text{ hours} = 2 + \frac{5}{3} + \frac{4}{3}
-   \]
-   \[
-   \text{Total Time} = 2 + \frac{9}{3} = 2 + 3 = 5 \text{ hours}
-   \]
+4. **Graph the Constraints:**
+   - Plot the line \( x + y = 100 \).
+   - Plot the line \( x = 20 \).
+   - Identify the feasible region that satisfies all constraints.
 
-4. **Calculate the Average Speed:**
-   - The total distance is 300 miles.
-   - The total time is 5 hours.
-   \[
-   \text{Average Speed} = \frac{\text{Total Distance}}{\text{Total Time}} = \frac{300 \text{ miles}}{5 \text{ hours}} = 60 \text{ mph}
-   \]
+5. **Identify Corner Points:**
+   - The corner points of the feasible region are where the constraints intersect. These points are:
+     - \( (20, 80) \) from \( x = 20 \) and \( x + y = 100 \)
+     - \( (20, 0) \) from \( x = 20 \) and \( y = 0 \)
+     - \( (100, 0) \) from \( x + y = 100 \) and \( y = 0 \)
 
-5. **Conclusion:**
-   - The average speed of the train for the entire trip is 60 miles per hour.
+6. **Evaluate the Objective Function at Each Corner Point:**
+   - At \( (20, 80) \):
+     \[
+     P = 5(20) + 7(80) = 100 + 560 = 660
+     \]
+   - At \( (20, 0) \):
+     \[
+     P = 5(20) + 7(0) = 100
+     \]
+   - At \( (100, 0) \):
+     \[
+     P = 5(100) + 7(0) = 500
+     \]
+
+7. **Determine the Maximum Profit:**
+   - The maximum profit of 660 occurs at the point \( (20, 80) \).
 
 **Final Answer:**
-The average speed of the train for the entire trip is 60 mph.
+To maximize profit, the company should produce 20 Type A widgets and 80 Type B widgets per day. The maximum profit is $660.
 
 ==================================================
 Trace saved at: reasoning_traces/math/superglue_74/turn_2_reasoning.txt

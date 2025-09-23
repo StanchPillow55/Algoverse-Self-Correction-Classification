@@ -3,34 +3,69 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To determine how many different rooms Hans could be checked into, we need to analyze the situation step by step.
+To solve the problem, we need to determine how many games the football team won, given that they played a total of 22 games and won 8 more games than they lost.
 
-1. **Understanding the Hotel Structure**: 
-   - The hotel has a total of 10 floors.
-   - Each floor has 10 identical rooms.
+Let's define the variables:
+- Let \( W \) be the number of games won.
+- Let \( L \) be the number of games lost.
 
-2. **Identifying the Unavailable Floor**:
-   - Due to an accident, the last floor (10th floor) is unavailable for guests. This means Hans cannot be checked into any room on the 10th floor.
+From the problem, we have the following information:
+1. The total number of games played is 22:
+   \[
+   W + L = 22
+   \]
+2. The team won 8 more games than they lost:
+   \[
+   W = L + 8
+   \]
 
-3. **Calculating Available Floors**:
-   - Since the 10th floor is unavailable, we only have the first 9 floors available for guests.
+Now we have a system of two equations:
+1. \( W + L = 22 \) (Equation 1)
+2. \( W = L + 8 \) (Equation 2)
 
-4. **Calculating Total Rooms**:
-   - Each of the 9 available floors has 10 rooms.
-   - Therefore, the total number of available rooms can be calculated as follows:
-     \[
-     \text{Total available rooms} = \text{Number of floors} \times \text{Number of rooms per floor}
-     \]
-     \[
-     \text{Total available rooms} = 9 \text{ floors} \times 10 \text{ rooms/floor} = 90 \text{ rooms}
-     \]
-
-5. **Conclusion**:
-   - Since there are 90 rooms available for Hans to be checked into, we conclude that the total number of different rooms he could be assigned to is 90.
-
-Thus, the final answer is:
+We can substitute Equation 2 into Equation 1. First, let's express \( W \) in terms of \( L \) using Equation 2:
 \[
-\boxed{90}
+W = L + 8
+\]
+
+Now substitute this expression for \( W \) into Equation 1:
+\[
+(L + 8) + L = 22
+\]
+
+Now combine like terms:
+\[
+2L + 8 = 22
+\]
+
+Next, we will isolate \( L \) by subtracting 8 from both sides:
+\[
+2L = 22 - 8
+\]
+\[
+2L = 14
+\]
+
+Now, divide both sides by 2 to solve for \( L \):
+\[
+L = \frac{14}{2} = 7
+\]
+
+Now that we have the number of games lost, we can find the number of games won using Equation 2:
+\[
+W = L + 8 = 7 + 8 = 15
+\]
+
+Thus, the football team won \( W = 15 \) games.
+
+To summarize:
+- The team lost 7 games.
+- The team won 15 games.
+- The total number of games played is \( 15 + 7 = 22 \), which is consistent with the information given in the problem.
+
+Therefore, the final answer is:
+\[
+\boxed{15}
 \]
 
 ==================================================

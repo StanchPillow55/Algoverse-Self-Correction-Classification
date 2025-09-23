@@ -1,0 +1,73 @@
+Question ID: 635
+Turn: 0
+Dataset Type: math
+==================================================
+
+To determine how many classes Manny can miss before his parents decide not to sign him up again, we need to analyze the cost per class based on the number of classes he attends.
+
+1. **Total Cost of Classes**: Manny signed up for Karate classes for a total of $60.
+
+2. **Total Number of Classes**: There are 10 classes in total.
+
+3. **Cost Per Class Calculation**: 
+   - If Manny attends all 10 classes, the cost per class is calculated as follows:
+   \[
+   \text{Cost per class} = \frac{\text{Total Cost}}{\text{Total Classes}} = \frac{60}{10} = 6
+   \]
+   This means if he attends all classes, it costs him $6 per class, which is less than $10.
+
+4. **Condition for Parents**: His parents will not sign him up again if the cost per class exceeds $10. Therefore, we need to find out how many classes he can miss while still keeping the cost per class at or below $10.
+
+5. **Let \( x \) be the number of classes Manny misses**. Then the number of classes he attends is:
+   \[
+   10 - x
+   \]
+
+6. **New Cost Per Class Calculation**: If Manny misses \( x \) classes, the new cost per class becomes:
+   \[
+   \text{New Cost per class} = \frac{60}{10 - x}
+   \]
+
+7. **Setting Up the Inequality**: We need to ensure that this new cost per class does not exceed $10:
+   \[
+   \frac{60}{10 - x} \leq 10
+   \]
+
+8. **Solving the Inequality**:
+   - First, multiply both sides by \( 10 - x \) (note that \( 10 - x \) must be positive, which means \( x < 10 \)):
+   \[
+   60 \leq 10(10 - x)
+   \]
+   - Expanding the right side:
+   \[
+   60 \leq 100 - 10x
+   \]
+   - Rearranging the inequality:
+   \[
+   10x \leq 100 - 60
+   \]
+   \[
+   10x \leq 40
+   \]
+   \[
+   x \leq 4
+   \]
+
+9. **Conclusion**: Manny can miss up to 4 classes. If he misses 4 classes, he will attend 6 classes, and the cost per class will be:
+   \[
+   \text{Cost per class} = \frac{60}{6} = 10
+   \]
+   If he misses 5 classes, he will attend only 5 classes, and the cost per class will be:
+   \[
+   \text{Cost per class} = \frac{60}{5} = 12
+   \]
+   which exceeds $10.
+
+Thus, the maximum number of classes Manny can miss while still keeping the cost per class at or below $10 is:
+
+\[
+\boxed{4}
+\]
+
+==================================================
+Trace saved at: reasoning_traces/math/635/turn_0_reasoning.txt

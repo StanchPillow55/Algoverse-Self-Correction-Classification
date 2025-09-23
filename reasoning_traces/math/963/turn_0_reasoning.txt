@@ -1,0 +1,98 @@
+Question ID: 963
+Turn: 0
+Dataset Type: math
+==================================================
+
+Let's define the number of Pokémon caught by each person using variables:
+
+- Let \( A \) be the number of Pokémon caught by Alex.
+- Let \( S \) be the number of Pokémon caught by Stan.
+- Let \( D \) be the number of Pokémon caught by Adelwolfe.
+
+From the problem, we have the following information:
+
+1. Together, they have caught 339 Pokémon:
+   \[
+   A + S + D = 339
+   \]
+
+2. Alex has caught 5 more than Stan:
+   \[
+   A = S + 5
+   \]
+
+3. Stan has caught 13 less than 4 times as many as Adelwolfe has caught:
+   \[
+   S = 4D - 13
+   \]
+
+Now, we can substitute the expressions for \( A \) and \( S \) into the first equation.
+
+First, substitute \( A \) from the second equation into the first equation:
+\[
+(S + 5) + S + D = 339
+\]
+This simplifies to:
+\[
+2S + D + 5 = 339
+\]
+Subtract 5 from both sides:
+\[
+2S + D = 334 \quad \text{(Equation 1)}
+\]
+
+Next, substitute \( S \) from the third equation into Equation 1. We can express \( D \) in terms of \( S \):
+\[
+D = \frac{334 - 2S}{1} \quad \text{(from Equation 1)}
+\]
+
+Now, substitute this expression for \( D \) into the equation for \( S \):
+\[
+S = 4D - 13
+\]
+Substituting \( D \):
+\[
+S = 4\left(\frac{334 - 2S}{1}\right) - 13
+\]
+This simplifies to:
+\[
+S = 1336 - 8S - 13
+\]
+Combine like terms:
+\[
+S + 8S = 1336 - 13
+\]
+\[
+9S = 1323
+\]
+Now, divide both sides by 9:
+\[
+S = \frac{1323}{9} = 147
+\]
+
+Now that we have \( S \), we can find \( A \) and \( D \).
+
+Using \( S = 147 \) to find \( A \):
+\[
+A = S + 5 = 147 + 5 = 152
+\]
+
+Now, using \( S \) to find \( D \):
+\[
+D = \frac{334 - 2S}{1} = \frac{334 - 2(147)}{1} = \frac{334 - 294}{1} = 40
+\]
+
+Now, let's verify that the total number of Pokémon caught is correct:
+\[
+A + S + D = 152 + 147 + 40 = 339
+\]
+
+Thus, the calculations are consistent with the problem statement.
+
+Finally, the number of Pokémon caught by Stan is:
+\[
+\boxed{147}
+\]
+
+==================================================
+Trace saved at: reasoning_traces/math/963/turn_0_reasoning.txt

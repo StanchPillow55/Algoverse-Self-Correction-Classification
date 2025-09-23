@@ -29,14 +29,25 @@ class LearnerBot:
             # Map short names to full API model names
             anthropic_mapping = {
                 "claude-haiku": "claude-3-haiku-20240307",
-                "claude-sonnet": "claude-3-5-sonnet-20241210",  # Updated to Claude 3.5
+                "claude-sonnet": "claude-3-5-sonnet-20240620",  # Use available Claude 3.5 version
                 "claude-opus": "claude-3-opus-20240229",
                 "claude-3-haiku": "claude-3-haiku-20240307",
-                "claude-3-sonnet": "claude-3-5-sonnet-20241210",  # Updated to Claude 3.5
-                "claude-3.5-sonnet": "claude-3-5-sonnet-20241210",  # New mapping for 3.5
+                "claude-3-sonnet": "claude-3-5-sonnet-20240620",  # Use available Claude 3.5 version
+                "claude-3.5-sonnet": "claude-3-5-sonnet-20240620",  # Use available Claude 3.5 version
                 "claude-3-opus": "claude-3-opus-20240229"
             }
             return anthropic_mapping.get(model, model)
+        elif provider == "replicate":
+            # Map short names to Replicate model identifiers
+            replicate_mapping = {
+                "llama-70b": "meta/llama-2-70b-chat",
+                "llama-7b": "meta/llama-2-7b-chat",
+                "llama-13b": "meta/llama-2-13b-chat",
+                "llama2-70b": "meta/llama-2-70b-chat",
+                "llama2-7b": "meta/llama-2-7b-chat",
+                "llama2-13b": "meta/llama-2-13b-chat"
+            }
+            return replicate_mapping.get(model, model)
         return model
 
     def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None, 
@@ -147,6 +158,9 @@ class LearnerBot:
             # Handle template parameter
             user_prompt = f"{q}\n[Instruction]: {template}" if template else q
             
+            # Add system prompt for proper Claude behavior
+            sys_prompt = "You are a helpful AI assistant. Follow the instructions carefully and provide complete, accurate responses. Show your work and reasoning clearly."
+            
             # Heuristic: detect code-generation tasks
             is_code_task = ("Python function" in q) or ("code block" in q) or ("def " in q)
             max_tokens = 1024 if is_code_task else 256
@@ -154,6 +168,7 @@ class LearnerBot:
             
             response = client.messages.create(
                 model=self.model,
+                system=sys_prompt,
                 messages=[{"role": "user", "content": user_prompt}],
                 temperature=temperature,
                 max_tokens=max_tokens
@@ -190,6 +205,14 @@ class LearnerBot:
         except Exception as e:
             error_msg = f"ANTHROPIC_API_ERROR: {str(e)}"
             self._safe_debug_log(q, template, error_msg, "ERROR", "anthropic")
+            
+            # Check for specific API errors that should terminate the experiment
+            error_str = str(e).lower()
+            if any(term in error_str for term in ['quota', 'rate limit', 'insufficient', 'billing', 'api key']):
+                print(f"🚨 CRITICAL API ERROR - Experiment should terminate: {error_msg}")
+                # Raise the error to bubble up and trigger experiment termination
+                raise e
+            
             return f"ERROR_{type(e).__name__}", 0.1, error_msg
 
     def _call_replicate(self, q: str, template: str | None = None, 

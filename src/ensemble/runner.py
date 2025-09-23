@@ -18,6 +18,7 @@ from dataclasses import asdict
 # Enhanced error handling and checkpointing
 from src.utils.checkpoint import CheckpointManager, CheckpointError
 from src.utils.api_error_handler import APIErrorHandler, ErrorHandlingConfig, create_error_handler_from_config
+from src.utils.multi_turn_error_handler import create_multi_turn_error_handler, MultiTurnErrorHandler
 
 from .learner import EnsembleLearnerBot
 from src.agents.teacher import detect_bias, combine_confidence
@@ -138,24 +139,17 @@ def run_dataset(
     output_dir = Path(traces_out).parent
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Initialize checkpoint manager
-    checkpoint_file = output_dir / f"{Path(traces_out).stem}_checkpoint.jsonl"
-    checkpoint_manager = CheckpointManager(str(checkpoint_file))
+    # Initialize unified multi-turn error handler
+    multi_turn_handler = create_multi_turn_error_handler(
+        output_dir=output_dir,
+        experiment_id=experiment_id,
+        config=config,
+        learner_type="ensemble"
+    )
     
-    # Initialize API error handler
-    error_config = config.get('error_handling', {}) if config else {}
-    error_handler = create_error_handler_from_config(checkpoint_manager, error_config)
-    
-    # Check if experiment was previously terminated
-    was_terminated, termination_reason = checkpoint_manager.check_if_terminated()
-    if was_terminated:
-        print(f"🚨 Experiment was previously terminated: {termination_reason}")
-        print("Please review error logs and resolve issues before resuming.")
-        return {"error": "experiment_previously_terminated", "reason": termination_reason}
-    
-    # Load existing progress
-    completed_qids = checkpoint_manager.load_completed_ids()
-    print(f"📋 Resuming with {len(completed_qids)} completed samples")
+    # Initialize experiment and check if it should proceed
+    if not multi_turn_handler.initialize_experiment(dataset_name, provider, model or "unknown"):
+        return {"error": "experiment_initialization_failed"}
 
     # Configure ensemble settings from config or environment
     ensemble_size = config.get('ensemble_size', 3) if config else int(os.getenv('ENSEMBLE_SIZE', '3'))
@@ -174,7 +168,7 @@ def run_dataset(
         ensemble_size=ensemble_size,
         ensemble_models=ensemble_models,
         ensemble_configs=ensemble_configs,
-        error_handler=error_handler
+        error_handler=multi_turn_handler.api_error_handler
     )
     traces: List[Dict[str, Any]] = []
     
@@ -217,24 +211,9 @@ def run_dataset(
             task = None
             is_humaneval = False
         
-        # Skip if already completed (resumable experiments)
-        if checkpoint_manager.is_completed(qid):
-            print(f"⏭️ Skipping completed sample: {qid}")
+        # Check if sample should be processed using unified handler
+        if not multi_turn_handler.start_sample_processing(qid, q):
             continue
-        
-        # Skip if error handler says this sample has too many errors
-        if error_handler.should_skip_sample(qid):
-            print(f"⏭️ Skipping sample due to too many errors: {qid}")
-            continue
-        
-        # Check if experiment should terminate due to API errors
-        if error_handler.experiment_terminated:
-            print(f"🚨 Terminating experiment due to API errors: {error_handler.termination_reason}")
-            checkpoint_manager.save_experiment_termination(
-                error_handler.termination_reason,
-                error_context=error_handler.export_error_report()
-            )
-            break
         
         # Start trace for this example
         sample_id = qid
@@ -243,124 +222,124 @@ def run_dataset(
         try:
             # Process this sample with error handling
             history: List[Dict[str, Any]] = []
-        
-        # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
-        if is_humaneval:
-            prompt = (
-                "You are a Python programmer. Show your complete reasoning and thought process.\n\n"
-                "Think through the problem step by step, explain your approach, then implement the solution.\n"
-                "Include your reasoning, then provide the complete function definition.\n\nProblem:\n" + q + "\n\n"
-                "Please show your full reasoning process and then provide your implementation."
-            )
-        else:
-            prompt = (
-                "You are a math problem solver. Show your complete reasoning and work.\n\n"
-                "Think through the problem step by step. Show all calculations and explain your reasoning.\n"
-                "Work through the problem completely and provide your final answer.\n\nQuestion:\n" + q + "\n\n"
-                "Please show all your work and reasoning, then state your final answer."
-            )
-        
-        # First attempt - Get full reasoning trace
-        raw_answer, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
-                                                        experiment_id=experiment_id, dataset_name=dataset_name, 
-                                                        sample_id=sample_id, turn_number=0)
-        
-        # Save full reasoning trace to file
-        dataset_type = "code" if is_humaneval else "math"
-        reasoning_trace_file = reasoning_extractor.save_reasoning_trace(
-            qid=sample_id, turn=0, reasoning_text=full_response_0,
-            output_dir=output_dir, dataset_type=dataset_type
-        )
-        
-        # Extract final answer from reasoning trace
-        if is_humaneval:
-            extracted_answer, reasoning_summary = reasoning_extractor.extract_code_answer(
-                full_response_0, task.get('entry_point', '')
-            )
-        else:
-            extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
-        
-        # Use extracted answer for evaluation, fallback to raw if extraction fails
-        a0 = extracted_answer if extracted_answer is not None else raw_answer
-        
-        # Score based on task type
-        if is_humaneval:
-            # pass@k via sampling (k from env or arg)
-            k_try = int(os.getenv("PASS_K", str(k))) if k else int(os.getenv("PASS_K", "1"))
-            passes = []
-            score_result = score_humaneval_candidate(task, a0)
-            execution_details = score_result.get('execution_result', {})
-            passes.append(bool(score_result.get('passed', False)))
-            for _ in range(max(0, k_try - 1)):
-                # For additional samples, also get full reasoning and extract
-                raw_sample, _, full_sample = learner.answer(prompt, history, template=None, 
-                                          experiment_id=experiment_id, dataset_name=dataset_name, 
-                                          sample_id=sample_id, turn_number=0)
-                extracted_sample, _ = reasoning_extractor.extract_code_answer(
-                    full_sample, task.get('entry_point', '')
+            
+            # Prepare prompt for HumanEval vs standard tasks - UPDATED FOR FULL REASONING
+            if is_humaneval:
+                prompt = (
+                    "You are a Python programmer. Show your complete reasoning and thought process.\n\n"
+                    "Think through the problem step by step, explain your approach, then implement the solution.\n"
+                    "Include your reasoning, then provide the complete function definition.\n\nProblem:\n" + q + "\n\n"
+                    "Please show your full reasoning process and then provide your implementation."
                 )
-                sample_answer = extracted_sample if extracted_sample is not None else raw_sample
-                sr = score_humaneval_candidate(task, sample_answer)
-                passes.append(bool(sr.get('passed', False)))
-            acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
-        else:
-            acc0 = gsm8k_em(a0, ref)
-            execution_details = {}
-        
-        # Only run bias detection and confidence if enabled
-        if enable_error_awareness:
-            bias, tconf = detect_bias(
-                q, a0, ref, history, 
-                reasoning_text=full_response_0,
-                execution_result=execution_details,
-                is_code_task=is_humaneval
+            else:
+                prompt = (
+                    "You are a math problem solver. Show your complete reasoning and work.\n\n"
+                    "Think through the problem step by step. Show all calculations and explain your reasoning.\n"
+                    "Work through the problem completely and provide your final answer.\n\nQuestion:\n" + q + "\n\n"
+                    "Please show all your work and reasoning, then state your final answer."
+                )
+            
+            # First attempt - Get full reasoning trace
+            raw_answer, self_conf, full_response_0 = learner.answer(prompt, history, template=None, 
+                                                            experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                            sample_id=sample_id, turn_number=0)
+            
+            # Save full reasoning trace to file
+            dataset_type = "code" if is_humaneval else "math"
+            reasoning_trace_file = reasoning_extractor.save_reasoning_trace(
+                qid=sample_id, turn=0, reasoning_text=full_response_0,
+                output_dir=output_dir, dataset_type=dataset_type
             )
-        else:
-            bias, tconf = "None", 0.5
+            
+            # Extract final answer from reasoning trace
+            if is_humaneval:
+                extracted_answer, reasoning_summary = reasoning_extractor.extract_code_answer(
+                    full_response_0, task.get('entry_point', '')
+                )
+            else:
+                extracted_answer, reasoning_summary = reasoning_extractor.extract_math_answer(full_response_0)
         
-        if enable_confidence:
-            conf = combine_confidence(self_conf, tconf, None)
-        else:
-            conf = 0.5
+            # Use extracted answer for evaluation, fallback to raw if extraction fails
+            a0 = extracted_answer if extracted_answer is not None else raw_answer
+            
+            # Score based on task type
+            if is_humaneval:
+                # pass@k via sampling (k from env or arg)
+                k_try = int(os.getenv("PASS_K", str(k))) if k else int(os.getenv("PASS_K", "1"))
+                passes = []
+                score_result = score_humaneval_candidate(task, a0)
+                execution_details = score_result.get('execution_result', {})
+                passes.append(bool(score_result.get('passed', False)))
+                for _ in range(max(0, k_try - 1)):
+                    # For additional samples, also get full reasoning and extract
+                    raw_sample, _, full_sample = learner.answer(prompt, history, template=None, 
+                                              experiment_id=experiment_id, dataset_name=dataset_name, 
+                                              sample_id=sample_id, turn_number=0)
+                    extracted_sample, _ = reasoning_extractor.extract_code_answer(
+                        full_sample, task.get('entry_point', '')
+                    )
+                    sample_answer = extracted_sample if extracted_sample is not None else raw_sample
+                    sr = score_humaneval_candidate(task, sample_answer)
+                    passes.append(bool(sr.get('passed', False)))
+                acc0 = int(humaneval_pass_at_k(passes, max(1, k_try)) > 0)
+            else:
+                acc0 = gsm8k_em(a0, ref)
+                execution_details = {}
+            
+            # Only run bias detection and confidence if enabled
+            if enable_error_awareness:
+                bias, tconf = detect_bias(
+                    q, a0, ref, history, 
+                    reasoning_text=full_response_0,
+                    execution_result=execution_details,
+                    is_code_task=is_humaneval
+                )
+            else:
+                bias, tconf = "None", 0.5
+            
+            if enable_confidence:
+                conf = combine_confidence(self_conf, tconf, None)
+            else:
+                conf = 0.5
 
-        turns = [{
-            "answer": a0,  # Extracted answer for evaluation
-            "raw_answer": raw_answer,  # Original learner output
-            "response_text": full_response_0,  # Full reasoning trace
-            "reasoning_trace_file": str(reasoning_trace_file),  # Path to saved reasoning trace
-            "reasoning_summary": reasoning_summary,  # Summary of reasoning process
-            "self_conf": round(self_conf,2), 
-            "teacher_bias": bias,
-            "teacher_conf": round(tconf,2),
-            "combined_confidence": round(conf,2),
-            "template": None, 
-            "accuracy": acc0,
-            "execution_details": execution_details if is_humaneval else {}
-        }]
-        
-        # Log first turn
-        coaching_feedback = coaching_from_bias(bias)
-        logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=full_response_0, 
-                      response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
-                      evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
-                      model_reported_confidence=self_conf, 
-                      evaluator_bias_label=bias,
-                      evaluator_feedback=coaching_feedback,
-                      model_name=getattr(learner, 'model', provider),
-                      task_type='humaneval' if is_humaneval else 'standard',
-                      execution_details=execution_details if is_humaneval else None)
+            turns = [{
+                "answer": a0,  # Extracted answer for evaluation
+                "raw_answer": raw_answer,  # Original learner output
+                "response_text": full_response_0,  # Full reasoning trace
+                "reasoning_trace_file": str(reasoning_trace_file),  # Path to saved reasoning trace
+                "reasoning_summary": reasoning_summary,  # Summary of reasoning process
+                "self_conf": round(self_conf,2), 
+                "teacher_bias": bias,
+                "teacher_conf": round(tconf,2),
+                "combined_confidence": round(conf,2),
+                "template": None, 
+                "accuracy": acc0,
+                "execution_details": execution_details if is_humaneval else {}
+            }]
+            
+            # Log first turn
+            coaching_feedback = coaching_from_bias(bias)
+            logger.on_turn(ex, turn_index=0, prompt=prompt, response_text=full_response_0, 
+                          response_is_final=(max_turns == 1 or acc0 == 1), is_correct=bool(acc0),
+                          evaluator_signal=('stop' if acc0 == 1 else 'continue'), 
+                          model_reported_confidence=self_conf, 
+                          evaluator_bias_label=bias,
+                          evaluator_feedback=coaching_feedback,
+                          model_name=getattr(learner, 'model', provider),
+                          task_type='humaneval' if is_humaneval else 'standard',
+                          execution_details=execution_details if is_humaneval else None)
 
-        # Multi-turn loop for all datasets when enabled
-        if enable_multi_turn:
-            acc_prev = acc0
-            t = 1
-            while t < max_turns and acc_prev == 0:
-                # Determine whether to reprompt
-                if enable_error_awareness:
-                    reprompt, template = select_template(bias, conf, bool(acc_prev), len(history), is_code_task=is_humaneval)
-                else:
-                    # If error awareness is disabled, use a generic retry template
-                    reprompt, template = True, "try_again_concise"
+            # Multi-turn loop for all datasets when enabled
+            if enable_multi_turn:
+                acc_prev = acc0
+                t = 1
+                while t < max_turns and acc_prev == 0:
+                    # Determine whether to reprompt
+                    if enable_error_awareness:
+                        reprompt, template = select_template(bias, conf, bool(acc_prev), len(history), is_code_task=is_humaneval)
+                    else:
+                        # If error awareness is disabled, use a generic retry template
+                        reprompt, template = True, "try_again_concise"
 
                 if not reprompt:
                     break
@@ -461,76 +440,36 @@ def run_dataset(
                 if acc1 == 1: break
                 acc_prev = acc1
 
-        # Finalize the trace for this example
-        final_answer = turns[-1]["answer"]
-        final_correct = bool(turns[-1]["accuracy"])
-        logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
-        
-            # Save successful result to checkpoint
-            result_record = {
-                "qid": qid,
-                "status": "success", 
-                "question": q,
-                "reference": ref,
-                "final_accuracy": turns[-1]["accuracy"],
-                "turns_count": len(turns),
-                "processing_time": time.time() - ex.start_time if hasattr(ex, 'start_time') else None
-            }
-            checkpoint_manager.append_result_atomic(result_record)
+            # Finalize the trace for this example
+            final_answer = turns[-1]["answer"]
+            final_correct = bool(turns[-1]["accuracy"])
+            logger.end_example(ex, final_answer=final_answer, final_correct=final_correct)
             
-            traces.append({
-                "qid": qid, "question": q, "reference": ref, "turns": turns,
+            # Complete sample processing using unified handler
+            sample_data = {
+                "qid": qid, 
+                "question": q, 
+                "reference": ref, 
+                "turns": turns,
                 "final_accuracy": turns[-1]["accuracy"]
-            })
+            }
             
-            # Periodic checkpoint state saving
-            if checkpoint_manager.should_checkpoint_state():
-                experiment_metadata = {
-                    "dataset": dataset_csv,
-                    "experiment_id": experiment_id,
-                    "provider": provider,
-                    "model": getattr(learner, 'model', model),
-                    "max_turns": max_turns,
-                    "processed_samples": len(traces),
-                    "error_stats": error_handler.export_error_report()
-                }
-                checkpoint_manager.save_resume_state(experiment_metadata)
-                print(f"📋 Checkpoint saved: {len(traces)} samples completed")
+            multi_turn_handler.complete_sample_processing(sample_data)
+            traces.append(sample_data)
         
         except Exception as e:
-            # Handle API and other errors during sample processing
+            # Handle sample-level error using unified handler
             print(f"⚠️ Error processing sample {qid}: {e}")
             
-            # Use error handler to manage the error
-            if error_handler:
-                try:
-                    should_continue, backoff_delay = error_handler.handle_api_error(
-                        e, provider, getattr(learner, 'model', model), 
-                        experiment_id, qid, 0  # turn_number=0 for sample-level errors
-                    )
-                    
-                    if not should_continue:
-                        # Error handler decided to terminate experiment
-                        print(f"🚨 Terminating experiment due to error: {error_handler.termination_reason}")
-                        break
-                    
-                    if backoff_delay and backoff_delay > 0:
-                        print(f"Backing off for {backoff_delay:.1f}s before continuing")
-                        time.sleep(backoff_delay)
-                        
-                except Exception as handler_error:
-                    print(f"Error in error handler: {handler_error}")
+            should_continue = multi_turn_handler.handle_sample_error(
+                e, provider, getattr(learner, 'model', model)
+            )
             
-            # Log error to checkpoint
-            error_context = {
-                "provider": provider,
-                "model": getattr(learner, 'model', model),
-                "experiment_id": experiment_id,
-                "dataset_name": dataset_name
-            }
-            checkpoint_manager.append_error_record(qid, e, retryable=True, error_context=error_context)
+            if not should_continue:
+                print(f"🚨 Terminating experiment due to error handling decision")
+                break
             
-            # Continue to next sample unless error handler terminated
+            # Continue to next sample
             continue
 
     summary = {
@@ -695,39 +634,9 @@ def run_dataset(
         # Do not fail the run if writer errors; proceed silently (logged to stdout)
         print(f"WARN: tracing writer failed: {_e}")
 
-    # Save final checkpoint and error report
-    try:
-        final_experiment_metadata = {
-            "experiment_completed": True,
-            "dataset": dataset_csv,
-            "experiment_id": experiment_id,
-            "provider": provider,
-            "model": getattr(learner, 'model', model),
-            "max_turns": max_turns,
-            "total_samples_processed": len(traces),
-            "final_accuracy": summary.get("final_accuracy_mean", 0),
-            "error_summary": error_handler.export_error_report() if error_handler else {}
-        }
-        checkpoint_manager.save_resume_state(final_experiment_metadata)
-        
-        # Generate error report if there were API issues
-        if error_handler and error_handler.total_api_errors > 0:
-            error_report_file = output_dir / "api_error_report.json"
-            with open(error_report_file, 'w') as f:
-                json.dump(error_handler.export_error_report(), f, indent=2)
-            print(f"📄 API error report saved: {error_report_file}")
-            
-            # Print recovery recommendations
-            recommendations = error_handler.get_recovery_recommendations()
-            if recommendations:
-                print("\n🔧 Recovery Recommendations:")
-                for rec in recommendations:
-                    print(f"  • {rec}")
-        
-        print(f"✅ Final checkpoint saved: {checkpoint_manager.get_stats()}")
-        
-    except Exception as e:
-        print(f"Warning: Failed to save final checkpoint: {e}")
+    # Finalize experiment using unified handler
+    final_results = multi_turn_handler.finalize_experiment(traces)
+    out.update(final_results)
     
     # Close the trace logger
     logger.close()

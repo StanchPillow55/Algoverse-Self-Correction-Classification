@@ -3,66 +3,83 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to first understand what "Sample reasoning question 189" refers to. Since the problem statement doesn't provide specific details about the question, I'll create a hypothetical math problem and solve it step by step. Let's assume the problem is as follows:
+To solve this problem, we need to first understand what "Sample reasoning question 189" entails. Since the question is not explicitly provided, I'll create a hypothetical math problem and solve it step by step. Let's assume the problem is as follows:
 
 **Problem:**
-A company produces two types of widgets: Type A and Type B. The company can produce a maximum of 100 widgets per day. The profit from selling one Type A widget is $5, and the profit from selling one Type B widget is $8. The company wants to maximize its profit, but it must produce at least 20 Type A widgets and at least 10 Type B widgets each day. How many of each type of widget should the company produce to maximize profit?
+A company produces two types of widgets: Type A and Type B. The company sells Type A widgets for $50 each and Type B widgets for $70 each. In one month, the company sold a total of 500 widgets and made $29,000 in revenue. How many of each type of widget did the company sell?
 
 **Solution:**
 
-1. **Define Variables:**
-   - Let \( x \) be the number of Type A widgets produced.
-   - Let \( y \) be the number of Type B widgets produced.
+To solve this problem, we need to set up a system of equations based on the information given.
 
-2. **Set Up the Constraints:**
-   - The total number of widgets produced cannot exceed 100: 
+1. **Define the Variables:**
+   - Let \( x \) be the number of Type A widgets sold.
+   - Let \( y \) be the number of Type B widgets sold.
+
+2. **Set Up the Equations:**
+   - The total number of widgets sold is 500. Therefore, we have the equation:
      \[
-     x + y \leq 100
+     x + y = 500
      \]
-   - At least 20 Type A widgets must be produced:
+   - The total revenue from selling the widgets is $29,000. Therefore, we have the equation:
      \[
-     x \geq 20
-     \]
-   - At least 10 Type B widgets must be produced:
-     \[
-     y \geq 10
+     50x + 70y = 29000
      \]
 
-3. **Objective Function:**
-   - The profit function \( P \) is given by:
-     \[
-     P = 5x + 8y
-     \]
-   - We want to maximize \( P \).
+3. **Solve the System of Equations:**
 
-4. **Graph the Constraints:**
-   - Plot the lines \( x + y = 100 \), \( x = 20 \), and \( y = 10 \) on a graph.
-   - Identify the feasible region that satisfies all constraints.
+   We have the following system of equations:
+   \[
+   \begin{align*}
+   x + y &= 500 \quad \text{(Equation 1)} \\
+   50x + 70y &= 29000 \quad \text{(Equation 2)}
+   \end{align*}
+   \]
 
-5. **Find the Vertices of the Feasible Region:**
-   - The intersection of \( x + y = 100 \) and \( x = 20 \) gives the point \( (20, 80) \).
-   - The intersection of \( x + y = 100 \) and \( y = 10 \) gives the point \( (90, 10) \).
-   - The intersection of \( x = 20 \) and \( y = 10 \) gives the point \( (20, 10) \).
+   From Equation 1, express \( y \) in terms of \( x \):
+   \[
+   y = 500 - x
+   \]
 
-6. **Evaluate the Objective Function at Each Vertex:**
-   - At \( (20, 80) \): 
-     \[
-     P = 5(20) + 8(80) = 100 + 640 = 740
-     \]
-   - At \( (90, 10) \): 
-     \[
-     P = 5(90) + 8(10) = 450 + 80 = 530
-     \]
-   - At \( (20, 10) \): 
-     \[
-     P = 5(20) + 8(10) = 100 + 80 = 180
-     \]
+   Substitute \( y = 500 - x \) into Equation 2:
+   \[
+   50x + 70(500 - x) = 29000
+   \]
 
-7. **Determine the Maximum Profit:**
-   - The maximum profit of 740 occurs at the point \( (20, 80) \).
+   Simplify and solve for \( x \):
+   \[
+   50x + 35000 - 70x = 29000
+   \]
+   \[
+   -20x + 35000 = 29000
+   \]
+   \[
+   -20x = 29000 - 35000
+   \]
+   \[
+   -20x = -6000
+   \]
+   \[
+   x = \frac{-6000}{-20}
+   \]
+   \[
+   x = 300
+   \]
+
+   Substitute \( x = 300 \) back into the expression for \( y \):
+   \[
+   y = 500 - 300
+   \]
+   \[
+   y = 200
+   \]
+
+4. **Conclusion:**
+
+   The company sold 300 Type A widgets and 200 Type B widgets.
 
 **Final Answer:**
-To maximize profit, the company should produce 20 Type A widgets and 80 Type B widgets per day, resulting in a maximum profit of $740.
+The company sold 300 Type A widgets and 200 Type B widgets.
 
 ==================================================
 Trace saved at: reasoning_traces/math/superglue_189/turn_0_reasoning.txt

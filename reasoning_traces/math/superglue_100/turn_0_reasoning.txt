@@ -3,49 +3,65 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-It seems like the question "Sample reasoning question 100" is not fully clear or specific. However, I will interpret this as a request to solve a sample math problem that involves reasoning, and I'll create a problem involving the number 100. Let's consider the following problem:
+To solve the problem, we need to first understand what "Sample reasoning question 100" refers to. Since the question is not explicitly stated, I'll assume it's a placeholder for a typical math problem. Let's create a sample math problem and solve it step by step.
 
-**Problem:**
+**Sample Problem:**
 
-If a number is increased by 20% and then decreased by 20%, what is the final value of the number if the original number is 100?
+A company produces two types of widgets: Type A and Type B. Each Type A widget requires 2 hours of labor and 3 units of material, while each Type B widget requires 1 hour of labor and 4 units of material. The company has a maximum of 100 hours of labor and 120 units of material available per week. If the profit from each Type A widget is $40 and from each Type B widget is $30, how many of each type of widget should the company produce to maximize profit?
 
-**Solution:**
+**Step-by-Step Solution:**
 
-To solve this problem, we need to understand the effect of successive percentage changes on a number.
+1. **Define Variables:**
+   - Let \( x \) be the number of Type A widgets produced.
+   - Let \( y \) be the number of Type B widgets produced.
 
-1. **Increase by 20%:**
+2. **Write the Constraints:**
+   - Labor constraint: \( 2x + y \leq 100 \)
+   - Material constraint: \( 3x + 4y \leq 120 \)
+   - Non-negativity constraints: \( x \geq 0 \), \( y \geq 0 \)
 
-   - Start with the original number: \( x = 100 \).
-   - Increase by 20% means you add 20% of the original number to itself.
-   - Calculate 20% of 100: 
-     \[
-     0.20 \times 100 = 20
-     \]
-   - Add this to the original number:
-     \[
-     100 + 20 = 120
-     \]
+3. **Objective Function:**
+   - Maximize profit \( P = 40x + 30y \)
 
-2. **Decrease by 20%:**
+4. **Graph the Constraints:**
+   - Convert inequalities to equations to find boundary lines:
+     - \( 2x + y = 100 \)
+     - \( 3x + 4y = 120 \)
 
-   - Now, take the new number, which is 120.
-   - Decrease by 20% means you subtract 20% of the current number from itself.
-   - Calculate 20% of 120:
-     \[
-     0.20 \times 120 = 24
-     \]
-   - Subtract this from 120:
-     \[
-     120 - 24 = 96
-     \]
+5. **Find Intersections:**
+   - Solve \( 2x + y = 100 \) and \( 3x + 4y = 120 \) simultaneously:
+     - Multiply the first equation by 4: \( 8x + 4y = 400 \)
+     - Subtract the second equation: \( 8x + 4y - 3x - 4y = 400 - 120 \)
+     - \( 5x = 280 \)
+     - \( x = 56 \)
+     - Substitute \( x = 56 \) into \( 2x + y = 100 \):
+       - \( 2(56) + y = 100 \)
+       - \( 112 + y = 100 \)
+       - \( y = -12 \) (not feasible since \( y \geq 0 \))
 
-3. **Conclusion:**
+6. **Find Feasible Region:**
+   - Check intersections with axes:
+     - For \( 2x + y = 100 \):
+       - \( x = 0 \), \( y = 100 \)
+       - \( y = 0 \), \( x = 50 \)
+     - For \( 3x + 4y = 120 \):
+       - \( x = 0 \), \( y = 30 \)
+       - \( y = 0 \), \( x = 40 \)
 
-   After increasing the original number by 20% and then decreasing the result by 20%, the final value is 96.
+7. **Vertices of Feasible Region:**
+   - \( (0, 0) \), \( (0, 30) \), \( (40, 0) \), \( (24, 18) \) (intersection of \( 2x + y = 100 \) and \( 3x + 4y = 120 \))
+
+8. **Evaluate Objective Function at Each Vertex:**
+   - \( P(0, 0) = 40(0) + 30(0) = 0 \)
+   - \( P(0, 30) = 40(0) + 30(30) = 900 \)
+   - \( P(40, 0) = 40(40) + 30(0) = 1600 \)
+   - \( P(24, 18) = 40(24) + 30(18) = 960 + 540 = 1500 \)
+
+9. **Conclusion:**
+   - The maximum profit is $1600, achieved by producing 40 Type A widgets and 0 Type B widgets.
 
 **Final Answer:**
-
-The final value of the number after a 20% increase followed by a 20% decrease is 96.
+The company should produce 40 Type A widgets and 0 Type B widgets to maximize profit, resulting in a maximum profit of $1600.
 
 ==================================================
 Trace saved at: reasoning_traces/math/superglue_100/turn_0_reasoning.txt

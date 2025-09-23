@@ -3,71 +3,85 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To determine how many pages Berry needs to read on Saturday to reach his goal of reading an average of 50 pages a day over the week, we will follow these steps:
+To solve the problem, we need to set up equations based on the information given about the football team members.
 
-1. **Calculate the total number of pages he needs to read for the week.**
-   Since there are 7 days in a week and Berry wants to average 50 pages per day, we can calculate the total pages needed as follows:
+Let:
+- \( d \) = number of players on the defense
+- \( o \) = number of players on the offense
+- \( s \) = number of players on the special teams
 
+From the problem, we have the following relationships:
+
+1. The total number of team members is 105:
    \[
-   \text{Total pages needed} = 50 \text{ pages/day} \times 7 \text{ days} = 350 \text{ pages}
+   o + d + s = 105
    \]
 
-2. **Calculate the total number of pages he has read from Sunday to Friday.**
-   We will add up the pages he read each day:
-
-   - Sunday: 43 pages
-   - Monday: 65 pages
-   - Tuesday: 28 pages
-   - Wednesday: 0 pages (no reading)
-   - Thursday: 70 pages
-   - Friday: 56 pages
-
-   Now, we sum these values:
-
+2. There are twice as many players on the offense as there are on the defense:
    \[
-   \text{Total pages read} = 43 + 65 + 28 + 0 + 70 + 56
+   o = 2d
    \]
 
-   Let's calculate this step by step:
-
+3. There is half the number of players on the special teams as there is on the defense:
    \[
-   43 + 65 = 108
-   \]
-   \[
-   108 + 28 = 136
-   \]
-   \[
-   136 + 0 = 136
-   \]
-   \[
-   136 + 70 = 206
-   \]
-   \[
-   206 + 56 = 262
+   s = \frac{1}{2}d
    \]
 
-   Thus, the total number of pages Berry has read from Sunday to Friday is:
+Now we can substitute the expressions for \( o \) and \( s \) in terms of \( d \) into the total members equation.
 
+Substituting \( o \) and \( s \) into the total equation:
+\[
+2d + d + \frac{1}{2}d = 105
+\]
+
+Now, combine the terms on the left side:
+\[
+(2d + d + \frac{1}{2}d) = 3d + \frac{1}{2}d
+\]
+To combine \( 3d \) and \( \frac{1}{2}d \), we can convert \( 3d \) into a fraction:
+\[
+3d = \frac{6}{2}d
+\]
+Thus,
+\[
+\frac{6}{2}d + \frac{1}{2}d = \frac{7}{2}d
+\]
+
+Now we have:
+\[
+\frac{7}{2}d = 105
+\]
+
+To solve for \( d \), multiply both sides by \( \frac{2}{7} \):
+\[
+d = 105 \times \frac{2}{7}
+\]
+
+Calculating the right side:
+\[
+d = 105 \div 7 \times 2 = 15 \times 2 = 30
+\]
+
+Now that we have \( d \), we can find \( o \) and \( s \):
+1. Calculate \( o \):
    \[
-   \text{Total pages read} = 262 \text{ pages}
+   o = 2d = 2 \times 30 = 60
    \]
 
-3. **Determine how many pages he needs to read on Saturday.**
-   To find out how many pages Berry needs to read on Saturday, we subtract the total pages he has read from the total pages needed for the week:
-
+2. Calculate \( s \):
    \[
-   \text{Pages needed on Saturday} = \text{Total pages needed} - \text{Total pages read}
-   \]
-   \[
-   \text{Pages needed on Saturday} = 350 - 262
-   \]
-   \[
-   \text{Pages needed on Saturday} = 88
+   s = \frac{1}{2}d = \frac{1}{2} \times 30 = 15
    \]
 
-Therefore, Berry needs to read **88 pages** on Saturday to reach his goal of reading an average of 50 pages a day over the week.
+Finally, we can verify that the total number of players adds up to 105:
+\[
+o + d + s = 60 + 30 + 15 = 105
+\]
 
-**Final Answer: 88 pages**
+Everything checks out, so the number of players on the defense is:
+\[
+\boxed{30}
+\]
 
 ==================================================
 Trace saved at: reasoning_traces/math/314/turn_0_reasoning.txt

@@ -1,0 +1,62 @@
+{
+  "name": "Anthropic Model Configuration",
+  "description": "Definitive configuration for all Anthropic Claude models with correct names",
+  "created": "2025-09-22",
+  "models": {
+    "haiku": {
+      "model_id": "claude-3-haiku-20240307",
+      "name": "Claude-3-Haiku",
+      "description": "Fast, efficient model for simple tasks",
+      "category": "small",
+      "cost_per_1k_input": 0.00025,
+      "cost_per_1k_output": 0.00125,
+      "max_tokens": 4096,
+      "context_window": 200000
+    },
+    "sonnet": {
+      "model_id": "claude-3-5-sonnet-20241022",
+      "name": "Claude-3.5-Sonnet",
+      "description": "Balanced model for complex reasoning and analysis",
+      "category": "medium",
+      "cost_per_1k_input": 0.003,
+      "cost_per_1k_output": 0.015,
+      "max_tokens": 8192,
+      "context_window": 200000
+    },
+    "opus": {
+      "model_id": "claude-3-opus-20240229",
+      "name": "Claude-3-Opus",
+      "description": "Most capable model for highly complex tasks",
+      "category": "large",
+      "cost_per_1k_input": 0.015,
+      "cost_per_1k_output": 0.075,
+      "max_tokens": 4096,
+      "context_window": 200000
+    }
+  },
+  "ensemble_configurations": {
+    "three_model_ensemble": [
+      "claude-3-haiku-20240307",
+      "claude-3-5-sonnet-20241022",
+      "claude-3-opus-20240229"
+    ],
+    "cost_effective": [
+      "claude-3-haiku-20240307",
+      "claude-3-5-sonnet-20241022"
+    ],
+    "performance_focused": [
+      "claude-3-5-sonnet-20241022",
+      "claude-3-opus-20240229"
+    ]
+  },
+  "deprecation_warnings": {
+    "claude-3-5-sonnet-20241210": "INVALID - This model never existed. Use claude-3-5-sonnet-20241022",
+    "claude-3-5-sonnet-20240620": "DEPRECATED - Use claude-3-5-sonnet-20241022",
+    "claude-3-sonnet-20240229": "DEPRECATED - Use claude-3-5-sonnet-20241022"
+  },
+  "validation": {
+    "last_verified": "2025-09-22",
+    "api_tested": true,
+    "notes": "All model names verified against Anthropic API. Use model_id values for API calls."
+  }
+}

@@ -1,0 +1,48 @@
+# Llama Multi-Turn Experiment Configuration
+# Optimized for reliable execution with Replicate API
+
+experiment:
+  name: "llama_70b_multiturn"
+  model: "llama-70b"
+  provider: "replicate"
+  dataset_subset: "subset_100"  # Start with 100 questions for validation
+  
+models:
+  provider: "replicate"
+  replicate_model: "meta/llama-2-70b-chat"
+  
+# Conservative rate limiting for Llama stability
+rate_limiting:
+  max_concurrency: 1          # One request at a time
+  requests_per_second: 0.5    # One request every 2 seconds
+  tokens_per_minute: 30000    # Conservative token limit
+  max_retries: 10             # Higher retries for Llama
+  retry_delay: 5              # 5 seconds between retries
+  timeout: 180                # 3 minutes timeout per request
+  
+# Multi-turn specific settings
+multi_turn:
+  max_turns: 3
+  checkpoint_every: 10        # Save progress every 10 questions
+  resume_enabled: true
+  confidence_threshold: 0.7   # Threshold for self-correction
+  
+# Output formatting
+output:
+  use_consolidated_formatter: true
+  create_chart_data: true
+  save_reasoning_traces: true
+  trace_format: "consolidated"  # ONE file per question
+  
+# Data handling
+data:
+  shuffle_questions: false
+  include_reference_answers: true
+  save_intermediate_results: true
+  
+# Monitoring
+monitoring:
+  log_level: "INFO"
+  track_costs: true
+  save_api_health: true
+  progress_updates: true
