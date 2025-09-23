@@ -3,34 +3,54 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to work backwards from the information given about the number of marbles Archie has left after losing some.
+To solve this problem, we need to work backwards from the information given. Let's denote the initial number of marbles Archie had as \( x \).
 
-1. **Identify the final amount of marbles**: 
-   Archie has 20 marbles left after losing some.
+1. **Understanding the Losses:**
+   - Archie loses 60% of his marbles into the street. This means he retains 40% of his marbles after this loss.
+   - Of the marbles he retains, he loses half down a sewer.
 
-2. **Determine how many marbles he had before losing half down the sewer**:
-   Since he lost half of the remaining marbles down the sewer, we can denote the number of marbles he had before losing them down the sewer as \( x \). According to the problem, half of \( x \) was lost, leaving him with 20 marbles. Therefore, we can set up the equation:
-   \[
-   \frac{x}{2} = 20
-   \]
-   To find \( x \), we multiply both sides by 2:
-   \[
-   x = 20 \times 2 = 40
-   \]
-   So, before losing the marbles down the sewer, Archie had 40 marbles.
+2. **Setting Up the Equations:**
+   - After losing 60% of his marbles, Archie has 40% of his original marbles left. This can be expressed as:
+     \[
+     0.4x
+     \]
+   - He then loses half of these remaining marbles down a sewer. Therefore, he retains half of the 40% he had left:
+     \[
+     \frac{1}{2} \times 0.4x = 0.2x
+     \]
+   - We know that after all these losses, Archie has 20 marbles left. Therefore, we can set up the equation:
+     \[
+     0.2x = 20
+     \]
 
-3. **Determine how many marbles he started with**:
-   Now we need to find out how many marbles he started with before losing 60% of them into the street. Let \( y \) be the number of marbles he started with. According to the problem, he lost 60% of his marbles, which means he retained 40% of them. Therefore, the relationship can be expressed as:
-   \[
-   0.4y = 40
-   \]
-   To find \( y \), we divide both sides by 0.4:
-   \[
-   y = \frac{40}{0.4} = 100
-   \]
+3. **Solving the Equation:**
+   - To find the initial number of marbles \( x \), we solve the equation:
+     \[
+     0.2x = 20
+     \]
+   - Divide both sides by 0.2 to isolate \( x \):
+     \[
+     x = \frac{20}{0.2}
+     \]
+   - Calculate the division:
+     \[
+     x = 100
+     \]
 
-4. **Final answer**:
-   Therefore, the number of marbles Archie started with is \( \boxed{100} \).
+4. **Verification:**
+   - Let's verify the solution by working through the problem with \( x = 100 \):
+     - Initially, Archie has 100 marbles.
+     - He loses 60% of 100 marbles, which is 60 marbles. So, he has:
+       \[
+       100 - 60 = 40 \text{ marbles left}
+       \]
+     - He then loses half of these 40 marbles down a sewer, which is 20 marbles. So, he has:
+       \[
+       40 - 20 = 20 \text{ marbles left}
+       \]
+   - This matches the given condition that Archie has 20 marbles left after all losses.
+
+Therefore, the initial number of marbles Archie started with is \(\boxed{100}\).
 
 ==================================================
 Trace saved at: reasoning_traces/math/344/turn_0_reasoning.txt

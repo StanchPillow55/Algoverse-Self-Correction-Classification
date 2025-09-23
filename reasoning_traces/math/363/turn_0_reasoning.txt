@@ -3,84 +3,75 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to set up equations based on the information given about the costs of apples and bananas.
+To solve this problem, we need to determine the cost of a bunch of bananas. Let's define the variables and set up the equations based on the information given:
 
 Let:
-- \( x \) = cost of one dozen apples
-- \( y \) = cost of one bunch of bananas
+- \( A \) be the cost of one dozen apples.
+- \( B \) be the cost of one bunch of bananas.
 
 From the problem, we have the following information:
 
 1. Tony paid $7 for 2 dozen apples and 1 bunch of bananas.
 2. Arnold paid $5 for 1 dozen apples and 1 bunch of bananas.
 
-We can translate this information into equations.
+We can translate these statements into equations:
 
-### Step 1: Set up the equations
+1. For Tony: 
+   \[
+   2A + B = 7
+   \]
 
-From Tony's purchase:
-- The cost for 2 dozen apples is \( 2x \).
-- The total cost for Tony's purchase can be expressed as:
-  \[
-  2x + y = 7 \quad \text{(Equation 1)}
-  \]
+2. For Arnold:
+   \[
+   A + B = 5
+   \]
 
-From Arnold's purchase:
-- The cost for 1 dozen apples is \( x \).
-- The total cost for Arnold's purchase can be expressed as:
-  \[
-  x + y = 5 \quad \text{(Equation 2)}
-  \]
+Now, we have a system of two linear equations:
 
-### Step 2: Solve the equations
-
-Now we have a system of two equations:
-1. \( 2x + y = 7 \)
-2. \( x + y = 5 \)
-
-We can solve this system using substitution or elimination. Here, we will use substitution.
-
-From Equation 2, we can express \( y \) in terms of \( x \):
 \[
-y = 5 - x \quad \text{(Equation 3)}
+\begin{align*}
+2A + B &= 7 \quad \text{(Equation 1)} \\
+A + B &= 5 \quad \text{(Equation 2)}
+\end{align*}
 \]
 
-Now, we substitute Equation 3 into Equation 1:
+To find the value of \( B \), we can eliminate \( A \) by subtracting Equation 2 from Equation 1:
+
 \[
-2x + (5 - x) = 7
+(2A + B) - (A + B) = 7 - 5
 \]
 
-### Step 3: Simplify and solve for \( x \)
+Simplifying the left side:
 
-Now simplify the equation:
 \[
-2x + 5 - x = 7
-\]
-\[
-x + 5 = 7
-\]
-\[
-x = 7 - 5
-\]
-\[
-x = 2
+2A + B - A - B = 2
 \]
 
-### Step 4: Find \( y \)
+This reduces to:
 
-Now that we have \( x \), we can find \( y \) using Equation 3:
 \[
-y = 5 - x = 5 - 2 = 3
+A = 2
 \]
 
-### Conclusion
+Now that we know \( A = 2 \), we can substitute this value back into Equation 2 to find \( B \):
 
-The cost of one bunch of bananas, \( y \), is:
 \[
-\boxed{3}
-\] 
+A + B = 5
+\]
 
-Thus, a bunch of bananas costs $3.
+Substitute \( A = 2 \):
+
+\[
+2 + B = 5
+\]
+
+Subtract 2 from both sides:
+
+\[
+B = 3
+\]
+
+Thus, the cost of a bunch of bananas is \( \boxed{3} \).
 
 ==================================================
 Trace saved at: reasoning_traces/math/363/turn_0_reasoning.txt

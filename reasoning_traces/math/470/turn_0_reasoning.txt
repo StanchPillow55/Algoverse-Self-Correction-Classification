@@ -3,68 +3,60 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To determine how many hours Gary worked that week, we need to break down his earnings into regular hours and overtime hours.
+To solve this problem, we need to determine how many hours Gary worked in total, given that he earns overtime pay for hours worked beyond 40 hours in a week. Here's a step-by-step breakdown of the solution:
 
-1. **Identify the normal wage and overtime rate:**
-   - Gary's normal wage is $12 per hour.
-   - The overtime rate is 1.5 times the normal wage: 
+1. **Identify the normal and overtime pay rates:**
+   - Gary's normal hourly wage is $12 per hour.
+   - For overtime, he earns 1.5 times his normal wage. Therefore, his overtime wage is:
      \[
-     \text{Overtime Rate} = 1.5 \times 12 = 18 \text{ dollars per hour}
-     \]
-
-2. **Define the number of hours worked:**
-   - Let \( h \) be the total number of hours Gary worked that week.
-   - If \( h \) is greater than 40 hours, then he worked \( h - 40 \) hours of overtime.
-
-3. **Calculate the earnings based on hours worked:**
-   - If Gary worked 40 hours or less, his total earnings would be:
-     \[
-     \text{Earnings} = 12h
-     \]
-   - If he worked more than 40 hours, his earnings would be:
-     \[
-     \text{Earnings} = 12 \times 40 + 18 \times (h - 40)
-     \]
-   - Simplifying the overtime earnings:
-     \[
-     \text{Earnings} = 480 + 18(h - 40)
-     \]
-     \[
-     = 480 + 18h - 720
-     \]
-     \[
-     = 18h - 240
+     1.5 \times 12 = 18 \text{ dollars per hour}
      \]
 
-4. **Set up the equation based on his paycheck:**
-   - We know Gary's total earnings for the week is $696. Therefore, we can set up the equation:
+2. **Set up the equation for total earnings:**
+   - Let \( x \) be the total number of hours Gary worked in the week.
+   - If \( x \leq 40 \), then all hours are at the normal rate, but since he earned overtime, \( x \) must be greater than 40.
+   - For hours up to 40, he earns at the normal rate, and for hours beyond 40, he earns at the overtime rate.
+   - Let \( y \) be the number of overtime hours worked. Then, \( y = x - 40 \).
+
+3. **Calculate the total earnings:**
+   - Earnings from the first 40 hours at the normal rate:
      \[
-     18h - 240 = 696
+     40 \times 12 = 480 \text{ dollars}
+     \]
+   - Earnings from overtime hours:
+     \[
+     y \times 18 = (x - 40) \times 18
+     \]
+   - Total earnings equation:
+     \[
+     480 + (x - 40) \times 18 = 696
      \]
 
-5. **Solve for \( h \):**
-   - First, add 240 to both sides:
-     \[
-     18h = 696 + 240
-     \]
-     \[
-     18h = 936
-     \]
-   - Now, divide both sides by 18:
-     \[
-     h = \frac{936}{18}
-     \]
-     \[
-     h = 52
-     \]
+4. **Solve the equation for \( x \):**
+   \[
+   480 + 18(x - 40) = 696
+   \]
+   Simplify the equation:
+   \[
+   480 + 18x - 720 = 696
+   \]
+   Combine like terms:
+   \[
+   18x - 240 = 696
+   \]
+   Add 240 to both sides:
+   \[
+   18x = 936
+   \]
+   Divide both sides by 18 to solve for \( x \):
+   \[
+   x = \frac{936}{18} = 52
+   \]
 
-6. **Conclusion:**
+5. **Conclusion:**
    - Gary worked a total of 52 hours that week.
 
-Thus, the final answer is:
-\[
-\boxed{52}
-\]
+Therefore, the final answer is that Gary worked **52 hours** that week.
 
 ==================================================
 Trace saved at: reasoning_traces/math/470/turn_0_reasoning.txt

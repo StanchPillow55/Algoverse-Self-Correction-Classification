@@ -3,47 +3,89 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to first understand what "Sample math problem 491" refers to. Since the problem itself is not provided, I'll create a hypothetical math problem and solve it step by step. Let's assume "Sample math problem 491" is as follows:
+To solve the problem, we first need to understand what "Sample math problem 491" refers to. Since the problem itself is not provided, I'll create a sample math problem and solve it step by step.
 
-**Problem:**
-A rectangle has a length that is 3 times its width. If the perimeter of the rectangle is 48 units, find the dimensions of the rectangle.
+**Sample Math Problem:**
 
-**Solution:**
+A company produces two types of widgets: A and B. The profit from each widget A is $30, and the profit from each widget B is $50. The company can produce a maximum of 200 widgets in total per day due to labor constraints. Additionally, the company can use up to 150 units of material per day. Each widget A requires 1 unit of material, and each widget B requires 2 units of material. How many of each type of widget should the company produce to maximize profit?
 
-To solve this problem, we need to find the length and width of the rectangle. Let's denote the width of the rectangle as \( w \) and the length as \( l \).
+**Step-by-Step Solution:**
 
-According to the problem, the length is 3 times the width:
-\[ l = 3w \]
+1. **Define Variables:**
+   - Let \( x \) be the number of widget A produced.
+   - Let \( y \) be the number of widget B produced.
 
-The formula for the perimeter \( P \) of a rectangle is given by:
-\[ P = 2l + 2w \]
+2. **Objective Function:**
+   - We want to maximize the profit function \( P \).
+   - Profit from widget A is $30 per unit, and from widget B is $50 per unit.
+   - Therefore, the profit function is: 
+     \[
+     P = 30x + 50y
+     \]
 
-We are given that the perimeter is 48 units:
-\[ 2l + 2w = 48 \]
+3. **Constraints:**
+   - The total number of widgets produced cannot exceed 200:
+     \[
+     x + y \leq 200
+     \]
+   - The total material used cannot exceed 150 units:
+     \[
+     x + 2y \leq 150
+     \]
+   - Non-negativity constraints:
+     \[
+     x \geq 0, \quad y \geq 0
+     \]
 
-Substitute the expression for \( l \) from the first equation into the perimeter equation:
-\[ 2(3w) + 2w = 48 \]
+4. **Graphical Solution:**
+   - Plot the constraints on a graph with \( x \) on the horizontal axis and \( y \) on the vertical axis.
+   - The line \( x + y = 200 \) intersects the axes at (200, 0) and (0, 200).
+   - The line \( x + 2y = 150 \) intersects the axes at (150, 0) and (0, 75).
 
-Simplify the equation:
-\[ 6w + 2w = 48 \]
+5. **Feasible Region:**
+   - The feasible region is bounded by the lines \( x + y = 200 \), \( x + 2y = 150 \), and the axes.
+   - The vertices of the feasible region are found by solving the system of equations:
+     - Intersection of \( x + y = 200 \) and \( x + 2y = 150 \):
+       \[
+       \begin{align*}
+       x + y &= 200 \\
+       x + 2y &= 150
+       \end{align*}
+       \]
+       Subtract the first equation from the second:
+       \[
+       (x + 2y) - (x + y) = 150 - 200 \\
+       y = -50
+       \]
+       Since \( y \) cannot be negative, this intersection is not feasible.
 
-Combine like terms:
-\[ 8w = 48 \]
+     - Intersection of \( x + y = 200 \) and the y-axis:
+       \[
+       x = 0, \quad y = 200
+       \]
+       This point is not feasible as it exceeds the material constraint.
 
-Solve for \( w \) by dividing both sides by 8:
-\[ w = \frac{48}{8} \]
-\[ w = 6 \]
+     - Intersection of \( x + 2y = 150 \) and the x-axis:
+       \[
+       y = 0, \quad x = 150
+       \]
 
-Now that we have the width, we can find the length using the relationship \( l = 3w \):
-\[ l = 3 \times 6 \]
-\[ l = 18 \]
+     - Intersection of \( x + 2y = 150 \) and \( x + y = 200 \) (already checked).
 
-Thus, the dimensions of the rectangle are:
-- Width: 6 units
-- Length: 18 units
+     - Intersection of \( x = 0 \) and \( x + 2y = 150 \):
+       \[
+       x = 0, \quad y = 75
+       \]
+
+6. **Evaluate the Objective Function at Each Vertex:**
+   - \( (150, 0) \): \( P = 30(150) + 50(0) = 4500 \)
+   - \( (0, 75) \): \( P = 30(0) + 50(75) = 3750 \)
+
+7. **Conclusion:**
+   - The maximum profit is $4500, achieved by producing 150 units of widget A and 0 units of widget B.
 
 **Final Answer:**
-The width of the rectangle is 6 units, and the length is 18 units.
+The company should produce 150 units of widget A and 0 units of widget B to maximize profit, resulting in a maximum profit of $4500.
 
 ==================================================
 Trace saved at: reasoning_traces/math/mathbench_491/turn_0_reasoning.txt

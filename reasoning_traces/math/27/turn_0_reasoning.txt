@@ -3,48 +3,27 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we will break it down into steps, calculating the number of valuable files Brennan has after each round of downloads and deletions.
+First, we need to find out how many files Brennan deleted from the first batch of 800 files. We know that he deleted 70% of them, so we calculate 70% of 800:
 
-### Step 1: Initial Download and Deletion
+70/100 * 800 = 560 files
 
-1. **Initial Files Downloaded**: Brennan downloaded 800 files.
-2. **Files Deleted**: He deleted 70% of these files.
-   - To find out how many files he deleted, we calculate:
-     \[
-     \text{Files Deleted} = 0.70 \times 800 = 560
-     \]
-3. **Valuable Files Remaining**: The number of files left after deletion is:
-   \[
-   \text{Valuable Files} = 800 - 560 = 240
-   \]
+So, Brennan deleted 560 files from the first batch. To find out how many files he kept, we subtract the number of deleted files from the total number of downloaded files:
 
-### Step 2: Second Download and Deletion
+800 - 560 = 240 files
 
-1. **Second Round of Downloads**: Brennan downloaded 400 more files.
-2. **Files Deleted from Second Download**: He realized that 3/5 of these files were irrelevant.
-   - To find out how many files he deleted from the second download, we calculate:
-     \[
-     \text{Files Deleted} = \frac{3}{5} \times 400 = 240
-     \]
-3. **Valuable Files from Second Download**: The number of valuable files from the second download is:
-   \[
-   \text{Valuable Files from Second Download} = 400 - 240 = 160
-   \]
+Next, we need to find out how many files Brennan deleted from the second batch of 400 files. We know that he deleted 3/5 of them, so we calculate 3/5 of 400:
 
-### Step 3: Total Valuable Files
+3/5 * 400 = 240 files
 
-Now, we combine the valuable files from both rounds of downloads:
-\[
-\text{Total Valuable Files} = \text{Valuable Files from First Download} + \text{Valuable Files from Second Download}
-\]
-Substituting the values we calculated:
-\[
-\text{Total Valuable Files} = 240 + 160 = 400
-\]
+So, Brennan deleted 240 files from the second batch. To find out how many files he kept, we subtract the number of deleted files from the total number of downloaded files:
 
-### Final Answer
+400 - 240 = 160 files
 
-After deleting the unrelated files from both rounds of downloads, Brennan is left with a total of **400 valuable files**.
+Finally, to find out how many valuable files Brennan was left with in total, we add the number of files he kept from the first batch to the number of files he kept from the second batch:
+
+240 + 160 = 400 files
+
+So, Brennan was left with 400 valuable files after deleting the unrelated files he downloaded in the second round.
 
 ==================================================
 Trace saved at: reasoning_traces/math/27/turn_0_reasoning.txt

@@ -3,45 +3,32 @@ Turn: 1
 Dataset Type: math
 ==================================================
 
-To solve this problem, we need to calculate the total cost of running Kim's TV for a week, given the power consumption, the duration of use per day, and the cost of electricity.
+To solve this problem, we need to calculate the total cost of running Kim's TV for a week, given the power consumption, daily usage, and electricity cost.
 
-### Step-by-Step Solution:
+**Step 1: Calculate the daily energy consumption in kilowatt-hours (kWh).**
 
-1. **Determine the daily energy consumption of the TV:**
+1. The TV uses 125 watts of electricity per hour.
+2. Kim runs the TV for 4 hours a day.
 
-   The TV uses 125 watts per hour. Since Kim runs it for 4 hours a day, we calculate the daily energy consumption in watt-hours (Wh):
+First, calculate the daily energy consumption in watt-hours:
+\[ \text{Daily energy consumption (Wh)} = 125 \, \text{watts} \times 4 \, \text{hours} = 500 \, \text{Wh} \]
 
-   \[
-   \text{Daily energy consumption} = 125 \, \text{watts} \times 4 \, \text{hours} = 500 \, \text{Wh}
-   \]
+Convert watt-hours to kilowatt-hours:
+\[ \text{Daily energy consumption (kWh)} = \frac{500 \, \text{Wh}}{1000} = 0.5 \, \text{kWh} \]
 
-2. **Convert watt-hours to kilowatt-hours:**
+**Step 2: Calculate the weekly energy consumption in kilowatt-hours.**
 
-   Since electricity costs are given in kilowatt-hours (kWh), we need to convert the daily energy consumption from watt-hours to kilowatt-hours. There are 1000 watts in a kilowatt, so:
+Since there are 7 days in a week, multiply the daily energy consumption by 7:
+\[ \text{Weekly energy consumption (kWh)} = 0.5 \, \text{kWh/day} \times 7 \, \text{days} = 3.5 \, \text{kWh} \]
 
-   \[
-   \text{Daily energy consumption in kWh} = \frac{500 \, \text{Wh}}{1000} = 0.5 \, \text{kWh}
-   \]
+**Step 3: Calculate the cost of the weekly energy consumption.**
 
-3. **Calculate the weekly energy consumption:**
+The cost of electricity is 14 cents per kilowatt-hour. Therefore, the cost for 3.5 kWh is:
+\[ \text{Cost (cents)} = 3.5 \, \text{kWh} \times 14 \, \text{cents/kWh} = 49 \, \text{cents} \]
 
-   Kim uses the TV for 7 days a week, so we calculate the weekly energy consumption:
+**Final Answer:**
 
-   \[
-   \text{Weekly energy consumption} = 0.5 \, \text{kWh/day} \times 7 \, \text{days} = 3.5 \, \text{kWh}
-   \]
-
-4. **Calculate the cost of electricity for a week:**
-
-   The cost of electricity is 14 cents per kWh. Therefore, the cost to run the TV for a week is:
-
-   \[
-   \text{Weekly cost} = 3.5 \, \text{kWh} \times 14 \, \text{cents/kWh} = 49 \, \text{cents}
-   \]
-
-### Final Answer:
-
-The cost to run Kim's TV for a week is **49 cents**.
+The cost to run Kim's TV for a week is 49 cents.
 
 ==================================================
 Trace saved at: reasoning_traces/math/343/turn_1_reasoning.txt
