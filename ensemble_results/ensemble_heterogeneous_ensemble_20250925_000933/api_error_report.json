@@ -1,0 +1,40 @@
+{
+  "experiment_status": "terminated",
+  "termination_reason": "Consecutive failures exceeded threshold (5)",
+  "error_statistics": {
+    "total_errors": 6,
+    "consecutive_failures": 5,
+    "affected_samples": 6,
+    "error_rate": 6.0
+  },
+  "error_breakdown": {
+    "total_errors": 6,
+    "error_breakdown": {
+      "mixed:unknown_error": 6
+    },
+    "affected_samples": 6,
+    "time_span_hours": 0.06556035194132064,
+    "most_common_error": [
+      "mixed:unknown_error",
+      6
+    ]
+  },
+  "recovery_recommendations": [
+    "Experiment was terminated - address errors before resuming",
+    "Termination reason: Consecutive failures exceeded threshold (5)"
+  ],
+  "config": {
+    "max_api_errors_per_sample": 3,
+    "max_total_api_errors": 50,
+    "max_consecutive_failures": 5,
+    "checkpoint_on_error": true,
+    "terminate_on_quota_exceeded": true,
+    "terminate_on_auth_failure": true,
+    "backoff_multiplier": 2.0,
+    "max_backoff_seconds": 300.0,
+    "min_backoff_seconds": 1.0,
+    "ensemble_failure_threshold": 0.5
+  },
+  "detailed_errors": [
+    {
+      "error_type": 

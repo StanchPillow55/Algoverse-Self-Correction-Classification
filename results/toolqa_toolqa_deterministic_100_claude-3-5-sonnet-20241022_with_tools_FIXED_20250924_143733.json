@@ -1,0 +1,236 @@
+{
+  "experiment_info": {
+    "model": "claude-3-5-sonnet-20241022",
+    "dataset": "datasets/toolqa_deterministic_100.json",
+    "total_questions": 10,
+    "use_tools": true,
+    "timestamp": "2025-09-24 14:37:33",
+    "version": "fixed_v1"
+  },
+  "results": {
+    "accuracy": 10.0,
+    "correct_answers": 1,
+    "total_questions": 10,
+    "tool_usage_rate": 80.0,
+    "questions_with_tools": 8,
+    "total_tool_executions": 5,
+    "successful_tool_executions": 5,
+    "tool_success_rate": 100.0
+  },
+  "individual_results": [
+    {
+      "question_id": "hard-coffee-0103",
+      "question": "What was the coffee price range from 2000-01-03 to 2020-10-07?",
+      "expected_answer": "306.2 USD",
+      "model_response": "I'll help you find the coffee price range for the specified dates using the coffee_get_price_range function.",
+      "extracted_answer": "546.795",
+      "is_correct": false,
+      "response_time": 1.8473098278045654,
+      "tool_augmented": true,
+      "tools_used": [
+        "coffee_get_price_range"
+      ],
+      "tool_results": [
+        {
+          "tool_name": "coffee_get_price_range",
+          "function": "get_price_range",
+          "parameters": {
+            "start_date": "2000-01-03",
+            "end_date": "2020-10-07"
+          },
+          "result": {
+            "min_price": 24.01,
+            "max_price": 1069.58,
+            "date_range": "2000-01-03 to 2020-10-07",
+            "data_points": 7584
+          },
+          "success": true,
+          "error": null,
+          "execution_time": 0.0032379627227783203
+        }
+      ],
+      "error": null
+    },
+    {
+      "question_id": "easy-dblp-0091",
+      "question": "What venue did Eric F. Vermote and J.-C. Roger collaborate most in the DBLP citation network?",
+      "expected_answer": "IGARSS",
+      "model_response": null,
+      "extracted_answer": null,
+      "is_correct": false,
+      "response_time": 0.13605189323425293,
+      "tool_augmented": true,
+      "tools_used": [],
+      "tool_results": [],
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tools.3.custom.input_schema.type: Field required'}, 'request_id': 'req_011CTTwuZDoT8sNeGaF6pfjf'}"
+    },
+    {
+      "question_id": "hard-yelp-0047",
+      "question": "What is the average review counts of businesses within a 5-mile radius from Paper Source?",
+      "expected_answer": 78.81,
+      "model_response": null,
+      "extracted_answer": null,
+      "is_correct": false,
+      "response_time": 0.13269400596618652,
+      "tool_augmented": true,
+      "tools_used": [],
+      "tool_results": [],
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tools.3.custom.input_schema.type: Field required'}, 'request_id': 'req_011CTTwuZqG6cdCvUpckVeVP'}"
+    },
+    {
+      "question_id": "easy-coffee-0015",
+      "question": "What was the lowest price of coffee on 2000-09-13?",
+      "expected_answer": "79.0",
+      "model_response": "I can help answer this question using the coffee_get_price_on_date tool, which allows us to get the coffee price for a specific date.",
+      "extracted_answer": "79.0",
+      "is_correct": true,
+      "response_time": 1.7971620559692383,
+      "tool_augmented": true,
+      "tools_used": [
+        "coffee_get_price_on_date"
+      ],
+      "tool_results": [
+        {
+          "tool_name": "coffee_get_price_on_date",
+          "function": "get_price_on_date",
+          "parameters": {
+            "date": "2000-09-13"
+          },
+          "result": {
+            "date": "2000-09-13",
+            "open": 158.49,
+            "high": 164.05,
+            "low": 79.0,
+            "close": 159.65
+          },
+          "success": true,
+          "error": null,
+          "execution_time": 7.033348083496094e-05
+        }
+      ],
+      "error": null
+    },
+    {
+      "question_id": "hard-agenda-0003",
+      "question": "How many events happen on 2022/03/09 in the agenda table?",
+      "expected_answer": 24,
+      "model_response": "I don't see any agenda table in our conversation that I could use to count events for that date. Could you please provide the agenda table you'd like me to analyze?",
+      "extracted_answer": "I don't see any agenda table in our conversation that I could use to count events for that date. Could you please provide the agenda table you'd like me to analyze?",
+      "is_correct": false,
+      "response_time": 1.5704500675201416,
+      "tool_augmented": false,
+      "tools_used": [],
+      "tool_results": [],
+      "error": null
+    },
+    {
+      "question_id": "easy-agenda-0031",
+      "question": "Who attended Horse race between 2:00 PM and 5:00 PM on 2022/08/14 in Santa Anita Park?",
+      "expected_answer": "Harper",
+      "model_response": "Looking at the available tools, I can try to search for events related to a horse race using the search function. Let me search using \"horse race\" as a query and the specific date.",
+      "extracted_answer": "Looking at the available tools, I can try to search for events related to a horse race using the search function. Let me search using \"horse race\" as a query and the specific date.",
+      "is_correct": false,
+      "response_time": 2.4241790771484375,
+      "tool_augmented": true,
+      "tools_used": [
+        "agenda_search_events"
+      ],
+      "tool_results": [
+        {
+          "tool_name": "agenda_search_events",
+          "function": "search_events",
+          "parameters": {
+            "query": "horse race",
+            "date": "2022-08-14"
+          },
+          "result": [],
+          "success": true,
+          "error": null,
+          "execution_time": 2.6941299438476562e-05
+        }
+      ],
+      "error": null
+    },
+    {
+      "question_id": "hard-agenda-0098",
+      "question": "How many dates in the agenda table have Christopher scheduled?",
+      "expected_answer": 86,
+      "model_response": "I don't see any agenda table in our conversation. Could you please share the agenda table you're referring to? Once you do, I'll be happy to help count Christopher's scheduled dates.",
+      "extracted_answer": "I don't see any agenda table in our conversation. Could you please share the agenda table you're referring to? Once you do, I'll be happy to help count Christopher's scheduled dates.",
+      "is_correct": false,
+      "response_time": 1.2840781211853027,
+      "tool_augmented": false,
+      "tools_used": [],
+      "tool_results": [],
+      "error": null
+    },
+    {
+      "question_id": "easy-agenda-0062",
+      "question": "When did Georgina attend Indie film festival on 2022/04/30?",
+      "expected_answer": "12:00 PM",
+      "model_response": "I'll help check Georgina's schedule for the Indie film festival on April 30th, 2022 using the agenda_get_events function.",
+      "extracted_answer": "2022",
+      "is_correct": false,
+      "response_time": 1.9312379360198975,
+      "tool_augmented": true,
+      "tools_used": [
+        "agenda_get_events"
+      ],
+      "tool_results": [
+        {
+          "tool_name": "agenda_get_events",
+          "function": "get_events",
+          "parameters": {
+            "person": "Georgina",
+            "date": "2022-04-30"
+          },
+          "result": [],
+          "success": true,
+          "error": null,
+          "execution_time": 2.3126602172851562e-05
+        }
+      ],
+      "error": null
+    },
+    {
+      "question_id": "easy-airbnb-0083",
+      "question": "What is the review rate number of Trendy Chelsea 1BR w/ Balcony, Gym + Doorman by Blueground (id: 22336685) in Chelsea?",
+      "expected_answer": "2.0",
+      "model_response": null,
+      "extracted_answer": null,
+      "is_correct": false,
+      "response_time": 0.1129453182220459,
+      "tool_augmented": true,
+      "tools_used": [],
+      "tool_results": [],
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tools.3.custom.input_schema.type: Field required'}, 'request_id': 'req_011CTTwvEsXM7nCBJgnar9cW'}"
+    },
+    {
+      "question_id": "easy-gsm8k-0091",
+      "question": "A farmer extracts 5 liters of milk a day from a cow. Since he has 3 cows, how many more cows does he need to have to produce 25 liters of milk a day?",
+      "expected_answer": 2.0,
+      "model_response": "Let me help solve this problem step by step using the available tools.\n\n1. First, let's calculate how many liters of milk the farmer currently gets from 3 cows:\n- Each cow produces 5 liters per day\n- Current number of cows is 3\n\nLet me calculate the current daily production:",
+      "extracted_answer": "15",
+      "is_correct": false,
+      "response_time": 2.378343105316162,
+      "tool_augmented": true,
+      "tools_used": [
+        "calculator_calculate"
+      ],
+      "tool_results": [
+        {
+          "tool_name": "calculator_calculate",
+          "function": "calculate",
+          "parameters": {
+            "expression": "3 * 5"
+          },
+          "result": 15,
+          "success": true,
+          "error": null,
+          "execution_time": 0.00016999244689941406
+        }
+      ],
+      "error": null
+    }
+  ]
+}

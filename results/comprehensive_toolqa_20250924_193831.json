@@ -1,0 +1,77 @@
+{
+  "experiment_info": {
+    "dataset": "datasets/toolqa_deterministic_100.json",
+    "models": [
+      "claude-3-haiku"
+    ],
+    "max_questions": 3,
+    "use_tools": true,
+    "timestamp": "2025-09-24T19:38:31.402950",
+    "total_questions": 3
+  },
+  "results": {
+    "claude-3-haiku": [
+      {
+        "question_id": "hard-coffee-0103",
+        "model": "claude-3-haiku",
+        "provider": "anthropic",
+        "question": "What was the coffee price range from 2000-01-03 to 2020-10-07?",
+        "expected_answer": "306.2 USD",
+        "model_response": null,
+        "extracted_answer": null,
+        "is_correct": false,
+        "tool_augmented": true,
+        "tools_used": [],
+        "tool_results": [],
+        "error": "name 'enhanced_messages' is not defined",
+        "response_time": 0.0003261566162109375
+      },
+      {
+        "question_id": "easy-dblp-0091",
+        "model": "claude-3-haiku",
+        "provider": "anthropic",
+        "question": "What venue did Eric F. Vermote and J.-C. Roger collaborate most in the DBLP citation network?",
+        "expected_answer": "IGARSS",
+        "model_response": null,
+        "extracted_answer": null,
+        "is_correct": false,
+        "tool_augmented": true,
+        "tools_used": [],
+        "tool_results": [],
+        "error": "name 'enhanced_messages' is not defined",
+        "response_time": 0.00014495849609375
+      },
+      {
+        "question_id": "hard-yelp-0047",
+        "model": "claude-3-haiku",
+        "provider": "anthropic",
+        "question": "What is the average review counts of businesses within a 5-mile radius from Paper Source?",
+        "expected_answer": 78.81,
+        "model_response": null,
+        "extracted_answer": null,
+        "is_correct": false,
+        "tool_augmented": true,
+        "tools_used": [],
+        "tool_results": [],
+        "error": "name 'enhanced_messages' is not defined",
+        "response_time": 0.0004978179931640625
+      }
+    ]
+  },
+  "summary": {
+    "claude-3-haiku": {
+      "total_questions": 3,
+      "correct_answers": 0,
+      "accuracy": 0.0,
+      "tool_usage_count": 3,
+      "tool_usage_rate": 1.0,
+      "average_response_time": 0.0003229777018229167,
+      "model_info": {
+        "provider": "anthropic",
+        "model_id": "claude-3-haiku-20240307",
+        "category": "small",
+        "supports_tools": true
+      }
+    }
+  }
+}

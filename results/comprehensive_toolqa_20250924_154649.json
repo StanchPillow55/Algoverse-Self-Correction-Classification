@@ -1,0 +1,78 @@
+{
+  "experiment_info": {
+    "dataset": "datasets/toolqa_deterministic_100.json",
+    "models": [
+      "claude-3-haiku"
+    ],
+    "max_questions": 2,
+    "use_tools": true,
+    "timestamp": "2025-09-24T15:46:47.053591",
+    "total_questions": 2
+  },
+  "results": {
+    "claude-3-haiku": [
+      {
+        "question_id": "hard-coffee-0103",
+        "model": "claude-3-haiku",
+        "provider": "anthropic",
+        "question": "What was the coffee price range from 2000-01-03 to 2020-10-07?",
+        "expected_answer": "306.2 USD",
+        "model_response": "Okay, let's use the available tools to find the coffee price range from 2000-01-03 to 2020-10-07.",
+        "extracted_answer": "N/A",
+        "is_correct": false,
+        "tool_augmented": true,
+        "tools_used": [
+          "coffee_get_price_range"
+        ],
+        "tool_results": [
+          {
+            "tool_name": "coffee_get_price_range",
+            "success": false,
+            "error": "Tool coffee_get_price_range not found"
+          }
+        ],
+        "error": null,
+        "response_time": 1.2594900131225586
+      },
+      {
+        "question_id": "easy-dblp-0091",
+        "model": "claude-3-haiku",
+        "provider": "anthropic",
+        "question": "What venue did Eric F. Vermote and J.-C. Roger collaborate most in the DBLP citation network?",
+        "expected_answer": "IGARSS",
+        "model_response": "Okay, let's use the available tools to find the venue where Eric F. Vermote and J.-C. Roger collaborated most.",
+        "extracted_answer": "N/A",
+        "is_correct": false,
+        "tool_augmented": true,
+        "tools_used": [
+          "dblp_get_author_papers"
+        ],
+        "tool_results": [
+          {
+            "tool_name": "dblp_get_author_papers",
+            "success": false,
+            "error": "Tool dblp_get_author_papers not found"
+          }
+        ],
+        "error": null,
+        "response_time": 0.9064970016479492
+      }
+    ]
+  },
+  "summary": {
+    "claude-3-haiku": {
+      "total_questions": 2,
+      "correct_answers": 0,
+      "accuracy": 0.0,
+      "tool_usage_count": 2,
+      "tool_usage_rate": 1.0,
+      "average_response_time": 1.082993507385254,
+      "model_info": {
+        "provider": "anthropic",
+        "model_id": "claude-3-haiku-20240307",
+        "category": "small",
+        "supports_tools": true
+      }
+    }
+  }
+}
