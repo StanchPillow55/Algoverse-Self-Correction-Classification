@@ -1,0 +1,80 @@
+{
+  "name": "Heterogeneous Multi-Provider Ensemble",
+  "description": "True heterogeneous ensemble mixing multiple providers and model sizes",
+  "provider": "mixed",
+  "ensemble_size": 5,
+  "ensemble_configs": [
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-haiku-20240307"
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4o"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-3.5-turbo"
+    }
+  ],
+  "voting_strategy": "adaptive",
+  "features": {
+    "enable_confidence": true,
+    "enable_error_awareness": true,
+    "enable_multi_turn": true
+  },
+  "cost_optimization": {
+    "enabled": true,
+    "max_cost_per_question": 0.25,
+    "early_stopping": true
+  },
+  "experiment_settings": {
+    "max_turns": 3,
+    "temperature": 0.2,
+    "max_tokens": 1024
+  },
+  "diversity_metrics": {
+    "provider_diversity": true,
+    "model_size_diversity": true,
+    "training_data_diversity": true
+  },
+  "error_handling": {
+    "max_api_errors_per_sample": 3,
+    "max_total_api_errors": 50,
+    "max_consecutive_failures": 5,
+    "checkpoint_on_error": true,
+    "terminate_on_quota_exceeded": true,
+    "terminate_on_auth_failure": true,
+    "backoff_multiplier": 2.0,
+    "max_backoff_seconds": 300.0,
+    "min_backoff_seconds": 1.0,
+    "ensemble_failure_threshold": 0.5
+  },
+  "health_monitoring": {
+    "monitoring_window_hours": 24,
+    "health_check_interval": 300,
+    "healthy_failure_rate_threshold": 0.05,
+    "degraded_failure_rate_threshold": 0.2,
+    "down_consecutive_failures_threshold": 10
+  },
+  "recovery": {
+    "enable_auto_recovery": true,
+    "max_recovery_attempts": 3,
+    "recovery_cooldown_minutes": 15,
+    "pause_experiment_on_critical": true
+  },
+  "logging": {
+    "log_all_api_calls": false,
+    "log_error_details": true,
+    "create_error_reports": true,
+    "error_log_level": "INFO"
+  }
+}

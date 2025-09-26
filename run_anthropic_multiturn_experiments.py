@@ -25,6 +25,13 @@ from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 import logging
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv not installed, skip
+
 # Add src to path
 sys.path.append(str(Path(__file__).parent / "src"))
 
@@ -52,7 +59,7 @@ class AnthropicMultiTurnExperimentRunner:
                 "cost_per_1k_output": 0.00125,
                 "max_tokens": 4096
             },
-            "claude-3-5-sonnet-20241210": {
+            "claude-3-5-sonnet-20241022": {
                 "name": "Claude-3.5-Sonnet", 
                 "cost_per_1k_input": 0.003,
                 "cost_per_1k_output": 0.015,
@@ -231,10 +238,11 @@ class AnthropicMultiTurnExperimentRunner:
         estimated_cost = self.estimate_experiment_cost(model, len(dataset), self.default_config["max_turns"])
         logger.info(f"Estimated cost: ${estimated_cost:.4f}")
         
-        # Create temporary dataset file
+        # Create temporary dataset file in the format expected by the loader
         temp_dataset_file = self.output_dir / f"{experiment_id}_dataset.json"
         with open(temp_dataset_file, 'w') as f:
-            json.dump({"samples": dataset}, f)
+            # For ToolQA and other datasets, the loader expects a direct list
+            json.dump(dataset, f)
         
         experiment_result = {
             "experiment_id": experiment_id,
@@ -469,7 +477,7 @@ def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Run Anthropic multi-turn experiments")
     parser.add_argument("--models", 
-                       default="claude-3-haiku-20240307,claude-3-5-sonnet-20241210",
+                       default="claude-3-haiku-20240307,claude-3-5-sonnet-20241022",
                        help="Comma-separated list of Anthropic models")
     parser.add_argument("--datasets", 
                        default="gsm8k,mathbench",

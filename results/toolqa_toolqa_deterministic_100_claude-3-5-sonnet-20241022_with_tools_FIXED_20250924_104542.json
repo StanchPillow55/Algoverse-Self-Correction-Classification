@@ -1,0 +1,68 @@
+{
+  "experiment_info": {
+    "model": "claude-3-5-sonnet-20241022",
+    "dataset": "data/scaling/toolqa_deterministic_100.json",
+    "total_questions": 2,
+    "use_tools": true,
+    "timestamp": "2025-09-24 10:45:42",
+    "version": "fixed_v1"
+  },
+  "results": {
+    "accuracy": 0.0,
+    "correct_answers": 0,
+    "total_questions": 2,
+    "tool_usage_rate": 50.0,
+    "questions_with_tools": 1,
+    "total_tool_executions": 1,
+    "successful_tool_executions": 1,
+    "tool_success_rate": 100.0
+  },
+  "individual_results": [
+    {
+      "question_id": "toolqa_0",
+      "question": "What was the coffee price range from 2000-01-03 to 2020-10-07?",
+      "expected_answer": "306.2 USD",
+      "model_response": "I can help answer this question about the coffee price range using the coffee_get_price_range tool, which is specifically designed for this purpose. I'll query the date range you specified.",
+      "extracted_answer": "100.75",
+      "is_correct": false,
+      "response_time": 3.846381187438965,
+      "tool_augmented": true,
+      "tools_used": [
+        "coffee_get_price_range"
+      ],
+      "tool_results": [
+        {
+          "tool_name": "coffee_get_price_range",
+          "function": "get_price_range",
+          "parameters": {
+            "start_date": "2000-01-03",
+            "end_date": "2020-10-07"
+          },
+          "result": {
+            "min_price": 100.75,
+            "max_price": 163.0,
+            "date_range": "2000-01-03 to 2020-10-07",
+            "data_points": 12
+          },
+          "success": true,
+          "error": null,
+          "execution_time": 0.00011706352233886719
+        }
+      ],
+      "error": null
+    },
+    {
+      "question_id": "toolqa_1",
+      "question": "What venue did Eric F. Vermote and J.-C. Roger collaborate most in the DBLP citation network?",
+      "expected_answer": "IGARSS",
+      "model_response": "I cannot determine with certainty which venue Eric F. Vermote and J.-C. Roger collaborated most in from the DBLP citation network without access to that data. I would need to analyze their joint publication records in the DBLP database to make that determination.",
+      "extracted_answer": "I cannot determine with certainty which venue Eric F. Vermote and J.-C. Roger collaborated most in from the DBLP citation network without access to that data. I would need to analyze their joint publication records in the DBLP database to make that determination.",
+      "is_correct": false,
+      "response_time": 3.7588298320770264,
+      "tool_augmented": false,
+      "tools_used": [],
+      "tool_results": [],
+      "error": null
+    }
+  ]
+}
