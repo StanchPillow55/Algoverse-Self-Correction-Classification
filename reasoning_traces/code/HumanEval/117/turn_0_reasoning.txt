@@ -3,74 +3,102 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-To solve the problem of selecting words from a string that contain exactly `n` consonants, we need to break down the task into several steps. Let's go through the reasoning and approach step by step:
+Let me break this down step by step:
 
-### Step-by-Step Reasoning
+1) First, let's understand what we need to do:
+   - Take a string and a number n as input
+   - Find words that have exactly n consonants
+   - Return these words in the order they appear
+   - Only letters and spaces in input
+   - Return empty list for empty string
 
-1. **Understand the Problem:**
-   - We are given a string `s` and a natural number `n`.
-   - We need to return a list of words from `s` that contain exactly `n` consonants.
-   - If the string `s` is empty, we should return an empty list.
-   - The input string contains only letters and spaces.
+2) We'll need to:
+   - Split the string into words
+   - For each word, count consonants
+   - Keep words with exactly n consonants
+   - Maintain original order
 
-2. **Define Consonants:**
-   - Consonants are all alphabetic characters that are not vowels.
-   - Vowels are: 'a', 'e', 'i', 'o', 'u' (both lowercase and uppercase).
+3) Helper considerations:
+   - Need to identify consonants
+   - Vowels are 'aeiou' (and sometimes y, but let's consider y a consonant)
+   - Case shouldn't matter (Mary vs mary)
+   - Need to handle empty string case
 
-3. **Approach:**
-   - Split the string `s` into words using the `split()` method. This will handle multiple spaces naturally.
-   - For each word, count the number of consonants.
-   - If the count of consonants in a word is equal to `n`, add the word to the result list.
-   - Return the result list.
+4) Algorithm steps:
+   - Check if string is empty → return empty list
+   - Split string into words
+   - For each word:
+     - Count consonants
+     - If count equals n, include word
+   - Return filtered list
 
-4. **Implementation Details:**
-   - Use a helper function to count consonants in a word.
-   - Iterate over each word in the split list and apply the consonant counting function.
-   - Collect words that meet the criteria into a list and return it.
-
-### Implementation
-
-Let's implement the function based on the above reasoning:
+Here's my implementation with detailed comments:
 
 ```python
 def select_words(s, n):
-    """Given a string s and a natural number n, return a list of all words from string s
-    that contain exactly n consonants, in order these words appear in the string s."""
+    """
+    Returns list of words containing exactly n consonants from string s.
+    Args:
+        s: input string containing only letters and spaces
+        n: number of consonants to match
+    Returns:
+        list of words with exactly n consonants in order of appearance
+    """
+    # Handle empty string case
+    if not s:
+        return []
+    
+    # Define vowels for consonant checking
+    vowels = set('aeiou')
     
     def count_consonants(word):
-        vowels = set('aeiouAEIOU')
-        consonant_count = 0
-        for char in word:
-            if char.isalpha() and char not in vowels:
-                consonant_count += 1
-        return consonant_count
+        """Helper function to count consonants in a word"""
+        # Convert to lowercase and count letters that aren't vowels
+        return sum(1 for char in word.lower() if char.isalpha() and char not in vowels)
     
-    # Split the string into words
+    # Split string into words and filter for those with n consonants
     words = s.split()
-    
-    # List to store words with exactly n consonants
-    result = []
-    
-    # Iterate over each word and check consonant count
-    for word in words:
-        if count_consonants(word) == n:
-            result.append(word)
+    result = [word for word in words if count_consonants(word) == n]
     
     return result
-
-# Example usage:
-print(select_words("Mary had a little lamb", 4))  # Output: ["little"]
-print(select_words("Mary had a little lamb", 3))  # Output: ["Mary", "lamb"]
-print(select_words("simple white space", 2))     # Output: []
-print(select_words("Hello world", 4))            # Output: ["world"]
-print(select_words("Uncle sam", 3))              # Output: ["Uncle"]
 ```
 
-### Explanation
+Let's go through how it works:
 
-- **Helper Function `count_consonants`:** This function iterates over each character in a word and checks if it is a consonant (i.e., an alphabetic character that is not a vowel). It uses a set for vowels for efficient membership checking.
-- **Main Function `select_words`:** This function splits the input string into words, counts the consonants in each word using the helper function, and collects words with exactly `n` consonants into a result list.
-- **Edge Cases:** The function handles empty strings by returning an empty list since splitting an empty string results in an empty list.
+1) First, we handle the empty string case immediately to satisfy that requirement
+
+2) We define vowels as a set for efficient lookup when counting consonants
+
+3) We create a helper function `count_consonants` that:
+   - Takes a word
+   - Converts to lowercase for consistent checking
+   - Counts letters that are:
+     - alphabetic (using isalpha())
+     - not vowels
+
+4) Main function then:
+   - Splits input string into words
+   - Uses list comprehension to filter words
+   - Returns only words with exactly n consonants
+
+5) The solution maintains order because we use list comprehension which preserves original order
+
+Testing with examples:
+```python
+assert select_words("Mary had a little lamb", 4) == ["little"]
+assert select_words("Mary had a little lamb", 3) == ["Mary", "lamb"]
+assert select_words("simple white space", 2) == []
+assert select_words("Hello world", 4) == ["world"]
+assert select_words("Uncle sam", 3) == ["Uncle"]
+```
+
+This solution is:
+- Efficient (O(n) where n is total characters)
+- Clear and readable
+- Handles all test cases
+- Maintains word order
+- Handles empty strings
+- Case insensitive
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/117/turn_0_reasoning.txt

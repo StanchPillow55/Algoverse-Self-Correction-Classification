@@ -3,61 +3,95 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-To solve the problem of sorting a list in a "strange" order, we need to alternate between selecting the minimum and maximum values from the list until all elements are exhausted. Let's break down the steps needed to achieve this:
+Let me think through this step by step.
 
-### Step-by-Step Approach:
+1) First, let's understand what the "strange sort" means:
+   * We need to alternate between minimum and maximum values
+   * First take the minimum value
+   * Then take the maximum of remaining values
+   * Then take the minimum of remaining values
+   * And so on...
 
-1. **Understand the Problem**: We need to sort a list such that we start with the minimum value, then the maximum of the remaining values, then the next minimum, and so on. This pattern continues until all elements are placed in the new list.
+2) Let's consider edge cases:
+   * Empty list should return empty list
+   * List with same numbers should return same numbers
+   * List with unique numbers needs the alternating pattern
 
-2. **Examples Analysis**:
-   - For the list `[1, 2, 3, 4]`, the sorted order should be `[1, 4, 2, 3]`.
-   - For the list `[5, 5, 5, 5]`, since all elements are the same, the order remains `[5, 5, 5, 5]`.
-   - An empty list `[]` should return an empty list `[]`.
+3) Algorithm approach:
+   * We'll need to work with a copy of the list to not modify original
+   * We'll build a result list
+   * We'll need to track if we're taking min or max
+   * Continue until input list is empty
 
-3. **Plan the Solution**:
-   - Initialize an empty list `result` to store the final sorted order.
-   - Use a loop to repeatedly find and remove the minimum and maximum values from the list until it is empty.
-   - In each iteration:
-     - Find the minimum value, append it to `result`, and remove it from the list.
-     - If the list is not empty, find the maximum value, append it to `result`, and remove it from the list.
-   - Continue this process until the list is empty.
+4) Step by step process:
+   * Create empty result list
+   * While input list has elements:
+     * If it's min turn: take min and remove it
+     * If it's max turn: take max and remove it
+     * Alternate between min and max
+   * Return result list
 
-4. **Edge Cases**:
-   - If the list is empty, return an empty list immediately.
-   - If all elements are the same, the order remains unchanged.
-
-5. **Implementation**: Now, let's implement the function based on the above plan.
+Here's the implementation with comments:
 
 ```python
 def strange_sort_list(lst):
+    '''
+    Given list of integers, return list in strange order.
+    Strange sorting, is when you start with the minimum value,
+    then maximum of the remaining integers, then minimum and so on.
+    '''
+    # Handle empty list case
+    if not lst:
+        return []
+    
+    # Create working copy of list and result list
+    work_list = lst.copy()
     result = []
-    while lst:
-        # Find and append the minimum value
-        min_val = min(lst)
-        result.append(min_val)
-        lst.remove(min_val)
+    
+    # Flag to alternate between min (True) and max (False)
+    min_turn = True
+    
+    # Continue while we have elements to process
+    while work_list:
+        if min_turn:
+            # Find minimum value
+            current = min(work_list)
+        else:
+            # Find maximum value
+            current = max(work_list)
+            
+        # Add value to result and remove from working list
+        result.append(current)
+        work_list.remove(current)
         
-        # Check if the list is empty before finding the maximum
-        if lst:
-            # Find and append the maximum value
-            max_val = max(lst)
-            result.append(max_val)
-            lst.remove(max_val)
+        # Toggle between min and max for next iteration
+        min_turn = not min_turn
     
     return result
-
-# Test cases
-print(strange_sort_list([1, 2, 3, 4]))  # Output: [1, 4, 2, 3]
-print(strange_sort_list([5, 5, 5, 5]))  # Output: [5, 5, 5, 5]
-print(strange_sort_list([]))            # Output: []
 ```
 
-### Explanation of the Code:
-- We use a `while` loop to continue processing until the list `lst` is empty.
-- In each iteration, we find the minimum value using `min(lst)`, append it to `result`, and remove it from `lst`.
-- We then check if `lst` is still non-empty before finding the maximum value using `max(lst)`, append it to `result`, and remove it from `lst`.
-- This alternating process continues until all elements are moved to `result`.
-- Finally, the `result` list is returned, which contains the elements in the "strange" sorted order.
+Let's verify it works with the example cases:
+
+```python
+# Test cases
+print(strange_sort_list([1, 2, 3, 4]))  # Should output [1, 4, 2, 3]
+print(strange_sort_list([5, 5, 5, 5]))  # Should output [5, 5, 5, 5]
+print(strange_sort_list([]))            # Should output []
+```
+
+The solution:
+1) Handles empty list case
+2) Creates a working copy to not modify input
+3) Uses a boolean flag to alternate between min and max
+4) Removes elements as they're used
+5) Builds result list in the required order
+
+Time complexity is O(n²) because for each element we need to:
+- Find min/max: O(n)
+- Remove element: O(n)
+And we do this n times.
+
+Space complexity is O(n) for the working copy and result list.
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/70/turn_0_reasoning.txt

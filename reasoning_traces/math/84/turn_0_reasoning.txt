@@ -3,70 +3,24 @@ Turn: 0
 Dataset Type: math
 ==================================================
 
-To solve the problem, we need to determine how many games the football team won, given that they played a total of 22 games and won 8 more games than they lost.
+To solve this problem, we need to find the total number of available rooms in the hotel, excluding the last floor that is unavailable.
 
-Let's define the variables:
-- Let \( W \) be the number of games won.
-- Let \( L \) be the number of games lost.
+Given information:
+- The hotel has 10 floors.
+- Each floor has 10 identical rooms.
+- The last floor is unavailable for guests.
 
-From the problem, we have the following information:
-1. The total number of games played is 22:
-   \[
-   W + L = 22
-   \]
-2. The team won 8 more games than they lost:
-   \[
-   W = L + 8
-   \]
+Step 1: Calculate the total number of rooms in the hotel.
+Total number of rooms = Number of floors × Number of rooms per floor
+Total number of rooms = 10 × 10 = 100 rooms
 
-Now we have a system of two equations:
-1. \( W + L = 22 \) (Equation 1)
-2. \( W = L + 8 \) (Equation 2)
+Step 2: Calculate the number of rooms available for guests.
+Number of available rooms = Total number of rooms - Number of rooms on the last floor
+Number of available rooms = 100 - 10 = 90 rooms
 
-We can substitute Equation 2 into Equation 1. First, let's express \( W \) in terms of \( L \) using Equation 2:
-\[
-W = L + 8
-\]
+Therefore, Hans could be checked in to any of the 90 available rooms in the hotel.
 
-Now substitute this expression for \( W \) into Equation 1:
-\[
-(L + 8) + L = 22
-\]
-
-Now combine like terms:
-\[
-2L + 8 = 22
-\]
-
-Next, we will isolate \( L \) by subtracting 8 from both sides:
-\[
-2L = 22 - 8
-\]
-\[
-2L = 14
-\]
-
-Now, divide both sides by 2 to solve for \( L \):
-\[
-L = \frac{14}{2} = 7
-\]
-
-Now that we have the number of games lost, we can find the number of games won using Equation 2:
-\[
-W = L + 8 = 7 + 8 = 15
-\]
-
-Thus, the football team won \( W = 15 \) games.
-
-To summarize:
-- The team lost 7 games.
-- The team won 15 games.
-- The total number of games played is \( 15 + 7 = 22 \), which is consistent with the information given in the problem.
-
-Therefore, the final answer is:
-\[
-\boxed{15}
-\]
+Final answer: Hans could be checked in to 90 different rooms in the hotel.
 
 ==================================================
 Trace saved at: reasoning_traces/math/84/turn_0_reasoning.txt

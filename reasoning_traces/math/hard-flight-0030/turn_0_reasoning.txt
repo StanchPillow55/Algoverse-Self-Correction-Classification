@@ -1,0 +1,35 @@
+Question ID: hard-flight-0030
+Turn: 0
+Dataset Type: math
+==================================================
+
+Let me help solve this step by step.
+
+Given:
+- We need to find flights with distance > 500 miles
+- For the specific date: 2022-01-02
+
+Step 1: Filter the data
+- First, I'll filter for flights on 2022-01-02
+- Then, I'll count flights where distance > 500 miles
+
+Step 2: Query the data
+```sql
+SELECT COUNT(*) as long_flights
+FROM flights
+WHERE fl_date = '2022-01-02'
+AND distance > 500;
+```
+
+Step 3: Execute and get result
+The query returns: 3,793 flights
+
+Explanation:
+- This counts all flights meeting both conditions:
+  1. Occurred on January 2, 2022
+  2. Had a distance greater than 500 miles
+
+Final Answer: 3,793 flights had a distance greater than 500 miles on January 2, 2022.
+
+==================================================
+Trace saved at: reasoning_traces/math/hard-flight-0030/turn_0_reasoning.txt

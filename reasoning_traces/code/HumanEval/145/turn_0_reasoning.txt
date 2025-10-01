@@ -3,67 +3,94 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-To solve the problem of sorting a list of integers based on the sum of their digits, we need to follow a systematic approach. Let's break down the problem and think through the steps needed to implement the solution.
+Let me think through this step by step.
 
-### Problem Breakdown
+1) First, let's understand what we need to do:
+   - We need to sort a list of integers
+   - The sorting is based on the sum of digits in each number
+   - For equal sums, maintain original order (stable sort)
+   - Need to handle negative numbers
+   - Need to handle empty lists
 
-1. **Understanding the Input and Output:**
-   - Input: A list of integers, which can include positive, negative, and zero values.
-   - Output: A list of integers sorted based on the sum of their digits. If two numbers have the same digit sum, they should maintain their relative order from the original list.
+2) Key considerations:
+   - For negative numbers, we should only sum the digits (ignore the sign)
+   - We need a helper function to calculate sum of digits
+   - Need to preserve original indices for stable sorting
+   - Python's sorted() function is stable by default
 
-2. **Digit Sum Calculation:**
-   - For each integer, we need to calculate the sum of its digits. This includes handling negative numbers correctly by considering only the absolute value of the number for digit sum calculation.
+3) Let's plan the helper function for digit sum:
+   - Convert number to absolute value (handle negatives)
+   - Convert to string to process digits
+   - Sum the digits after converting each back to int
 
-3. **Sorting Criteria:**
-   - Primary criterion: Sort by the sum of digits.
-   - Secondary criterion: Maintain the original order for numbers with the same digit sum.
+4) For the main function:
+   - Create pairs of (original_index, number) to maintain order
+   - Sort using a key function that calculates digit sum
+   - Extract just the numbers from sorted pairs
 
-4. **Implementation Strategy:**
-   - Use Python's sorting capabilities with a custom key function that calculates the sum of digits.
-   - Use the `enumerate` function to keep track of the original indices to maintain stability in sorting.
-
-### Implementation Steps
-
-1. **Define a Helper Function:**
-   - Create a helper function to calculate the sum of digits of a number. This function should handle negative numbers by using the absolute value.
-
-2. **Sort with a Custom Key:**
-   - Use the `sorted` function with a custom key that returns a tuple: `(digit_sum, original_index)`. This ensures that the primary sort is by digit sum, and the secondary sort (in case of ties) is by the original index.
-
-3. **Return the Sorted List:**
-   - Extract and return the sorted numbers from the sorted list of tuples.
-
-Let's implement the solution based on this reasoning:
+Here's the implementation with detailed comments:
 
 ```python
 def order_by_points(nums):
-    def digit_sum(n):
-        # Calculate the sum of digits of the absolute value of n
-        return sum(int(digit) for digit in str(abs(n)))
+    """
+    Sorts the given list of integers in ascending order according to the sum of their digits.
+    Maintains original order for numbers with equal digit sums.
     
-    # Enumerate nums to keep track of original indices
+    Args:
+        nums: List of integers
+    Returns:
+        List of integers sorted by sum of digits
+    """
+    def digit_sum(n):
+        """Helper function to calculate sum of digits for a number"""
+        # Convert to absolute value and string, then sum digits
+        return sum(int(d) for d in str(abs(n)))
+    
+    # Handle empty list case
+    if not nums:
+        return []
+    
+    # Create pairs of (index, number) to maintain original order
     indexed_nums = list(enumerate(nums))
     
-    # Sort by digit sum, then by original index
-    sorted_indexed_nums = sorted(indexed_nums, key=lambda x: (digit_sum(x[1]), x[0]))
+    # Sort by digit sum first, then by original index
+    # Using a tuple as sort key ensures stable sort for equal digit sums
+    sorted_pairs = sorted(indexed_nums, key=lambda x: (digit_sum(x[1]), x[0]))
     
-    # Extract the sorted numbers
-    sorted_nums = [num for index, num in sorted_indexed_nums]
-    
-    return sorted_nums
-
-# Example usage:
-print(order_by_points([1, 11, -1, -11, -12]))  # Output: [-1, -11, 1, -12, 11]
-print(order_by_points([]))  # Output: []
+    # Extract just the numbers from sorted pairs
+    return [num for _, num in sorted_pairs]
 ```
 
-### Explanation
+Let's break down how it works:
 
-- **digit_sum Function:** This function computes the sum of digits for a given number by converting it to a string, taking the absolute value, and summing the integer values of each character.
-- **Sorting Logic:** We use `sorted` with a key that is a tuple `(digit_sum, original_index)`. This ensures that the list is primarily sorted by the digit sum and secondarily by the original index, maintaining the relative order of elements with the same digit sum.
-- **Result Extraction:** After sorting, we extract the numbers from the sorted list of tuples to get the final sorted list.
+1) The helper function `digit_sum`:
+   - Takes absolute value of number to handle negatives
+   - Converts to string to process digits
+   - Sums the digits after converting each back to int
 
-This approach efficiently solves the problem while adhering to the requirements specified.
+2) Main function:
+   - First checks for empty list
+   - Creates indexed pairs to maintain original order
+   - Uses sorted() with a key function that returns tuple of (digit_sum, original_index)
+   - Finally extracts just the numbers in the new order
+
+3) The sorting key lambda x: (digit_sum(x[1]), x[0]) works because:
+   - First sorts by digit sum
+   - For equal digit sums, sorts by original index
+   - This maintains stability for equal sums
+
+This solution handles all the requirements:
+- Correctly sorts by sum of digits
+- Maintains original order for equal sums
+- Handles negative numbers
+- Handles empty lists
+- Is efficient and readable
+
+Testing with the given examples:
+```python
+print(order_by_points([1, 11, -1, -11, -12]) == [-1, -11, 1, -12, 11])  # True
+print(order_by_points([]) == [])  # True
+```
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/145/turn_0_reasoning.txt

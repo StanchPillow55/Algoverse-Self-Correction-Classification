@@ -128,6 +128,7 @@ done
 | File | Purpose | Usage |
 |------|---------|--------|
 | [`run_full_scale_study.py`](run_full_scale_study.py) | **Full scaling study runner** | `python run_full_scale_study.py --mode production` |
+| [`run_toolqa_experiments.py`](run_toolqa_experiments.py) | **ToolQA experiments with tool augmentation** | `python run_toolqa_experiments.py --dataset X --models Y` |
 | [`src/main.py`](src/main.py) | **Individual experiment runner** | `python -m src.main run --dataset X --provider Y` |
 
 ### **📊 Dataset Management** 
@@ -198,6 +199,78 @@ python -m src.ensemble.metrics \
 ```
 
 **📖 Full ensemble documentation**: [`docs/ENSEMBLE_GUIDE.md`](docs/ENSEMBLE_GUIDE.md)
+
+## 🛠️ **ToolQA Experiments (New!)**
+
+Comprehensive tool-augmented question answering experiments across all supported models with enhanced accuracy evaluation.
+
+### **Key Features**
+- **Multi-Provider Support**: All 7 target models (OpenAI, Anthropic, Replicate placeholder)
+- **Tool Integration**: Unified tool system for external data access and computation
+- **Enhanced Answer Extraction**: Robust extraction from verbose model responses
+- **Flexible Evaluation**: Tolerant matching for numeric, text, and fuzzy answers
+- **Comprehensive Logging**: Detailed tool usage and accuracy tracking
+
+### **Quick ToolQA Start**
+```bash
+# Run ToolQA experiments with Claude Sonnet on 100 questions
+python run_toolqa_experiments.py \
+  --dataset data/scaling/toolqa_deterministic_100.json \
+  --models claude-3-5-sonnet \
+  --max-questions 100
+
+# Run across all available models
+python run_toolqa_experiments.py \
+  --dataset data/scaling/toolqa_deterministic_500.json \
+  --max-questions 50
+
+# Disable tools for baseline comparison
+python run_toolqa_experiments.py \
+  --dataset data/scaling/toolqa_deterministic_100.json \
+  --models gpt-4o-mini \
+  --no-tools
+```
+
+### **ToolQA Model Support**
+| Model | Provider | Tool Support | Status |
+|-------|----------|--------------|--------|
+| **GPT-4o-mini** | OpenAI | ✅ | Active |
+| **GPT-4o** | OpenAI | ✅ | Active |
+| **GPT-4** | OpenAI | ✅ | Active |
+| **Claude-3-Haiku** | Anthropic | ✅ | Active |
+| **Claude-3.5-Sonnet** | Anthropic | ✅ | Active |
+| **Claude-3-Opus** | Anthropic | ✅ | Active |
+| **Llama-70B** | Replicate | ⏳ | Planned |
+
+### **ToolQA Output Structure**
+```
+results/comprehensive_toolqa_TIMESTAMP.json
+├── experiment_info          # Dataset, models, configuration
+├── results                  # Per-model detailed results
+│   └── {model_name}/
+│       ├── question_id
+│       ├── question
+│       ├── expected_answer
+│       ├── model_response
+│       ├── extracted_answer
+│       ├── is_correct
+│       ├── tool_augmented
+│       ├── tools_used[]
+│       └── tool_results[]
+└── summary                  # Accuracy and tool usage statistics
+    └── {model_name}/
+        ├── accuracy
+        ├── tool_usage_rate
+        └── average_response_time
+```
+
+**🔧 ToolQA addresses the 0.0 accuracy issue** through:
+- Enhanced answer extraction from verbose responses
+- Refusal pattern detection and handling
+- Flexible correctness matching (numeric tolerance, fuzzy text matching)
+- Proper tool result integration with follow-up prompts
+
+**📚 Complete ToolQA documentation**: [`docs/TOOLQA_GUIDE.md`](docs/TOOLQA_GUIDE.md)
 
 ## 🔄 **Teacher/Learner Cycle Details**
 

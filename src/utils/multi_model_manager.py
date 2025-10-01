@@ -90,7 +90,8 @@ class MultiModelManager:
         api_keys = {
             "openai": os.getenv("OPENAI_API_KEY"),
             "anthropic": os.getenv("ANTHROPIC_API_KEY"),
-            "replicate": os.getenv("REPLICATE_API_TOKEN")
+            "replicate": os.getenv("REPLICATE_API_TOKEN"),
+            "together": os.getenv("TOGETHER_API_KEY")
         }
         return api_keys.get(model.provider) is not None
     

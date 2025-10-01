@@ -3,29 +3,40 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-To solve the problem of removing elements that occur more than once from a list of integers while maintaining the order of the remaining elements, we need to follow a systematic approach. Let's break down the problem and devise a solution step by step.
+Let me think through this step by step.
 
-### Problem Analysis
+REASONING PROCESS:
 
-1. **Input**: A list of integers, e.g., `[1, 2, 3, 2, 4]`.
-2. **Output**: A list of integers where all elements that occur more than once are removed, e.g., `[1, 3, 4]`.
-3. **Constraints**: 
-   - The order of the remaining elements should be the same as in the input list.
-   - Elements that appear more than once should be completely removed.
+1. Problem Analysis:
+- Input: List of integers
+- Output: List of integers with duplicates removed
+- Key requirements:
+  * Remove ALL instances of numbers that appear more than once
+  * Maintain original order of remaining elements
+  * Return a new list with unique elements only
 
-### Approach
+2. Approach Options:
+a) Could use a dictionary/counter to count occurrences first
+b) Could use set operations
+c) Could use list methods with counting
 
-To achieve the desired output, we can use the following approach:
+3. Best Approach Selection:
+- Using a Counter or dictionary to count occurrences would be most efficient
+- Two-pass solution:
+  1. First pass: Count all numbers
+  2. Second pass: Keep only numbers with count=1
 
-1. **Count Occurrences**: First, we need to determine how many times each element appears in the list. This can be efficiently done using a dictionary where the keys are the elements from the list and the values are their respective counts.
+4. Algorithm Steps:
+1. Create a dictionary/counter to store frequency of each number
+2. Iterate through list once to count occurrences
+3. Create new list keeping only numbers with count=1
+4. This preserves order and removes all duplicates
 
-2. **Filter Elements**: Once we have the counts, we can iterate through the original list and construct a new list by including only those elements that have a count of exactly one.
+5. Time/Space Complexity:
+- Time: O(n) - need to traverse list twice
+- Space: O(n) - need extra dictionary for counting
 
-3. **Maintain Order**: Since we iterate through the original list to construct the new list, the order of elements that appear exactly once will be preserved.
-
-### Implementation
-
-Let's implement the solution based on the above approach:
+IMPLEMENTATION:
 
 ```python
 from typing import List
@@ -34,28 +45,45 @@ from collections import Counter
 def remove_duplicates(numbers: List[int]) -> List[int]:
     """ From a list of integers, remove all elements that occur more than once.
     Keep order of elements left the same as in the input.
+    
+    Args:
+        numbers: List of integers
+        
+    Returns:
+        List of integers with all duplicates removed
+        
+    >>> remove_duplicates([1, 2, 3, 2, 4])
+    [1, 3, 4]
     """
-    # Step 1: Count occurrences of each number
-    counts = Counter(numbers)
+    # Count occurrences of each number
+    count = Counter(numbers)
     
-    # Step 2: Filter numbers that occur exactly once
-    result = [num for num in numbers if counts[num] == 1]
-    
-    return result
-
-# Example usage:
-# print(remove_duplicates([1, 2, 3, 2, 4]))  # Output should be [1, 3, 4]
+    # Keep only numbers that appear exactly once
+    return [num for num in numbers if count[num] == 1]
 ```
 
-### Explanation
+VERIFICATION:
 
-- **Counter**: We use `collections.Counter` to count the occurrences of each element in the list. This gives us a dictionary-like object where each key is a number from the list, and its value is the count of that number.
+Let's verify with test cases:
+1. [1, 2, 3, 2, 4] → [1, 3, 4]
+   - 2 appears twice, so removed
+   - 1, 3, 4 appear once, so kept
+   - Order maintained
 
-- **List Comprehension**: We use a list comprehension to iterate over the original list and construct a new list containing only those elements that have a count of exactly one (`counts[num] == 1`).
+2. [1, 1, 1] → []
+   - 1 appears three times, so removed
+   - Empty list returned
 
-- **Order Preservation**: Since we iterate over the original list to construct the new list, the order of elements that appear exactly once is preserved.
+3. [1, 2, 3] → [1, 2, 3]
+   - All numbers appear once
+   - All kept in same order
 
-This solution efficiently removes duplicates and maintains the order of the remaining elements, satisfying the problem's requirements.
+The solution satisfies all requirements:
+- Removes all instances of duplicate numbers
+- Maintains original order
+- Handles edge cases
+- Uses type hints
+- Is efficient in both time and space
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/26/turn_0_reasoning.txt

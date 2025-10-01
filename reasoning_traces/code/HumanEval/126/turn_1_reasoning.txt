@@ -1,0 +1,60 @@
+Question ID: HumanEval/126
+Turn: 1
+Dataset Type: code
+==================================================
+
+To solve this problem, we can follow these steps:
+
+1. Understand the problem statement and the given examples.
+2. Identify the key requirements and constraints.
+3. Develop a step-by-step approach to solve the problem.
+4. Implement the solution in Python.
+
+Understanding the problem statement:
+The `is_sorted` function takes a list of numbers as input and returns `True` if the list is sorted in ascending order, and `False` otherwise. Additionally, if the list has more than one duplicate of the same number, the function should return `False`.
+
+Key requirements and constraints:
+- The list contains only non-negative integers.
+- The list can be empty or contain a single element, which should be considered as sorted.
+- The function should return `False` if the list has more than one duplicate of the same number.
+
+Approach:
+1. Check if the list is empty or has only one element, as these cases are considered sorted.
+2. Create a set from the list to check for duplicates. If the length of the set is less than the length of the list, there are duplicates, and the function should return `False`.
+3. Sort the list and compare each element with the next element to ensure they are in ascending order. If any pair of adjacent elements is not in ascending order, the function should return `False`.
+4. If the list passes the above checks, the function should return `True`.
+
+Implementation:
+```python
+def is_sorted(lst):
+    """
+    Given a list of numbers, return whether or not they are sorted
+    in ascending order. If list has more than 1 duplicate of the same
+    number, return False. Assume no negative numbers and only integers.
+    """
+    # Check if the list is empty or has only one element
+    if len(lst) <= 1:
+        return True
+
+    # Check for duplicates
+    if len(set(lst)) < len(lst):
+        return False
+
+    # Check if the list is sorted in ascending order
+    for i in range(len(lst) - 1):
+        if lst[i] >= lst[i + 1]:
+            return False
+
+    return True
+```
+
+Explanation:
+1. The function first checks if the list is empty or has only one element. In these cases, the list is considered sorted, so the function returns `True`.
+2. Next, the function creates a set from the list to check for duplicates. If the length of the set is less than the length of the list, there are duplicates, and the function returns `False`.
+3. If the list has no duplicates, the function iterates through the list and compares each element with the next element. If any pair of adjacent elements is not in ascending order, the function returns `False`.
+4. If the list passes all the checks, the function returns `True`.
+
+This solution has a time complexity of O(n), where n is the length of the input list, as it iterates through the list once to check for duplicates and then again to check if the list is sorted. The space complexity is O(n) due to the creation of the set.
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/126/turn_1_reasoning.txt

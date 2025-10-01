@@ -3,70 +3,88 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-To solve the problem of replacing spaces in a given string according to specific rules, we need to carefully consider the requirements and implement a solution that handles all cases correctly. Let's break down the problem and devise a plan:
+Let me think through this step by step.
 
-### Problem Analysis
+ANALYSIS:
+1. First, I need to understand what the function should do:
+   - Replace single spaces with underscores (_)
+   - Replace 2+ consecutive spaces with a single dash (-)
+   - Handle spaces at the beginning and end of string
+   - Preserve all other characters
 
-1. **Single Spaces**: Any single space in the string should be replaced with an underscore (`_`).
-2. **Consecutive Spaces**: If there are more than two consecutive spaces, they should be replaced with a single hyphen (`-`).
+2. Key cases to consider:
+   - No spaces (return as-is)
+   - Single spaces (convert to _)
+   - Multiple consecutive spaces (convert to -)
+   - Leading/trailing spaces
+   - Mixed cases with both single and multiple spaces
 
-### Approach
+3. Approach:
+   - I can use regex to identify and replace patterns
+   - Or iterate through string checking consecutive spaces
+   - Regex would be cleaner for this case
+   - Can use re.sub() to replace patterns
 
-1. **Iterate Through the String**: We will iterate through the string character by character to identify spaces and count consecutive spaces.
-2. **Count Consecutive Spaces**: As we iterate, we will keep track of consecutive spaces using a counter.
-3. **Replace Spaces**:
-   - If we encounter a single space (i.e., the counter is 1), we replace it with an underscore.
-   - If the counter exceeds 2 (indicating more than two consecutive spaces), we replace the entire sequence with a hyphen.
-4. **Build the Result**: We will construct the resulting string by appending characters and replacements to a list, which we will join at the end to form the final string.
+4. Algorithm steps:
+   - First replace 2+ consecutive spaces with -
+   - Then replace any remaining single spaces with _
+   - This order is important to avoid conflicts
 
-### Implementation
-
-Let's implement the function `fix_spaces` based on the above approach:
+Here's my implementation with detailed comments:
 
 ```python
-def fix_spaces(text):
-    result = []
-    i = 0
-    n = len(text)
-    
-    while i < n:
-        if text[i] == ' ':
-            # Start counting spaces
-            space_count = 0
-            while i < n and text[i] == ' ':
-                space_count += 1
-                i += 1
-            
-            # Determine replacement based on space count
-            if space_count == 1:
-                result.append('_')
-            elif space_count > 2:
-                result.append('-')
-        else:
-            # Append non-space characters directly
-            result.append(text[i])
-            i += 1
-    
-    return ''.join(result)
+import re
 
-# Test cases
-print(fix_spaces("Example"))        # "Example"
-print(fix_spaces("Example 1"))      # "Example_1"
-print(fix_spaces(" Example 2"))     # "_Example_2"
-print(fix_spaces(" Example   3"))   # "_Example-3"
+def fix_spaces(text):
+    """
+    Replace spaces in text with either underscores or dashes based on rules:
+    - Single spaces become underscores
+    - 2+ consecutive spaces become a single dash
+    
+    Args:
+        text (str): Input string to process
+        
+    Returns:
+        str: Processed string with spaces replaced
+    """
+    # First replace 2 or more consecutive spaces with a single dash
+    # \s{2,} matches 2 or more whitespace characters
+    text = re.sub(r'\s{2,}', '-', text)
+    
+    # Then replace any remaining single spaces with underscore
+    # \s matches any single whitespace character
+    text = re.sub(r'\s', '_', text)
+    
+    return text
 ```
 
-### Explanation
+Testing the function with the given examples:
+```python
+assert fix_spaces("Example") == "Example"
+assert fix_spaces("Example 1") == "Example_1"
+assert fix_spaces(" Example 2") == "_Example_2"
+assert fix_spaces(" Example   3") == "_Example-3"
+```
 
-- **Loop Through Characters**: We use a `while` loop to iterate through the string. The index `i` is incremented as we process each character.
-- **Space Counting**: When we encounter a space, we enter a nested loop to count consecutive spaces. We increment `i` within this loop to skip over the spaces.
-- **Replacement Logic**: After counting spaces, we decide the replacement based on the count:
-  - A single space is replaced with `_`.
-  - More than two consecutive spaces are replaced with `-`.
-- **Appending Characters**: Non-space characters are directly appended to the result list.
-- **Result Construction**: Finally, we join the list of characters into a single string and return it.
+The solution:
+1. Uses regex for clean pattern matching
+2. Handles the cases in correct order (multiple spaces first, then single spaces)
+3. Preserves all non-space characters
+4. Handles edge cases like leading/trailing spaces
+5. Is efficient and readable
 
-This solution efficiently handles the requirements and edge cases specified in the problem statement.
+Alternative approaches considered:
+1. Could iterate through string character by character counting spaces
+2. Could split string and rejoin with replacements
+3. Could use string.replace() multiple times
+
+I chose regex because it's:
+- More concise and readable
+- Handles all cases cleanly
+- More maintainable
+- Efficient for pattern matching
+
+The solution meets all requirements and passes the test cases provided.
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/140/turn_0_reasoning.txt

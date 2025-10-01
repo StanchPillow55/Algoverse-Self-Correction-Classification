@@ -341,104 +341,104 @@ def run_dataset(
                         # If error awareness is disabled, use a generic retry template
                         reprompt, template = True, "try_again_concise"
 
-                if not reprompt:
-                    break
+                    if not reprompt:
+                        break
 
-                # Preserve the bias used for template selection to align feedback with the chosen template
-                bias_for_template = bias
+                    # Preserve the bias used for template selection to align feedback with the chosen template
+                    bias_for_template = bias
 
-                # send template to learner - get full reasoning trace
-                raw_answer_1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
-                                                               experiment_id=experiment_id, dataset_name=dataset_name, 
-                                                               sample_id=sample_id, turn_number=t)
-                
-                # Save reasoning trace for this turn
-                dataset_type_turn = "code" if is_humaneval else "math"
-                reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
-                    qid=sample_id, turn=t, reasoning_text=full_response_1,
-                    output_dir=output_dir, dataset_type=dataset_type_turn
-                )
-                
-                # Extract answer from reasoning trace
-                if is_humaneval:
-                    extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_code_answer(
-                        full_response_1, task.get('entry_point', '')
+                    # send template to learner - get full reasoning trace
+                    raw_answer_1, self_conf, full_response_1 = learner.answer(prompt, history + turns, template=template, 
+                                                                   experiment_id=experiment_id, dataset_name=dataset_name, 
+                                                                   sample_id=sample_id, turn_number=t)
+                    
+                    # Save reasoning trace for this turn
+                    dataset_type_turn = "code" if is_humaneval else "math"
+                    reasoning_trace_file_1 = reasoning_extractor.save_reasoning_trace(
+                        qid=sample_id, turn=t, reasoning_text=full_response_1,
+                        output_dir=output_dir, dataset_type=dataset_type_turn
                     )
-                else:
-                    extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
-                a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
+                    
+                    # Extract answer from reasoning trace
+                    if is_humaneval:
+                        extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_code_answer(
+                            full_response_1, task.get('entry_point', '')
+                        )
+                    else:
+                        extracted_answer_1, reasoning_summary_1 = reasoning_extractor.extract_math_answer(full_response_1)
+                    a1 = extracted_answer_1 if extracted_answer_1 is not None else raw_answer_1
 
-                # Score based on task type
-                if is_humaneval:
-                    score_result_1 = score_humaneval_candidate(task, a1)
-                    execution_details = score_result_1.get('execution_result', {})
-                    acc1 = int(score_result_1.get('passed', False))
-                else:
-                    acc1 = gsm8k_em(a1, ref)
-                    execution_details = {}
+                    # Score based on task type
+                    if is_humaneval:
+                        score_result_1 = score_humaneval_candidate(task, a1)
+                        execution_details = score_result_1.get('execution_result', {})
+                        acc1 = int(score_result_1.get('passed', False))
+                    else:
+                        acc1 = gsm8k_em(a1, ref)
+                        execution_details = {}
 
-                # Only run bias detection and confidence if enabled (after the new response)
-                if enable_error_awareness:
-                    bias_after, tconf = detect_bias(
-                        q, a1, ref, history + turns,
-                        reasoning_text=full_response_1,
-                        execution_result=execution_details,
-                        is_code_task=is_humaneval
+                    # Only run bias detection and confidence if enabled (after the new response)
+                    if enable_error_awareness:
+                        bias_after, tconf = detect_bias(
+                            q, a1, ref, history + turns,
+                            reasoning_text=full_response_1,
+                            execution_result=execution_details,
+                            is_code_task=is_humaneval
+                        )
+                    else:
+                        bias_after, tconf = "None", 0.5
+
+                    if enable_confidence:
+                        conf = combine_confidence(self_conf, tconf, None)
+                    else:
+                        conf = 0.5
+
+                    # Append turn details with both before/after bias and selected template
+                    turns.append({
+                        "answer": a1,  # Extracted answer for evaluation
+                        "raw_answer": raw_answer_1,  # Original learner output
+                        "response_text": full_response_1,  # Full reasoning trace
+                        "reasoning_trace_file": str(reasoning_trace_file_1),  # Path to saved reasoning trace
+                        "reasoning_summary": reasoning_summary_1,  # Summary of reasoning process
+                        "self_conf": round(self_conf,2),
+                        "teacher_bias": bias_after,
+                        "teacher_conf": round(tconf,2),
+                        "combined_confidence": round(conf,2),
+                        "template": template,
+                        "template_selected": template,
+                        "evaluator_bias_label_before": bias_for_template,
+                        "evaluator_bias_label_after": bias_after,
+                        "accuracy": acc1,
+                        "execution_details": execution_details if is_humaneval else {}
+                    })
+
+                    # Log this turn with feedback aligned to the bias used for template selection
+                    coaching_feedback = coaching_from_bias(bias_for_template)
+                    logger.on_turn(
+                        ex,
+                        turn_index=t,
+                        prompt=f"Template: {template}",
+                        response_text=full_response_1,
+                        response_is_final=(t == max_turns-1 or acc1 == 1),
+                        is_correct=bool(acc1),
+                        evaluator_signal=('stop' if acc1 == 1 else 'continue'),
+                        model_reported_confidence=self_conf,
+                        evaluator_bias_label=bias_for_template,
+                        evaluator_feedback=coaching_feedback,
+                        model_name=getattr(learner, 'model', provider),
+                        task_type='humaneval' if is_humaneval else 'standard',
+                        template_selected=template,
+                        evaluator_bias_label_after=bias_after,
+                        execution_details=execution_details if is_humaneval else None
                     )
-                else:
-                    bias_after, tconf = "None", 0.5
 
-                if enable_confidence:
-                    conf = combine_confidence(self_conf, tconf, None)
-                else:
-                    conf = 0.5
+                    # Prepare for next iteration: use the latest bias as current
+                    bias = bias_after
 
-                # Append turn details with both before/after bias and selected template
-                turns.append({
-                    "answer": a1,  # Extracted answer for evaluation
-                    "raw_answer": raw_answer_1,  # Original learner output
-                    "response_text": full_response_1,  # Full reasoning trace
-                    "reasoning_trace_file": str(reasoning_trace_file_1),  # Path to saved reasoning trace
-                    "reasoning_summary": reasoning_summary_1,  # Summary of reasoning process
-                    "self_conf": round(self_conf,2),
-                    "teacher_bias": bias_after,
-                    "teacher_conf": round(tconf,2),
-                    "combined_confidence": round(conf,2),
-                    "template": template,
-                    "template_selected": template,
-                    "evaluator_bias_label_before": bias_for_template,
-                    "evaluator_bias_label_after": bias_after,
-                    "accuracy": acc1,
-                    "execution_details": execution_details if is_humaneval else {}
-                })
-
-                # Log this turn with feedback aligned to the bias used for template selection
-                coaching_feedback = coaching_from_bias(bias_for_template)
-                logger.on_turn(
-                    ex,
-                    turn_index=t,
-                    prompt=f"Template: {template}",
-                    response_text=full_response_1,
-                    response_is_final=(t == max_turns-1 or acc1 == 1),
-                    is_correct=bool(acc1),
-                    evaluator_signal=('stop' if acc1 == 1 else 'continue'),
-                    model_reported_confidence=self_conf,
-                    evaluator_bias_label=bias_for_template,
-                    evaluator_feedback=coaching_feedback,
-                    model_name=getattr(learner, 'model', provider),
-                    task_type='humaneval' if is_humaneval else 'standard',
-                    template_selected=template,
-                    evaluator_bias_label_after=bias_after,
-                    execution_details=execution_details if is_humaneval else None
-                )
-
-                # Prepare for next iteration: use the latest bias as current
-                bias = bias_after
-
-                t += 1
-                # simple stop: two non-improvements handled implicitly by max_turns and correctness
-                if acc1 == 1: break
-                acc_prev = acc1
+                    t += 1
+                    # simple stop: two non-improvements handled implicitly by max_turns and correctness
+                    if acc1 == 1: break
+                    acc_prev = acc1
 
             # Finalize the trace for this example
             final_answer = turns[-1]["answer"]

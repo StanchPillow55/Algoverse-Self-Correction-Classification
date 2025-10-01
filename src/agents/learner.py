@@ -19,6 +19,8 @@ class LearnerBot:
             self.model = os.getenv("REPLICATE_MODEL", "meta/llama-2-7b-chat")
         elif provider == "huggingface":
             self.model = os.getenv("HUGGINGFACE_MODEL", "meta-llama/Llama-2-7b-chat-hf")
+        elif provider == "together":
+            self.model = os.getenv("TOGETHER_MODEL", "meta-llama/Llama-2-70b-chat-hf")
         else:
             # Fallback for unknown providers
             self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
@@ -48,6 +50,19 @@ class LearnerBot:
                 "llama2-13b": "meta/llama-2-13b-chat"
             }
             return replicate_mapping.get(model, model)
+        elif provider == "together":
+            # Map short names to Together AI model identifiers
+            together_mapping = {
+                "llama-70b": "meta-llama/Llama-2-70b-chat-hf",
+                "llama-7b": "meta-llama/Llama-2-7b-chat-hf",
+                "llama-13b": "meta-llama/Llama-2-13b-chat-hf",
+                "llama2-70b": "meta-llama/Llama-2-70b-chat-hf",
+                "llama2-7b": "meta-llama/Llama-2-7b-chat-hf",
+                "llama2-13b": "meta-llama/Llama-2-13b-chat-hf",
+                "llama-3-70b": "meta-llama/Llama-3-70b-chat-hf",
+                "llama-3-8b": "meta-llama/Llama-3-8b-chat-hf"
+            }
+            return together_mapping.get(model, model)
         return model
 
     def answer(self, q: str, hist: List[Dict[str, Any]], template: str | None = None, 
@@ -78,6 +93,8 @@ class LearnerBot:
             return self._call_replicate(q, template, experiment_id, dataset_name, sample_id, turn_number)
         elif self.provider == "huggingface":
             return self._call_huggingface(q, template, experiment_id, dataset_name, sample_id, turn_number)
+        elif self.provider == "together":
+            return self._call_together(q, template, experiment_id, dataset_name, sample_id, turn_number)
         else:
             return "UNKNOWN_PROVIDER", 0.1, "Error: Unknown provider specified."
 
@@ -281,6 +298,88 @@ class LearnerBot:
         except Exception as e:
             error_msg = f"REPLICATE_API_ERROR: {str(e)}"
             self._safe_debug_log(q, template, error_msg, "ERROR")
+            return f"ERROR_{type(e).__name__}", 0.1, error_msg
+
+    def _call_together(self, q: str, template: str | None = None, 
+                       experiment_id: str = "unknown", dataset_name: str = "unknown", 
+                       sample_id: str = "unknown", turn_number: int = 0) -> Tuple[str, float, str]:
+        """Call Together AI API (OpenAI-compatible interface for Llama models)."""
+        try:
+            from together import Together
+            
+            # Get API key from environment
+            api_key = os.getenv("TOGETHER_API_KEY")
+            if not api_key:
+                raise ValueError("TOGETHER_API_KEY not found in environment")
+            
+            client = Together(api_key=api_key)
+            
+            # Handle template parameter
+            user_prompt = f"{q}\n[Instruction]: {template}" if template else q
+            
+            # Add system prompt for Llama models
+            sys_prompt = "You are a helpful AI assistant. Follow the instructions carefully and provide complete, accurate responses. Show your work and reasoning clearly."
+            
+            # Heuristic: detect code-generation tasks
+            is_code_task = ("Python function" in q) or ("code block" in q) or ("def " in q) or ("reasoning" in q)
+            max_tokens = int(os.getenv("TOGETHER_MAX_TOKENS", "2048" if is_code_task else "1024"))
+            temperature = float(os.getenv("TOGETHER_TEMPERATURE", "0.2"))
+            
+            # Make API call using OpenAI-compatible interface
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": sys_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+                top_p=0.9,
+                frequency_penalty=0.0,
+                presence_penalty=0.0
+            )
+            
+            # Extract content
+            raw_text = response.choices[0].message.content
+            if raw_text is None:
+                self._safe_debug_log(q, template, "<NULL_RESPONSE>", "ERROR")
+                return "ERROR_NULL_RESPONSE", 0.1, "<NULL_RESPONSE>"
+            
+            text = raw_text.strip()
+            if not text:
+                self._safe_debug_log(q, template, "<EMPTY_RESPONSE>", "ERROR")
+                return "ERROR_EMPTY_RESPONSE", 0.1, "<EMPTY_RESPONSE>"
+            
+            # For reasoning traces, return full text - extraction will be done later
+            ans = text  # Keep full reasoning trace
+            conf = 0.6
+            
+            self._safe_debug_log(q, template, text, ans, "together")
+            
+            # Track cost and token usage
+            try:
+                from ..utils.cost_tracker import record_cost
+                input_tokens = response.usage.prompt_tokens if hasattr(response, 'usage') and response.usage else 0
+                output_tokens = response.usage.completion_tokens if hasattr(response, 'usage') and response.usage else 0
+                record_cost(self.model, "together", input_tokens, output_tokens, 
+                           experiment_id, dataset_name, sample_id, turn_number)
+            except Exception as e:
+                # Don't fail the main operation if cost tracking fails
+                pass
+            
+            return ans, conf, text
+            
+        except Exception as e:
+            error_msg = f"TOGETHER_API_ERROR: {str(e)}"
+            self._safe_debug_log(q, template, error_msg, "ERROR", "together")
+            
+            # Check for specific API errors that should terminate the experiment
+            error_str = str(e).lower()
+            if any(term in error_str for term in ['quota', 'rate limit', 'insufficient', 'billing', 'api key']):
+                print(f"🚨 CRITICAL API ERROR - Experiment should terminate: {error_msg}")
+                # Raise the error to bubble up and trigger experiment termination
+                raise e
+            
             return f"ERROR_{type(e).__name__}", 0.1, error_msg
 
     def _call_huggingface(self, q: str, template: str | None = None, 

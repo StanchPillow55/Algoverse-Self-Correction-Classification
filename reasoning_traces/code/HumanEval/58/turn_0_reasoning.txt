@@ -3,50 +3,70 @@ Turn: 0
 Dataset Type: code
 ==================================================
 
-To solve the problem of finding sorted unique common elements between two lists, we can break down the task into several steps:
+Let me think through this step by step.
 
-1. **Identify Common Elements**: We need to find elements that are present in both lists. A straightforward way to do this is by using set operations, which are efficient for such tasks. Specifically, the intersection of two sets will give us the common elements.
+ANALYSIS:
+1. The function takes two lists as input parameters (l1 and l2)
+2. We need to find elements that appear in both lists
+3. The output should be:
+   - Sorted
+   - Contain only unique elements
+   - Be a list of common elements between l1 and l2
 
-2. **Ensure Uniqueness**: By converting the lists to sets, we automatically ensure that the elements are unique, as sets do not allow duplicate values.
+APPROACH:
+1. To find common elements, we need to identify values that exist in both lists
+2. To get unique elements, we can convert lists to sets since sets remove duplicates
+3. We can use set intersection to find common elements
+4. Finally, we need to convert back to a sorted list
 
-3. **Sort the Result**: After finding the common elements, we need to sort them in ascending order. This can be easily achieved using Python's built-in `sorted()` function.
+DETAILED STEPS:
+1. Convert both input lists to sets to remove duplicates
+2. Use the intersection operator (&) or intersection() method to find common elements
+3. Convert result back to list and sort it
+4. Return the sorted list
 
-4. **Return the Result**: Finally, we return the sorted list of common elements.
-
-Now, let's implement the solution based on this reasoning:
+Here's the implementation with explanation:
 
 ```python
 def common(l1: list, l2: list):
-    """Return sorted unique common elements for two lists."""
-    # Convert both lists to sets to find unique elements
+    """Return sorted unique common elements for two lists.
+    >>> common([1, 4, 3, 34, 653, 2, 5], [5, 7, 1, 5, 9, 653, 121])
+    [1, 5, 653]
+    >>> common([5, 3, 2, 8], [3, 2])
+    [2, 3]
+    """
+    # Convert lists to sets to remove duplicates
     set1 = set(l1)
     set2 = set(l2)
     
-    # Find the intersection of both sets to get common elements
-    common_elements = set1.intersection(set2)
+    # Find intersection of sets to get common elements
+    common_elements = set1 & set2
     
-    # Sort the common elements and convert to a list
-    sorted_common_elements = sorted(common_elements)
-    
-    # Return the sorted list of common elements
-    return sorted_common_elements
-
-# Example usage:
-# print(common([1, 4, 3, 34, 653, 2, 5], [5, 7, 1, 5, 9, 653, 121]))  # Output: [1, 5, 653]
-# print(common([5, 3, 2, 8], [3, 2]))  # Output: [2, 3]
+    # Convert back to list and sort
+    return sorted(common_elements)
 ```
 
-### Explanation:
+VERIFICATION:
+Let's verify it works with the test cases:
 
-- **Set Conversion**: We convert both input lists `l1` and `l2` into sets `set1` and `set2`. This step ensures that all elements are unique and allows us to use set operations.
+1. First test case:
+   - l1 = [1, 4, 3, 34, 653, 2, 5]
+   - l2 = [5, 7, 1, 5, 9, 653, 121]
+   - Common elements: 1, 5, 653
+   - Output is sorted: [1, 5, 653] ✓
 
-- **Intersection**: We use the `intersection()` method to find elements that are present in both `set1` and `set2`. This method returns a new set containing the common elements.
+2. Second test case:
+   - l1 = [5, 3, 2, 8]
+   - l2 = [3, 2]
+   - Common elements: 2, 3
+   - Output is sorted: [2, 3] ✓
 
-- **Sorting**: The `sorted()` function is used to sort the common elements in ascending order. The result is a list, which is what we need to return.
-
-- **Return**: Finally, the sorted list of common elements is returned as the output of the function.
-
-This approach is efficient and concise, leveraging Python's set operations to handle uniqueness and intersection, and using `sorted()` for ordering the result.
+The solution is:
+- Efficient (using sets for O(n) lookup)
+- Handles duplicates (using sets)
+- Returns sorted result
+- Matches the required output format
+- Passes all test cases
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/58/turn_0_reasoning.txt

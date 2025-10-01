@@ -1,0 +1,96 @@
+Question ID: HumanEval/152
+Turn: 1
+Dataset Type: code
+==================================================
+
+Let me break this down step by step:
+
+1) First, let's understand what we need to do:
+   - We have two arrays: game (actual scores) and guess (predicted scores)
+   - We need to compare each pair of numbers at the same index
+   - Return an array showing how far off each guess was
+   - The difference should be absolute (positive)
+
+2) Key requirements:
+   - Input: Two arrays of equal length
+   - Output: Single array of same length
+   - Each output element shows absolute difference between actual and guess
+   - If guess matches actual, output is 0
+
+3) Algorithm approach:
+   - Iterate through both arrays simultaneously
+   - For each pair of numbers:
+     * Calculate absolute difference |actual - guess|
+     * Add this difference to result array
+   - Return final array
+
+4) Edge cases to consider:
+   - Arrays will be same length (given in problem)
+   - Numbers can be negative (shown in example)
+   - Zero is valid input
+
+Here's my implementation with comments:
+
+```python
+def compare(game, guess):
+    """
+    Compare two arrays of scores and return array of absolute differences.
+    
+    Args:
+        game (list): Array of actual scores
+        guess (list): Array of guessed scores
+        
+    Returns:
+        list: Array of absolute differences between actual and guessed scores
+    """
+    # Initialize empty result array
+    result = []
+    
+    # Iterate through both arrays simultaneously using index
+    for i in range(len(game)):
+        # Calculate absolute difference between actual and guess
+        difference = abs(game[i] - guess[i])
+        # Add difference to result array
+        result.append(difference)
+    
+    return result
+```
+
+Alternative implementation using list comprehension for more concise code:
+
+```python
+def compare(game, guess):
+    """
+    Compare two arrays of scores and return array of absolute differences.
+    
+    Args:
+        game (list): Array of actual scores
+        guess (list): Array of guessed scores
+        
+    Returns:
+        list: Array of absolute differences between actual and guessed scores
+    """
+    return [abs(game[i] - guess[i]) for i in range(len(game))]
+```
+
+Let's verify with the example cases:
+```python
+# Test cases
+print(compare([1,2,3,4,5,1], [1,2,3,4,2,-2]))  # Should output [0,0,0,0,3,3]
+print(compare([0,5,0,0,0,4], [4,1,1,0,0,-2]))  # Should output [4,4,1,0,0,6]
+```
+
+Both implementations will work correctly. I prefer the second version (list comprehension) because it's:
+1. More concise
+2. More Pythonic
+3. Still readable
+4. Potentially more efficient (creates list in one go)
+
+The solution handles all the requirements and edge cases shown in the examples, including:
+- Negative numbers
+- Zero values
+- Correct matches (resulting in 0)
+- Non-matching values (resulting in absolute differences)
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/152/turn_1_reasoning.txt

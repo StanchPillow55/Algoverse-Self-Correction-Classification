@@ -3,61 +3,88 @@ Turn: 2
 Dataset Type: code
 ==================================================
 
-To solve the problem of determining if a given number `a` (less than 100) is the product of exactly three prime numbers, we need to follow a structured approach. Here's how we can think through the problem:
+Let me solve this step by step.
 
-### Step-by-Step Approach:
+REASONING:
+1. First, I need to understand what makes a number a product of 3 prime numbers:
+   - It must be able to be factored into exactly 3 prime numbers
+   - The number must be less than 100 (given constraint)
 
-1. **Understand the Problem Requirements:**
-   - We need to check if a number `a` is the product of exactly three prime numbers.
-   - The number `a` is guaranteed to be less than 100.
+2. To solve this, I need to:
+   a) Find all prime factors of the given number
+   b) Check if there are exactly 3 prime factors when multiplied together
 
-2. **Identify Prime Numbers Less Than 100:**
-   - The prime numbers less than 100 are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97.
+3. Key steps needed:
+   - Function to check if a number is prime
+   - Function to find prime factors
+   - Check if the multiplication of any 3 prime factors equals the input number
 
-3. **Generate All Possible Products of Three Distinct Primes:**
-   - We need to consider combinations of three distinct primes from the list above and calculate their products.
-   - Since `a` is less than 100, we only need to consider combinations where the product is less than 100.
+4. Approach:
+   - Get all prime factors (with repetition)
+   - If there are exactly 3 prime factors that multiply to give the input number, return True
+   - Otherwise, return False
 
-4. **Check if `a` is in the List of Products:**
-   - Once we have the list of all possible products of three distinct primes that are less than 100, we simply check if `a` is in this list.
-
-5. **Implementation:**
-   - We will use combinations from the itertools module to generate combinations of three primes.
-   - Calculate the product for each combination and store it in a set for quick lookup.
-   - Finally, check if `a` is in the set of products.
-
-### Implementation:
-
-Let's implement the solution based on the above reasoning:
+Here's my implementation with detailed comments:
 
 ```python
-from itertools import combinations
-
 def is_multiply_prime(a):
-    """Returns true if the given number is the multiplication of 3 prime numbers and false otherwise."""
-    # List of prime numbers less than 100
-    primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+    """
+    Returns true if the given number is the multiplication of 3 prime numbers.
+    Args:
+        a (int): Input number less than 100
+    Returns:
+        bool: True if number is product of 3 primes, False otherwise
+    """
+    # First check if number is less than 100
+    if a >= 100 or a < 0:
+        return False
+        
+    def is_prime(n):
+        """Helper function to check if a number is prime"""
+        if n < 2:
+            return False
+        for i in range(2, int(n ** 0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
     
-    # Generate all combinations of three distinct primes
-    products_of_three_primes = set()
-    for combo in combinations(primes, 3):
-        product = combo[0] * combo[1] * combo[2]
-        if product < 100:
-            products_of_three_primes.add(product)
+    def get_prime_factors(n):
+        """Helper function to get all prime factors"""
+        factors = []
+        i = 2
+        while i * i <= n:
+            while n % i == 0:
+                factors.append(i)
+                n //= i
+            i += 1
+        if n > 1:
+            factors.append(n)
+        return factors
     
-    # Check if the given number is in the set of products
-    return a in products_of_three_primes
-
-# Example usage:
-print(is_multiply_prime(30))  # Should return True
-print(is_multiply_prime(60))  # Should return False
+    # Get all prime factors
+    prime_factors = get_prime_factors(a)
+    
+    # Check if there are exactly 3 prime factors that multiply to give a
+    if len(prime_factors) == 3:
+        return True
+    
+    return False
 ```
 
-### Explanation:
+TEST CASES:
+1. is_multiply_prime(30) → True (2 * 3 * 5 = 30)
+2. is_multiply_prime(24) → False (2 * 2 * 2 * 3 = 24, has 4 prime factors)
+3. is_multiply_prime(13) → False (single prime)
+4. is_multiply_prime(100) → False (greater than or equal to 100)
 
-- We use `combinations(primes, 3)` to generate all possible combinations of three distinct primes.
-- For each combination, we calculate the product and check if it's less than 100. If it is, we add it to the set `products_of_three_primes`.
-- Finally, we check if the input number `a` is in this set, which tells us if `a` is a product of exactly three primes.
+The function works by:
+1. First checking if the input is valid (< 100)
+2. Using helper function is_prime() to check if a number is prime
+3. Using helper function get_prime_factors() to get all prime factors
+4. Checking if there are exactly 3 prime factors
+5. Returning True if conditions are met, False otherwise
+
+This solution handles all edge cases and meets the requirements of the problem.
 
 ==================================================
 Trace saved at: reasoning_traces/code/HumanEval/75/turn_2_reasoning.txt

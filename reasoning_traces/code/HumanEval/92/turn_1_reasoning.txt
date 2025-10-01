@@ -1,0 +1,77 @@
+Question ID: HumanEval/92
+Turn: 1
+Dataset Type: code
+==================================================
+
+Let me solve this step by step.
+
+1) First, let's understand what the function needs to do:
+   * Takes 3 numbers as input (x, y, z)
+   * All numbers must be integers
+   * One number must equal the sum of the other two
+   * Return True if both conditions are met, False otherwise
+
+2) Let's break down the requirements:
+   * Need to check if all inputs are integers
+   * Need to check all possible sum combinations:
+     - x = y + z
+     - y = x + z
+     - z = x + y
+
+3) For checking integers:
+   * Can use isinstance(num, int)
+   * Need to handle negative integers too
+   * Must return False for floats
+
+4) For checking sums:
+   * Need to try all three combinations
+   * If any combination works, return True
+   * Only if no combination works, return False
+
+5) Implementation approach:
+   * First check if all are integers
+   * Then check all possible sum combinations
+   * Use logical OR for the sum conditions
+
+Here's the implementation with comments:
+
+```python
+def any_int(x, y, z):
+    '''
+    Returns true if one number equals sum of other two and all are integers.
+    Returns false otherwise.
+    '''
+    # First check if all inputs are integers
+    if not (isinstance(x, int) and isinstance(y, int) and isinstance(z, int)):
+        return False
+    
+    # Check all possible sum combinations
+    # x = y + z OR y = x + z OR z = x + y
+    return (x == y + z) or (y == x + z) or (z == x + y)
+
+```
+
+Let's verify with test cases:
+
+```python
+# Test cases
+print(any_int(5, 2, 7))    # True (7 = 5 + 2)
+print(any_int(3, 2, 2))    # False (no sum equals third number)
+print(any_int(3, -2, 1))   # True (3 = -2 + 1)
+print(any_int(3.6, -2.2, 2))  # False (not all integers)
+```
+
+This solution:
+1) First checks if all numbers are integers using isinstance()
+2) If they're not all integers, returns False immediately
+3) If they are all integers, checks all possible sum combinations
+4) Returns True if any combination works, False otherwise
+
+The function handles:
+- Positive integers
+- Negative integers
+- Non-integer inputs (returns False)
+- All possible sum combinations
+
+==================================================
+Trace saved at: reasoning_traces/code/HumanEval/92/turn_1_reasoning.txt
